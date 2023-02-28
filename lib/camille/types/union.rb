@@ -7,6 +7,19 @@ module Camille
         @left = Camille::Type.from_value left
         @right = Camille::Type.from_value right
       end
+
+      def check value
+        left_result = @left.check value
+        if left_result
+          right_result = @right.check value
+          if right_result
+            Camille::TypeError.new(
+              'union.left' => left_result,
+              'union.right' => right_result
+            )
+          end
+        end
+      end
     end
   end
 end

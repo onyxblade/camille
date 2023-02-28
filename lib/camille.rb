@@ -8,10 +8,10 @@ require_relative "camille/types/boolean"
 require_relative "camille/types/array"
 require_relative "camille/types/object"
 require_relative "camille/types/null"
-require_relative "camille/types/undefined"
 require_relative "camille/types/union"
 require_relative "camille/type_store"
 require_relative "camille/type_resolver"
+require_relative "camille/type_error"
 
 module Camille
   class Error < StandardError; end
