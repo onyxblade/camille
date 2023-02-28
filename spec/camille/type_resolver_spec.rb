@@ -13,5 +13,10 @@ RSpec.describe Camille::TypeResolver do
       expect(resolver.eval{ number }).to be_an_instance_of(Camille::Types::Number)
       expect(resolver.eval{ array(number) }).to be_an_instance_of(Camille::Types::Array)
     end
+
+    it 'raises when no type found' do
+      resolver = Camille::TypeResolver.new(type_store)
+      expect{resolver.eval{ string }}.to raise_error(Camille::TypeResolver::NoMethodError)
+    end
   end
 end

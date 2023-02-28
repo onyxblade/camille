@@ -1,6 +1,7 @@
 module Camille
   class TypeStore
     class ArgumentError < ::ArgumentError; end
+    class NoTypeError < ::ArgumentError; end
 
     def initialize
       @map = {}
@@ -15,7 +16,11 @@ module Camille
     end
 
     def get name
-      @map[name]
+      if found = @map[name]
+        found
+      else
+        raise NoTypeError.new("Cannot find type by name #{name}")
+      end
     end
   end
 end
