@@ -24,6 +24,16 @@ RSpec.describe Camille::Types::Object do
       expect(object.fields[:product].fields[:price]).to be_an_instance_of(Camille::Types::Object)
       expect(object.fields[:product].fields[:price].fields[:regular]).to be_an_instance_of(Camille::Types::Number)
     end
+
+    it 'creates union type with undefined for all keys ending with ?' do
+      object = Camille::Types::Object.new(
+        id?: Camille::Types::Number.new
+      )
+
+      expect(object.fields[:id]).to be_an_instance_of(Camille::Types::Union)
+      expect(object.fields[:id].left).to be_an_instance_of(Camille::Types::Number)
+      expect(object.fields[:id].right).to be_an_instance_of(Camille::Types::Undefined)
+    end
   end
 
   describe '#check' do
@@ -31,14 +41,6 @@ RSpec.describe Camille::Types::Object do
       described_class.new(
         id: Camille::Types::Number.new,
         name: Camille::Types::String.new
-      )
-    }
-    let(:nested_object_type){
-      described_class.new(
-        product: {
-          id: Camille::Types::Number.new,
-          name: Camille::Types::String.new
-        }
       )
     }
 
@@ -66,23 +68,58 @@ RSpec.describe Camille::Types::Object do
       expect(error.components.values.first.basic?).to be true
     end
 
-    it 'returns errors for nested object' do
-      error = nested_object_type.check({
-        product: {
-          id: 1,
-          name: 2
-        }
-      })
-      expect(error).to be_an_instance_of(Camille::TypeError)
-      expect(error.basic?).to be false
-      expect(error.components.keys.first).to eq('product')
+    context 'when object has nested fields' do
+      let(:nested_object_type){
+        described_class.new(
+          product: {
+            id: Camille::Types::Number.new,
+            name: Camille::Types::String.new
+          }
+        )
+      }
 
-      nested_error = error.components.values.first
-      expect(nested_error).to be_an_instance_of(Camille::TypeError)
-      expect(nested_error.basic?).to be false
-      expect(nested_error.components.keys.first).to eq('name')
-      expect(nested_error.components.values.first).to be_an_instance_of(Camille::TypeError)
-      expect(nested_error.components.values.first.basic?).to be true
+      it 'returns errors for nested object' do
+        error = nested_object_type.check({
+          product: {
+            id: 1,
+            name: 2
+          }
+        })
+        expect(error).to be_an_instance_of(Camille::TypeError)
+        expect(error.basic?).to be false
+        expect(error.components.keys.first).to eq('product')
+
+        nested_error = error.components.values.first
+        expect(nested_error).to be_an_instance_of(Camille::TypeError)
+        expect(nested_error.basic?).to be false
+        expect(nested_error.components.keys.first).to eq('name')
+        expect(nested_error.components.values.first).to be_an_instance_of(Camille::TypeError)
+        expect(nested_error.components.values.first.basic?).to be true
+      end
+    end
+
+    context 'when object has optional fields' do
+      let(:optional_object_type){
+        described_class.new(
+          id?: Camille::Types::Number.new,
+          name?: Camille::Types::String.new
+        )
+      }
+
+      it 'checks if optional fields are nil' do
+        expect(optional_object_type.check({})).to be nil
+      end
+
+      it 'returns composite error if optional fields are of wrong type' do
+        error = optional_object_type.check({
+          id: '1'
+        })
+        expect(error).to be_an_instance_of(Camille::TypeError)
+        expect(error.basic?).to be false
+        expect(error.components.keys.first).to eq('id')
+        expect(error.components.values.first).to be_an_instance_of(Camille::TypeError)
+        expect(error.components.values.first.components.keys).to eq(['union.left', 'union.right'])
+      end
     end
   end
 

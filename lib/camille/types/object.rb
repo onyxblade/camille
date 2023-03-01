@@ -23,9 +23,19 @@ module Camille
 
       private
         def normalize_fields fields
-          fields.map do |k, v|
-            [k, Camille::Type.from_value(v)]
+          fields.map do |key, value|
+            type = Camille::Type.from_value(value)
+            if key.end_with?('?')
+              new_key = remove_question_mark(key)
+              [new_key, type | Camille::Types::Undefined.new]
+            else
+              [key, type]
+            end
           end.to_h
+        end
+
+        def remove_question_mark sym
+          sym.to_s.gsub(/\?$/, '').to_sym
         end
     end
   end
