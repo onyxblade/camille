@@ -3,8 +3,8 @@ RSpec.describe Camille::Types::Object do
   describe '#initialize' do
     it 'accepts a hash of fields' do
       object = Camille::Types::Object.new(
-        id: Camille::Types::Number.new,
-        name: Camille::Types::String.new
+        id: Camille::Types::Number,
+        name: Camille::Types::String
       )
       expect(object.fields[:id]).to be_an_instance_of(Camille::Types::Number)
       expect(object.fields[:name]).to be_an_instance_of(Camille::Types::String)
@@ -13,9 +13,9 @@ RSpec.describe Camille::Types::Object do
     it 'deeply converts hash fields to objects' do
       object = Camille::Types::Object.new(
         product: {
-          id: Camille::Types::Number.new,
+          id: Camille::Types::Number,
           price: {
-            regular: Camille::Types::Number.new,
+            regular: Camille::Types::Number,
           }
         }
       )
@@ -27,7 +27,7 @@ RSpec.describe Camille::Types::Object do
 
     it 'creates union type with undefined for all keys ending with ?' do
       object = Camille::Types::Object.new(
-        id?: Camille::Types::Number.new
+        id?: Camille::Types::Number
       )
 
       expect(object.fields[:id]).to be_an_instance_of(Camille::Types::Union)
@@ -39,8 +39,8 @@ RSpec.describe Camille::Types::Object do
   describe '#check' do
     let(:object_type){
       described_class.new(
-        id: Camille::Types::Number.new,
-        name: Camille::Types::String.new
+        id: Camille::Types::Number,
+        name: Camille::Types::String
       )
     }
 
@@ -72,8 +72,8 @@ RSpec.describe Camille::Types::Object do
       let(:nested_object_type){
         described_class.new(
           product: {
-            id: Camille::Types::Number.new,
-            name: Camille::Types::String.new
+            id: Camille::Types::Number,
+            name: Camille::Types::String
           }
         )
       }
@@ -101,8 +101,8 @@ RSpec.describe Camille::Types::Object do
     context 'when object has optional fields' do
       let(:optional_object_type){
         described_class.new(
-          id?: Camille::Types::Number.new,
-          name?: Camille::Types::String.new
+          id?: Camille::Types::Number,
+          name?: Camille::Types::String
         )
       }
 

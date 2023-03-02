@@ -5,8 +5,8 @@ RSpec.describe Camille::TypeErrorPrinter do
 
   let(:composite_error){
     Camille::Types::Object.new(
-      id: Camille::Types::Number.new | Camille::Types::Null.new,
-      names: Camille::Types::Array.new(Camille::Types::String.new)
+      id: Camille::Types::Number | Camille::Types::Null,
+      names: Camille::Types::Array.new(Camille::Types::String)
     ).check({
       id: '1',
       names: ['1', 2, '3']

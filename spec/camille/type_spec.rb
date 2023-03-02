@@ -34,7 +34,7 @@ RSpec.describe Camille::Type do
 
   describe '.instance' do
     it 'converts hash to object type' do
-      type = Camille::Type.instance(id: Camille::Types::Number.new)
+      type = Camille::Type.instance(id: Camille::Types::Number)
       expect(type).to be_an_instance_of(Camille::Types::Object)
     end
 

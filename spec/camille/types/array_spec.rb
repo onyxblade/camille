@@ -2,13 +2,13 @@
 RSpec.describe Camille::Types::Array do
   describe '#initialize' do
     it 'accepts a content type' do
-      array_of_numbers = Camille::Types::Array.new(Camille::Types::Number.new)
+      array_of_numbers = Camille::Types::Array.new(Camille::Types::Number)
       expect(array_of_numbers.content).to be_an_instance_of(Camille::Types::Number)
     end
 
     it 'accepts a hash as content' do
       array_of_objects = Camille::Types::Array.new(
-        id: Camille::Types::Number.new
+        id: Camille::Types::Number
       )
       expect(array_of_objects.content).to be_an_instance_of(Camille::Types::Object)
       expect(array_of_objects.content.fields[:id]).to be_an_instance_of(Camille::Types::Number)
@@ -16,7 +16,7 @@ RSpec.describe Camille::Types::Array do
   end
 
   describe '#check' do
-    let(:array_type){ described_class.new(Camille::Types::Number.new) }
+    let(:array_type){ described_class.new(Camille::Types::Number) }
 
     it 'checks if value is correct array type' do
       expect(array_type.check([1, 2])).to be nil

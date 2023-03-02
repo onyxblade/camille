@@ -2,7 +2,7 @@
 RSpec.describe Camille::Types::Union do
   describe '#initialize' do
     it "accepts two types" do
-      union = Camille::Types::Union.new(Camille::Types::Number.new, Camille::Types::String.new)
+      union = Camille::Types::Union.new(Camille::Types::Number, Camille::Types::String)
       expect(union).to be_an_instance_of(Camille::Types::Union)
     end
   end
@@ -10,8 +10,8 @@ RSpec.describe Camille::Types::Union do
   describe '#check' do
     let(:union_type){
       described_class.new(
-        Camille::Types::Number.new,
-        Camille::Types::String.new
+        Camille::Types::Number,
+        Camille::Types::String
       )
     }
 
