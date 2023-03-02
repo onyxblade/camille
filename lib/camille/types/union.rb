@@ -4,8 +4,8 @@ module Camille
       attr_reader :left, :right
 
       def initialize left, right
-        @left = Camille::Type.from_value left
-        @right = Camille::Type.from_value right
+        @left = Camille::Type.instance left
+        @right = Camille::Type.instance right
       end
 
       def check value

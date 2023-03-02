@@ -3,8 +3,8 @@ module Camille
     class Array < Camille::Type
       attr_reader :content
 
-      def initialize content_type
-        @content = Camille::Type.from_value content_type
+      def initialize content
+        @content = Camille::Type.instance content
       end
 
       def check value
