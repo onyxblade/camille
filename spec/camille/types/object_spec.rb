@@ -56,7 +56,7 @@ RSpec.describe Camille::Types::Object do
       expect(object_type.check(1).basic?).to be true
     end
 
-    it 'returns composite error if value is an array' do
+    it 'returns composite error if value is a hash' do
       error = object_type.check({
         id: 1,
         name: 2

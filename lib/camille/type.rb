@@ -23,8 +23,10 @@ module Camille
     end
 
     def self.instance value
-      if value.is_a? Hash
+      if value.is_a? ::Hash
         Camille::Types::Object.new(value)
+      elsif value.is_a? ::Array
+        Camille::Types::Tuple.new(value)
       elsif value.is_a? Camille::Type
         value
       elsif value.is_a?(Class) && value < Camille::Type && !value.generic?

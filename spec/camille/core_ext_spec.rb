@@ -18,4 +18,22 @@ RSpec.describe Camille::CoreExt do
       expect(union.right.fields[:name]).to be_an_instance_of(Camille::Types::String)
     end
   end
+
+  describe 'Array' do
+    it 'returns array type for #[]' do
+      array = [Camille::Types::Number][]
+      expect(array).to be_an_instance_of(Camille::Types::Array)
+      expect(array.content).to be_an_instance_of(Camille::Types::Tuple)
+      expect(array.content.elements[0]).to be_an_instance_of(Camille::Types::Number)
+    end
+
+    it 'returns union type for #|' do
+      union = [Camille::Types::Number] | [Camille::Types::String]
+      expect(union).to be_an_instance_of(Camille::Types::Union)
+      expect(union.left).to be_an_instance_of(Camille::Types::Tuple)
+      expect(union.left.elements[0]).to be_an_instance_of(Camille::Types::Number)
+      expect(union.right).to be_an_instance_of(Camille::Types::Tuple)
+      expect(union.right.elements[0]).to be_an_instance_of(Camille::Types::String)
+    end
+  end
 end

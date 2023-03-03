@@ -38,6 +38,11 @@ RSpec.describe Camille::Type do
       expect(type).to be_an_instance_of(Camille::Types::Object)
     end
 
+    it 'converts array to tuple type' do
+      type = Camille::Type.instance([Camille::Types::Number])
+      expect(type).to be_an_instance_of(Camille::Types::Tuple)
+    end
+
     it 'directly returns the type when no conversion needed' do
       type = Camille::Type.instance(Camille::Types::Number.new)
       expect(type).to be_an_instance_of(Camille::Types::Number)
