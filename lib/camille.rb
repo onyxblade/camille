@@ -4,6 +4,7 @@ require "active_support"
 
 require_relative "camille/version"
 require_relative "camille/basic_type"
+require_relative "camille/types"
 require_relative "camille/types/number"
 require_relative "camille/types/string"
 require_relative "camille/types/boolean"

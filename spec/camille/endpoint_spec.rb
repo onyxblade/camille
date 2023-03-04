@@ -3,6 +3,11 @@ class Camille::Schemas::EndpointSpec < Camille::Schema
 end
 
 RSpec.describe Camille::Endpoint do
+  after(:all) do
+    Camille::Schemas.loaded_schemas.delete(Camille::Schemas::EndpointSpec)
+    Camille::Schemas.send(:remove_const, :EndpointSpec)
+  end
+
   let(:endpoint) { Camille::Endpoint.new Camille::Schemas::EndpointSpec, :get, 'func' }
 
   describe '#params' do

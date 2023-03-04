@@ -10,7 +10,17 @@ class Camille::Types::TypeSpec::Nested < Camille::Type
   )
 end
 
+class Camille::Types::TypeSpec::Empty < Camille::Type
+end
+
 RSpec.describe Camille::Type do
+  after(:all) do
+    Camille::Types.loaded_types.delete(Camille::Types::TypeSpec)
+    Camille::Types.loaded_types.delete(Camille::Types::TypeSpec::Nested)
+    Camille::Types.loaded_types.delete(Camille::Types::TypeSpec::Empty)
+    Camille::Types.send(:remove_const, :TypeSpec)
+  end
+
   describe '.alias_of' do
     it 'defines type alias' do
       expect(Camille::Types::TypeSpec.new.underlying).to be_an_instance_of(Camille::Types::Number)
@@ -32,7 +42,7 @@ RSpec.describe Camille::Type do
 
   describe '#initialize' do
     it 'raises if no `alias_of` definition available' do
-      expect{Class.new(Camille::Type).new}.to raise_error(Camille::Type::NotImplementedError)
+      expect{Camille::Types::TypeSpec::Empty.new}.to raise_error(Camille::Type::NotImplementedError)
     end
   end
 
@@ -40,6 +50,16 @@ RSpec.describe Camille::Type do
     it 'returns correct literal' do
       expect(Camille::Types::TypeSpec.new.literal).to eq('TypeSpec')
       expect(Camille::Types::TypeSpec::Nested.new.literal).to eq('TypeSpec_Nested')
+    end
+  end
+
+  describe '.inherited' do
+    it 'add subclass to Types.loaded_types' do
+      expect(Camille::Types.loaded_types).to contain_exactly(
+        Camille::Types::TypeSpec,
+        Camille::Types::TypeSpec::Nested,
+        Camille::Types::TypeSpec::Empty
+      )
     end
   end
 end

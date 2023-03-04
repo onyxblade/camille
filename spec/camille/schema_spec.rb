@@ -26,6 +26,12 @@ class Camille::Schemas::SchemaSpec::Nested < Camille::Schema
 end
 
 RSpec.describe Camille::Schema do
+  after(:all) do
+    Camille::Schemas.loaded_schemas.delete(Camille::Schemas::SchemaSpec)
+    Camille::Schemas.loaded_schemas.delete(Camille::Schemas::SchemaSpec::Nested)
+    Camille::Schemas.send(:remove_const, :SchemaSpec)
+  end
+
   describe '.get' do
     it 'defines an endpoint' do
       endpoint = Camille::Schemas::SchemaSpec.endpoints[:show]
@@ -76,6 +82,12 @@ RSpec.describe Camille::Schema do
         end,
         '}'
       ])
+    end
+  end
+
+  describe '.inherited' do
+    it 'add subclass to Schemas.loaded_schemas' do
+      expect(Camille::Schemas.loaded_schemas).to contain_exactly(Camille::Schemas::SchemaSpec, Camille::Schemas::SchemaSpec::Nested)
     end
   end
 end

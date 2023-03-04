@@ -26,6 +26,10 @@ module Camille
       ]
     end
 
+    def self.inherited klass
+      Camille::Schemas.loaded_schemas << klass
+    end
+
     private
       def self.define_endpoint verb, name, &block
         if endpoints[name]

@@ -29,5 +29,9 @@ module Camille
     def self.const_missing name
       Camille::Types.const_get(name)
     end
+
+    def self.inherited klass
+      Camille::Types.loaded_types << klass
+    end
   end
 end
