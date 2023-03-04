@@ -16,6 +16,16 @@ module Camille
       "/#{ActiveSupport::Inflector.underscore self.name.gsub(/^Camille::Schemas::/, '')}"
     end
 
+    def self.literal_lines
+      [
+        '{',
+        *endpoints.map do |k, e|
+          "  #{e.function},"
+        end,
+        '}'
+      ]
+    end
+
     private
       def self.define_endpoint verb, name, &block
         if endpoints[name]

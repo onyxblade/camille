@@ -64,4 +64,18 @@ RSpec.describe Camille::Schema do
       expect(Camille::Schemas::SchemaSpec::Nested.path).to eq('/schema_spec/nested')
     end
   end
+
+  describe '.literal_lines' do
+    it 'returns correct literal' do
+      schema = Camille::Schemas::SchemaSpec
+
+      expect(schema.literal_lines).to eq([
+        '{',
+        *schema.endpoints.values.map do |e|
+          "  #{e.function},"
+        end,
+        '}'
+      ])
+    end
+  end
 end
