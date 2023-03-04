@@ -1,6 +1,6 @@
 module Camille
   module Types
-    class Tuple < Camille::Type
+    class Tuple < Camille::BasicType
       attr_reader :elements
 
       def initialize elements

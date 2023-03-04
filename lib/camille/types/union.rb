@@ -1,6 +1,6 @@
 module Camille
   module Types
-    class Union < Camille::Type
+    class Union < Camille::BasicType
       attr_reader :left, :right
 
       def initialize left, right

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "camille/version"
+require_relative "camille/basic_type"
 require_relative "camille/type"
 require_relative "camille/types/number"
 require_relative "camille/types/string"

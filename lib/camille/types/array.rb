@@ -1,6 +1,6 @@
 module Camille
   module Types
-    class Array < Camille::Type
+    class Array < Camille::BasicType
       attr_reader :content
 
       def initialize content

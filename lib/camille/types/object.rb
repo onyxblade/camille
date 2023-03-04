@@ -1,6 +1,6 @@
 module Camille
   module Types
-    class Object < Camille::Type
+    class Object < Camille::BasicType
       attr_reader :fields
 
       def initialize fields
