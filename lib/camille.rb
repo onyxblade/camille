@@ -15,6 +15,9 @@ require_relative "camille/type"
 require_relative "camille/type_error"
 require_relative "camille/type_error_printer"
 require_relative "camille/core_ext"
+require_relative "camille/endpoint"
+require_relative "camille/schema"
+require_relative "camille/schemas"
 
 module Camille
   class Error < StandardError; end
