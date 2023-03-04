@@ -12,7 +12,7 @@ module Camille
 
     private
       def self.define_endpoint verb, name, &block
-        endpoint = Camille::Endpoint.new verb
+        endpoint = Camille::Endpoint.new verb, name
         endpoint.instance_exec &block
 
         endpoints[name] = endpoint

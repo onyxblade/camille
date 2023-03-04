@@ -2,7 +2,9 @@
 module CamilleSchemaSpec
   class Schema < Camille::Schema
     get :show do
-      params(Number)
+      params(
+        id: Number
+      )
 
       response(
         name: String
@@ -28,7 +30,7 @@ RSpec.describe Camille::Schema do
       endpoint = CamilleSchemaSpec::Schema.endpoints[:show]
 
       expect(endpoint.verb).to eq(:get)
-      expect(endpoint.params_type).to be_an_instance_of(Camille::Types::Number)
+      expect(endpoint.params_type).to be_an_instance_of(Camille::Types::Object)
       expect(endpoint.response_type).to be_an_instance_of(Camille::Types::Object)
     end
   end
