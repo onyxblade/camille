@@ -1,5 +1,7 @@
 module Camille
   class Schema
+    class AlreadyDefinedError < ::ArgumentError; end
+
     include Camille::Types
 
     def self.endpoints
@@ -10,9 +12,16 @@ module Camille
       Camille::Types.const_get(name)
     end
 
+    def self.path
+      "/#{ActiveSupport::Inflector.underscore self.name.gsub(/^Camille::Schemas::/, '')}"
+    end
+
     private
       def self.define_endpoint verb, name, &block
-        endpoint = Camille::Endpoint.new verb, name
+        if endpoints[name]
+          raise AlreadyDefinedError.new("Endpoint `#{name}` has already been defined.")
+        end
+        endpoint = Camille::Endpoint.new self, verb, name
         endpoint.instance_exec &block
 
         endpoints[name] = endpoint

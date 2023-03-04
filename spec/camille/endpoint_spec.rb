@@ -1,6 +1,9 @@
 
+class Camille::Schemas::EndpointSpec < Camille::Schema
+end
+
 RSpec.describe Camille::Endpoint do
-  let(:endpoint) { Camille::Endpoint.new :get, 'func' }
+  let(:endpoint) { Camille::Endpoint.new Camille::Schemas::EndpointSpec, :get, 'func' }
 
   describe '#params' do
     it 'sets params_type' do
@@ -52,6 +55,17 @@ RSpec.describe Camille::Endpoint do
         params(id: Camille::Types::Number)
       end
       expect{endpoint.signature}.to raise_error(Camille::Endpoint::UnknownResponseError)
+    end
+  end
+
+  describe '#function' do
+    it 'returns the function' do
+      endpoint.instance_exec do
+        params(id: Camille::Types::Number)
+        response(id: Camille::Types::Number)
+      end
+
+      expect(endpoint.function).to eq("#{endpoint.signature}{ return request('get', '#{endpoint.schema.path}/func', params) }")
     end
   end
 end

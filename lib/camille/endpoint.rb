@@ -3,11 +3,12 @@ module Camille
     class ArgumentError < ::ArgumentError; end
     class UnknownResponseError < ::ArgumentError; end
 
-    attr_reader :params_type, :response_type, :verb, :name
+    attr_reader :params_type, :response_type, :verb, :name, :schema
 
-    def initialize verb, name
+    def initialize schema, verb, name
       @verb = verb
       @name = name
+      @schema = schema
     end
 
     def signature
@@ -19,6 +20,10 @@ module Camille
       else
         "#{@name}(): Promise<#{@response_type.literal}>"
       end
+    end
+
+    def function
+      "#{signature}{ return request('#{@verb}', '#{@schema.path}/#{name}', params) }"
     end
 
     private
