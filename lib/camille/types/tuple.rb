@@ -21,6 +21,9 @@ module Camille
         end
       end
 
+      def literal
+        "[#{elements.map(&:literal).join(', ')}]"
+      end
     end
   end
 end

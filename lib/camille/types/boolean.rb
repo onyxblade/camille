@@ -6,6 +6,10 @@ module Camille
           Camille::TypeError.new("Expected boolean, got #{value.inspect}.")
         end
       end
+
+      def literal
+        "boolean"
+      end
     end
   end
 end

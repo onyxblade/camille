@@ -6,6 +6,10 @@ module Camille
           Camille::TypeError.new("Expected nil, got #{value.inspect}.")
         end
       end
+
+      def literal
+        "undefined"
+      end
     end
   end
 end

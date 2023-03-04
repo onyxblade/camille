@@ -7,6 +7,10 @@ module Camille
           Camille::TypeError.new("Expected number, got #{value.inspect}.")
         end
       end
+
+      def literal
+        "number"
+      end
     end
   end
 end

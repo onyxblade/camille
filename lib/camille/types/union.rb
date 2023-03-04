@@ -20,6 +20,10 @@ module Camille
           end
         end
       end
+
+      def literal
+        "#{@left.literal} | #{@right.literal}"
+      end
     end
   end
 end

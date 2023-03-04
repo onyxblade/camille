@@ -17,6 +17,10 @@ module Camille
           Camille::TypeError.new("Expected array, got #{value.inspect}.")
         end
       end
+
+      def literal
+        "#{@content.literal}[]"
+      end
     end
   end
 end

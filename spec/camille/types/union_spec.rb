@@ -33,4 +33,14 @@ RSpec.describe Camille::Types::Union do
       expect(error.components.values.last.basic?).to be true
     end
   end
+
+  describe '#literal' do
+    it 'returns correct literal' do
+      union = described_class.new(
+        Camille::Types::Number,
+        Camille::Types::String
+      )
+      expect(union.literal).to eq('number | string')
+    end
+  end
 end

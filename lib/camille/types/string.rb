@@ -6,6 +6,10 @@ module Camille
           Camille::TypeError.new("Expected string, got #{value.inspect}.")
         end
       end
+
+      def literal
+        "string"
+      end
     end
   end
 end

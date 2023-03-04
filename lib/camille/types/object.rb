@@ -21,6 +21,10 @@ module Camille
         end
       end
 
+      def literal
+        "{#{@fields.map{|k,v| "#{k}: #{v.literal}"}.join(', ')}}"
+      end
+
       private
         def normalize_fields fields
           fields.map do |key, value|

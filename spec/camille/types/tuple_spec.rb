@@ -33,4 +33,11 @@ RSpec.describe Camille::Types::Tuple do
 
   end
 
+  describe '#literal' do
+    it 'returns correct literal' do
+      tuple = described_class.new([Camille::Types::Number, Camille::Types::String])
+      expect(tuple.literal).to eq('[number, string]')
+    end
+  end
+
 end

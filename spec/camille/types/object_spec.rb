@@ -123,4 +123,23 @@ RSpec.describe Camille::Types::Object do
     end
   end
 
+  describe '#literal' do
+    it 'returns correct literal' do
+      object = described_class.new(
+        id: Camille::Types::Number,
+        name: Camille::Types::String
+      )
+      expect(object.literal).to eq('{id: number, name: string}')
+    end
+
+    it 'returns correct literal when nested' do
+      object = described_class.new(
+        product: {
+          id: Camille::Types::Number,
+          name: Camille::Types::String
+        }
+      )
+      expect(object.literal).to eq('{product: {id: number, name: string}}')
+    end
+  end
 end

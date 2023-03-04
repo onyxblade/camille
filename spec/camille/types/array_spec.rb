@@ -37,4 +37,13 @@ RSpec.describe Camille::Types::Array do
     end
   end
 
+  describe '#literal' do
+    it 'returns correct literal' do
+      array = described_class.new(
+        Camille::Types::Number
+      )
+      expect(array.literal).to eq('number[]')
+    end
+  end
+
 end
