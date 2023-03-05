@@ -30,5 +30,14 @@ module Camille
     def to_s
       ' ' * @indent + @string
     end
+
+    def self.join lines, delimiter
+      size = lines.size
+      lines.each_with_index do |line, index|
+        if index < size - 1
+          line.append(delimiter)
+        end
+      end
+    end
   end
 end

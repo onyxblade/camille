@@ -27,4 +27,20 @@ RSpec.describe Camille::Line do
       expect(line.to_s).to eq('  abc')
     end
   end
+
+  describe '.join' do
+    it 'joins lines by delimiter' do
+      lines = [
+        Camille::Line.new('abc'),
+        Camille::Line.new('def'),
+        Camille::Line.new('ghi')
+      ]
+
+      Camille::Line.join(lines, ',')
+
+      expect(lines[0].string).to eq('abc,')
+      expect(lines[1].string).to eq('def,')
+      expect(lines[2].string).to eq('ghi')
+    end
+  end
 end

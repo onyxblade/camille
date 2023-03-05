@@ -35,13 +35,13 @@ module Camille
         tree.map do |key, value|
           if value.is_a? ::Hash
             [
-              Camille::Line.new("#{key}: {"),
+              Camille::Line.new("#{ActiveSupport::Inflector.camelize(key, false)}: {"),
               tree_literal_lines(value).map(&:do_indent),
               Camille::Line.new('},')
             ]
           else
             value.literal_lines.tap do |lines|
-              lines.first.prepend("#{key}: ")
+              lines.first.prepend("#{ActiveSupport::Inflector.camelize(key, false)}: ")
               lines.last.append(',')
             end
           end

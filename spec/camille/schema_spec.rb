@@ -22,6 +22,10 @@ RSpec.describe Camille::Schema do
           Boolean
         )
       end
+
+      post :do_something do
+        response(Boolean)
+      end
     end
 
     class Camille::Schemas::SchemaSpec::Nested < Camille::Schema
@@ -77,13 +81,15 @@ RSpec.describe Camille::Schema do
     it 'returns correct literal' do
       schema = Camille::Schemas::SchemaSpec
 
-      expect(schema.literal_lines).to eq([
-        Camille::Line.new('{'),
-        *schema.endpoints.values.map do |e|
-          Camille::Line.new("#{e.function},")
-        end.map(&:do_indent),
-        Camille::Line.new('}')
-      ])
+      text = <<~EOF.chomp
+      {
+        show(params: {id: number}): Promise<{name: string}>{ return request('get', '/schema_spec/show', params) },
+        update(params: {id: number, name: string}): Promise<boolean>{ return request('post', '/schema_spec/update', params) },
+        doSomething(): Promise<boolean>{ return request('post', '/schema_spec/do_something', params) },
+      }
+      EOF
+
+      expect(schema.literal_lines.join("\n")).to eq(text)
     end
   end
 

@@ -20,7 +20,7 @@ RSpec.describe Camille::Schemas do
     class Camille::Schemas::Api::V1::Orders < Camille::Schema
     end
 
-    class Camille::Schemas::Api::V2::Products < Camille::Schema
+    class Camille::Schemas::Api::V2::OrderProducts < Camille::Schema
     end
 
     class Camille::Schemas::Api::Settings < Camille::Schema
@@ -33,7 +33,7 @@ RSpec.describe Camille::Schemas do
   after(:all) do
     Camille::Schemas.loaded_schemas.delete(Camille::Schemas::Api::V1::Products)
     Camille::Schemas.loaded_schemas.delete(Camille::Schemas::Api::V1::Orders)
-    Camille::Schemas.loaded_schemas.delete(Camille::Schemas::Api::V2::Products)
+    Camille::Schemas.loaded_schemas.delete(Camille::Schemas::Api::V2::OrderProducts)
     Camille::Schemas.loaded_schemas.delete(Camille::Schemas::Api::Settings)
     Camille::Schemas.loaded_schemas.delete(Camille::Schemas::Root)
     Camille::Schemas.send(:remove_const, :Api)
@@ -43,22 +43,22 @@ RSpec.describe Camille::Schemas do
     it 'returns the correct literal' do
       text = <<~EOF.chomp
       {
-        Api: {
-          Settings: {
+        api: {
+          settings: {
           },
-          V1: {
-            Orders: {
+          v1: {
+            orders: {
             },
-            Products: {
+            products: {
               data(params: {id: number}): Promise<{id: number}>{ return request('get', '/api/v1/products/data', params) },
             },
           },
-          V2: {
-            Products: {
+          v2: {
+            orderProducts: {
             },
           },
         },
-        Root: {
+        root: {
         },
       }
       EOF
