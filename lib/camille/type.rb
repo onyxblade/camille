@@ -22,8 +22,12 @@ module Camille
       @underlying.check value
     end
 
+    def self.klass_name
+      name.gsub(/^Camille::Types::/, '')
+    end
+
     def literal
-      self.class.name.gsub(/^Camille::Types::/, '').gsub(/::/, '_')
+      self.class.klass_name.gsub(/::/, '_')
     end
 
     def self.const_missing name
