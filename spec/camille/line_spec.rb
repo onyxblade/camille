@@ -1,0 +1,30 @@
+
+RSpec.describe Camille::Line do
+  describe '#do_indent' do
+    it 'adds indent by 2' do
+      line = Camille::Line.new('string', 2)
+      expect(line.do_indent.indent).to eq(4)
+    end
+  end
+
+  describe '#prepend' do
+    it 'prepends content to the string' do
+      line = Camille::Line.new('abc', 2)
+      expect(line.prepend('def').string).to eq('defabc')
+    end
+  end
+
+  describe '#append' do
+    it 'appends content to the string' do
+      line = Camille::Line.new('abc', 2)
+      expect(line.append('def').string).to eq('abcdef')
+    end
+  end
+
+  describe '#to_s' do
+    it 'indents the right number' do
+      line = Camille::Line.new('abc', 2)
+      expect(line.to_s).to eq('  abc')
+    end
+  end
+end

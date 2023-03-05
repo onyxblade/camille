@@ -1,19 +1,21 @@
 
-class Camille::Types::TypeSpec < Camille::Type
-  alias_of(Number)
-end
-
-class Camille::Types::TypeSpec::Nested < Camille::Type
-  alias_of(
-    id: Number,
-    name: String
-  )
-end
-
-class Camille::Types::TypeSpec::Empty < Camille::Type
-end
-
 RSpec.describe Camille::Type do
+  before(:all) do
+    class Camille::Types::TypeSpec < Camille::Type
+      alias_of(Number)
+    end
+
+    class Camille::Types::TypeSpec::Nested < Camille::Type
+      alias_of(
+        id: Number,
+        name: String
+      )
+    end
+
+    class Camille::Types::TypeSpec::Empty < Camille::Type
+    end
+  end
+
   after(:all) do
     Camille::Types.loaded_types.delete(Camille::Types::TypeSpec)
     Camille::Types.loaded_types.delete(Camille::Types::TypeSpec::Nested)

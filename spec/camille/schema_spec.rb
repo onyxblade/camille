@@ -1,31 +1,33 @@
 
-class Camille::Schemas::SchemaSpec < Camille::Schema
-  get :show do
-    params(
-      id: Number
-    )
-
-    response(
-      name: String
-    )
-  end
-
-  post :update do
-    params(
-      id: Number,
-      name: String
-    )
-
-    response(
-      Boolean
-    )
-  end
-end
-
-class Camille::Schemas::SchemaSpec::Nested < Camille::Schema
-end
-
 RSpec.describe Camille::Schema do
+  before(:all) do
+    class Camille::Schemas::SchemaSpec < Camille::Schema
+      get :show do
+        params(
+          id: Number
+        )
+
+        response(
+          name: String
+        )
+      end
+
+      post :update do
+        params(
+          id: Number,
+          name: String
+        )
+
+        response(
+          Boolean
+        )
+      end
+    end
+
+    class Camille::Schemas::SchemaSpec::Nested < Camille::Schema
+    end
+  end
+
   after(:all) do
     Camille::Schemas.loaded_schemas.delete(Camille::Schemas::SchemaSpec)
     Camille::Schemas.loaded_schemas.delete(Camille::Schemas::SchemaSpec::Nested)
@@ -76,11 +78,11 @@ RSpec.describe Camille::Schema do
       schema = Camille::Schemas::SchemaSpec
 
       expect(schema.literal_lines).to eq([
-        '{',
+        Camille::Line.new('{'),
         *schema.endpoints.values.map do |e|
-          "  #{e.function},"
-        end,
-        '}'
+          Camille::Line.new("#{e.function},")
+        end.map(&:do_indent),
+        Camille::Line.new('}')
       ])
     end
   end

@@ -21,6 +21,7 @@ require_relative "camille/core_ext"
 require_relative "camille/endpoint"
 require_relative "camille/schema"
 require_relative "camille/schemas"
+require_relative "camille/line"
 
 module Camille
   class Error < StandardError; end

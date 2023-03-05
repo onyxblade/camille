@@ -13,16 +13,20 @@ module Camille
     end
 
     def self.path
-      "/#{ActiveSupport::Inflector.underscore self.name.gsub(/^Camille::Schemas::/, '')}"
+      "/#{ActiveSupport::Inflector.underscore klass_name}"
+    end
+
+    def self.klass_name
+      self.name.gsub(/^Camille::Schemas::/, '')
     end
 
     def self.literal_lines
       [
-        '{',
+        Camille::Line.new('{'),
         *endpoints.map do |k, e|
-          "  #{e.function},"
-        end,
-        '}'
+          Camille::Line.new("#{e.function},")
+        end.map(&:do_indent),
+        Camille::Line.new('}')
       ]
     end
 
