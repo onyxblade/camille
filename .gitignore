@@ -9,3 +9,6 @@
 
 # rspec failure tracking
 .rspec_status
+
+/spec/dummy/log/*.log
+/spec/dummy/tmp/
