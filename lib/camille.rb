@@ -23,6 +23,7 @@ require_relative "camille/schema"
 require_relative "camille/schemas"
 require_relative "camille/line"
 require_relative "camille/railtie"
+require_relative "camille/controller_extension"
 
 module Camille
   class Error < StandardError; end
