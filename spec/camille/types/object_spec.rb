@@ -141,5 +141,14 @@ RSpec.describe Camille::Types::Object do
       )
       expect(object.literal).to eq('{product: {id: number, name: string}}')
     end
+
+    it 'camelize keys' do
+      object = described_class.new(
+        order_product: {
+          long_name: Camille::Types::Number
+        }
+      )
+      expect(object.literal).to eq('{orderProduct: {longName: number}}')
+    end
   end
 end

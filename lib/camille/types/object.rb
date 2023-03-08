@@ -22,7 +22,7 @@ module Camille
       end
 
       def literal
-        "{#{@fields.map{|k,v| "#{k}: #{v.literal}"}.join(', ')}}"
+        "{#{@fields.map{|k,v| "#{ActiveSupport::Inflector.camelize k.to_s, false}: #{v.literal}"}.join(', ')}}"
       end
 
       private
