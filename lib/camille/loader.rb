@@ -15,16 +15,16 @@ module Camille
         loader.setup
         loader.eager_load
         construct_controller_name_to_schema_map
-        loader
+        @zeitwerk_loader = loader
       end
     end
 
-    def self.reload_types_and_schemas zeitwerk_loader
+    def self.reload_types_and_schemas
       synchronize do
         Camille::Loader.loaded_types.clear
         Camille::Loader.loaded_schemas.clear
-        zeitwerk_loader.reload
-        zeitwerk_loader.eager_load
+        @zeitwerk_loader.reload
+        @zeitwerk_loader.eager_load
         construct_controller_name_to_schema_map
       end
     end
@@ -64,5 +64,12 @@ module Camille
         end
       end
     end
+
+    def self.reload
+      reload_types_and_schemas
+      construct_controller_name_to_schema_map
+      Rails.application.reload_routes!
+    end
+
   end
 end

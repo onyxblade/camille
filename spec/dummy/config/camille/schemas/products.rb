@@ -10,6 +10,12 @@ class Camille::Schemas::Products < Camille::Schema
     )
   end
 
+  get :wrong_data do
+    response(
+      product: Product
+    )
+  end
+
   post :update do
     params(
       id: Number,

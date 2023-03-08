@@ -7,7 +7,7 @@ module Camille
       ActionController::API.include(Camille::ControllerExtension)
       ActionController::Base.include(Camille::ControllerExtension)
 
-      zeitwerk_loader = Camille::Loader.setup_zeitwerk_loader(app)
+      Camille::Loader.setup_zeitwerk_loader(app)
 
       app.routes.prepend do
         Camille::Loader.register_routes(self)
@@ -15,7 +15,7 @@ module Camille
 
       app.reloader.to_run do
         require_unload_lock!
-        Camille::Loader.reload_types_and_schemas zeitwerk_loader
+        Camille::Loader.reload_types_and_schemas
       end
     end
 

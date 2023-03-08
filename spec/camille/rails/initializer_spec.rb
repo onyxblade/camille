@@ -45,6 +45,10 @@ RSpec.describe 'initializer' do
 
   if Rails.env.development?
     context 'when Rails.env.development?' do
+      after(:each){
+        Camille::Loader.reload
+      }
+
       let(:product_type_content){
         <<~EOF
           class Camille::Types::Product < Camille::Type
