@@ -28,6 +28,10 @@ RSpec.describe 'initializer' do
     expect(Camille::Loader.controller_name_to_schema_map['Nested::ProductsController']).to be(Camille::Schemas::Nested::Products)
   end
 
+  it 'loads configurations' do
+    expect(Camille::Configuration.ts_location).to eq('tmp/api.ts')
+  end
+
   it 'loads routes' do
     expect(Rails.application.routes.recognize_path('/products/data', method: :get)).to eq(
       controller: 'products',
@@ -130,6 +134,21 @@ RSpec.describe 'initializer' do
             controller: 'products',
             action: 'new_data'
           )
+        end
+      end
+
+      it 'reloads configurations when `reload!` happened' do
+        configuration = <<~EOF
+          Camille.configure do |config|
+            config.ts_header = ''
+            config.ts_location = 'tmp/another.ts'
+          end
+        EOF
+
+        rewrite_file "#{Rails.root}/config/camille/configuration.rb", configuration do
+          expect(Camille::Configuration.ts_location).to eq('tmp/api.ts')
+          Rails.application.reloader.reload!
+          expect(Camille::Configuration.ts_location).to eq('tmp/another.ts')
         end
       end
 

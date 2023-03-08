@@ -14,6 +14,7 @@ module Camille
 
         loader.setup
         @zeitwerk_loader = loader
+        @configuration_location = "#{app.root}/config/camille/configuration.rb"
 
         eager_load
         construct_controller_name_to_schema_map
@@ -22,6 +23,7 @@ module Camille
 
     def self.eager_load
       @eager_loading = true
+      load @configuration_location
       @zeitwerk_loader.eager_load
       @eager_loading = false
     end

@@ -26,8 +26,12 @@ require_relative "camille/line"
 require_relative "camille/railtie"
 require_relative "camille/controller_extension"
 require_relative "camille/loader"
+require_relative "camille/configuration"
 
 module Camille
   class Error < StandardError; end
-  # Your code goes here...
+
+  def self.configure &block
+    Camille::Configuration.instance_eval &block
+  end
 end
