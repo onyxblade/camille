@@ -13,10 +13,21 @@ module Camille
         loader.push_dir "#{app.root}/config/camille/schemas", namespace: Camille::Schemas
 
         loader.setup
-        loader.eager_load
-        construct_controller_name_to_schema_map
         @zeitwerk_loader = loader
+
+        eager_load
+        construct_controller_name_to_schema_map
       end
+    end
+
+    def self.eager_load
+      @eager_loading = true
+      @zeitwerk_loader.eager_load
+      @eager_loading = false
+    end
+
+    def self.eager_loading?
+      @eager_loading
     end
 
     def self.reload_types_and_schemas
@@ -24,7 +35,7 @@ module Camille
         Camille::Loader.loaded_types.clear
         Camille::Loader.loaded_schemas.clear
         @zeitwerk_loader.reload
-        @zeitwerk_loader.eager_load
+        eager_load
         construct_controller_name_to_schema_map
       end
     end

@@ -31,7 +31,11 @@ module Camille
     end
 
     def self.const_missing name
-      Camille::Types.const_get(name)
+      if Camille::Loader.eager_loading?
+        Camille::Types.const_get(name)
+      else
+        super
+      end
     end
 
     def self.inherited klass
