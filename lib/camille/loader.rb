@@ -14,6 +14,7 @@ module Camille
 
         loader.setup
         loader.eager_load
+        construct_controller_name_to_schema_map
         loader
       end
     end
@@ -22,9 +23,9 @@ module Camille
       synchronize do
         Camille::Loader.loaded_types.clear
         Camille::Loader.loaded_schemas.clear
-        Camille::Schemas.controller_schema_map.clear
         zeitwerk_loader.reload
         zeitwerk_loader.eager_load
+        construct_controller_name_to_schema_map
       end
     end
 
@@ -51,6 +52,16 @@ module Camille
     def self.controller_name_to_schema_map
       synchronize do
         @controller_name_to_schema_map ||= {}
+      end
+    end
+
+    def self.construct_controller_name_to_schema_map
+      synchronize do
+        controller_name_to_schema_map.clear
+        loaded_schemas.each do |schema|
+          controller_class_name = "#{schema.klass_name}Controller"
+          controller_name_to_schema_map[controller_class_name] = schema
+        end
       end
     end
   end

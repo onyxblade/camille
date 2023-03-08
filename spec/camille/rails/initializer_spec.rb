@@ -18,11 +18,14 @@ RSpec.describe 'initializer' do
     expect(Camille::Loader.loaded_schemas.size).to eq(loaded_schemas_size)
   end
 
-  it 'installs controller extension by schemas' do
-    expect(ProductsController.included_modules).to include(Camille::ControllerExtension)
-    expect(Nested::ProductsController.included_modules).to include(Camille::ControllerExtension)
-    expect(Camille::Schemas.controller_schema_map[ProductsController]).to be(Camille::Schemas::Products)
-    expect(Camille::Schemas.controller_schema_map[Nested::ProductsController]).to be(Camille::Schemas::Nested::Products)
+  it 'installs controller extension to base controller' do
+    expect(ActionController::Base.included_modules).to include(Camille::ControllerExtension)
+    expect(ActionController::API.included_modules).to include(Camille::ControllerExtension)
+  end
+
+  it 'constructs Loader.controller_name_to_schema_map' do
+    expect(Camille::Loader.controller_name_to_schema_map['ProductsController']).to be(Camille::Schemas::Products)
+    expect(Camille::Loader.controller_name_to_schema_map['Nested::ProductsController']).to be(Camille::Schemas::Nested::Products)
   end
 
   it 'loads routes' do
@@ -89,32 +92,23 @@ RSpec.describe 'initializer' do
         end
       end
 
-      it 'installs controller extension by schemas when `reload!` happened' do
-        old_map = Camille::Schemas.controller_schema_map.dup
+      it 'reconstruct Loader.controller_name_to_schema_map when `reload!` happened' do
+        old_map = Camille::Loader.controller_name_to_schema_map.dup
 
         rewrite_file "#{Rails.root}/config/camille/schemas/products.rb", products_schema_content do
           Rails.application.reloader.reload!
 
           expect(Camille::Schemas::Products.endpoints[:data].response_type).to be_an_instance_of(Camille::Types::Boolean)
 
-          expect(ProductsController.included_modules).to include(Camille::ControllerExtension)
-          expect(Nested::ProductsController.included_modules).to include(Camille::ControllerExtension)
-          expect(Camille::Schemas.controller_schema_map[ProductsController]).to be(Camille::Schemas::Products)
-          expect(Camille::Schemas.controller_schema_map[Nested::ProductsController]).to be(Camille::Schemas::Nested::Products)
+          expect(Camille::Loader.controller_name_to_schema_map['ProductsController']).to be(Camille::Schemas::Products)
+          expect(Camille::Loader.controller_name_to_schema_map['Nested::ProductsController']).to be(Camille::Schemas::Nested::Products)
 
-          expect(Camille::Schemas.controller_schema_map.size).to eq(old_map.size)
+          expect(Camille::Loader.controller_name_to_schema_map.size).to eq(old_map.size)
 
-          # reloading will load the new schemas and controller classes.
-          # need to ensure that `controller_schema_map` contains the latest references.
-          Camille::Schemas.controller_schema_map.values.each do |new_schema|
-            old_schema = old_map.values.find{|x| x.klass_name == new_schema.klass_name}
-            expect(old_schema).to be_truthy
+          ['ProductsController', 'Nested::ProductsController'].each do |controller_name|
+            old_schema = old_map[controller_name]
+            new_schema = Camille::Loader.controller_name_to_schema_map[controller_name]
             expect(new_schema.object_id).not_to eq(old_schema.object_id)
-          end
-
-          [ProductsController, Nested::ProductsController].each do |new_controller|
-            old_controller = old_map.keys.find{|x| x.name == new_controller.name}
-            expect(new_controller.object_id).not_to eq(old_controller.object_id)
           end
         end
       end

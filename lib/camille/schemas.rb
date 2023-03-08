@@ -1,9 +1,5 @@
 module Camille
   module Schemas
-    def self.controller_schema_map
-      @controller_schema_map ||= {}
-    end
-
     def self.literal_lines
       [
         Camille::Line.new('{'),
