@@ -25,6 +25,21 @@ RSpec.describe 'initializer' do
     expect(Camille::Schemas.controller_schema_map[Nested::ProductsController]).to be(Camille::Schemas::Nested::Products)
   end
 
+  it 'loads routes' do
+    expect(Rails.application.routes.recognize_path('/products/data', method: :get)).to eq(
+      controller: 'products',
+      action: 'data'
+    )
+    expect(Rails.application.routes.recognize_path('/products/update', method: :post)).to eq(
+      controller: 'products',
+      action: 'update'
+    )
+    expect(Rails.application.routes.recognize_path('/nested/products/data', method: :get)).to eq(
+      controller: 'nested/products',
+      action: 'data'
+    )
+  end
+
   if Rails.env.development?
     context 'when Rails.env.development?' do
       let(:product_type_content){
@@ -38,6 +53,10 @@ RSpec.describe 'initializer' do
         <<~EOF
           class Camille::Schemas::Products < Camille::Schema
             get :data do
+              response(Boolean)
+            end
+
+            get :new_data do
               response(Boolean)
             end
           end
@@ -97,6 +116,22 @@ RSpec.describe 'initializer' do
             old_controller = old_map.keys.find{|x| x.name == new_controller.name}
             expect(new_controller.object_id).not_to eq(old_controller.object_id)
           end
+        end
+      end
+
+      it 'updates routes when `reload!` happened' do
+        rewrite_file "#{Rails.root}/config/camille/schemas/products.rb", products_schema_content do
+          Rails.application.reloader.reload!
+
+          expect(Rails.application.routes.recognize_path('/products/data', method: :get)).to eq(
+            controller: 'products',
+            action: 'data'
+          )
+          expect{Rails.application.routes.recognize_path('/products/update', method: :post)}.to raise_error(ActionController::RoutingError)
+          expect(Rails.application.routes.recognize_path('/products/new_data', method: :get)).to eq(
+            controller: 'products',
+            action: 'new_data'
+          )
         end
       end
 

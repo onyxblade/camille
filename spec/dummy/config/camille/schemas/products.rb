@@ -9,4 +9,12 @@ class Camille::Schemas::Products < Camille::Schema
       product: Product
     )
   end
+
+  post :update do
+    params(
+      id: Number,
+      product: Product
+    )
+    response(Boolean)
+  end
 end

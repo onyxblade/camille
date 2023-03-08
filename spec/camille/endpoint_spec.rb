@@ -65,6 +65,12 @@ RSpec.describe Camille::Endpoint do
     end
   end
 
+  describe '#path' do
+    it 'returns the correct path' do
+      expect(endpoint.path).to eq("#{endpoint.schema.path}/func")
+    end
+  end
+
   describe '#function' do
     it 'returns the function' do
       endpoint.instance_exec do
@@ -72,7 +78,7 @@ RSpec.describe Camille::Endpoint do
         response(id: Camille::Types::Number)
       end
 
-      expect(endpoint.function).to eq("#{endpoint.signature}{ return request('get', '#{endpoint.schema.path}/func', params) }")
+      expect(endpoint.function).to eq("#{endpoint.signature}{ return request('get', '#{endpoint.path}', params) }")
     end
   end
 end

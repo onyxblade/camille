@@ -22,8 +22,12 @@ module Camille
       end
     end
 
+    def path
+      "#{@schema.path}/#{name}"
+    end
+
     def function
-      "#{signature}{ return request('#{@verb}', '#{@schema.path}/#{name}', params) }"
+      "#{signature}{ return request('#{@verb}', '#{path}', params) }"
     end
 
     private
