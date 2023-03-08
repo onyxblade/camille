@@ -1,4 +1,4 @@
 Camille.configure do |config|
   config.ts_header = ''
-  config.ts_location = 'tmp/api.ts'
+  config.ts_location = "#{Rails.root}/tmp/api.ts"
 end

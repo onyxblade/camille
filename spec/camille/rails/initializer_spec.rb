@@ -29,7 +29,7 @@ RSpec.describe 'initializer' do
   end
 
   it 'loads configurations' do
-    expect(Camille::Configuration.ts_location).to eq('tmp/api.ts')
+    expect(Camille::Configuration.ts_location).to eq("#{Rails.root}/tmp/api.ts")
   end
 
   it 'loads routes' do
@@ -137,18 +137,22 @@ RSpec.describe 'initializer' do
         end
       end
 
-      it 'reloads configurations when `reload!` happened' do
+      it 'reloads configurations and generate ts when `reload!` happened' do
+        random_string = rand.to_s
+
         configuration = <<~EOF
           Camille.configure do |config|
-            config.ts_header = ''
-            config.ts_location = 'tmp/another.ts'
+            config.ts_header = '#{random_string}'
+            config.ts_location = "\#{Rails.root}/tmp/another.ts"
           end
         EOF
 
         rewrite_file "#{Rails.root}/config/camille/configuration.rb", configuration do
-          expect(Camille::Configuration.ts_location).to eq('tmp/api.ts')
+          expect(Camille::Configuration.ts_location).to eq("#{Rails.root}/tmp/api.ts")
           Rails.application.reloader.reload!
-          expect(Camille::Configuration.ts_location).to eq('tmp/another.ts')
+          path = "#{Rails.root}/tmp/another.ts"
+          expect(Camille::Configuration.ts_location).to eq(path)
+          expect(File.open(path, &:read).lines.first.chomp).to eq(random_string)
         end
       end
 
