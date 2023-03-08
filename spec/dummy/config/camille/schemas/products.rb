@@ -19,8 +19,11 @@ class Camille::Schemas::Products < Camille::Schema
   post :update do
     params(
       id: Number,
-      product: Product
+      product: {
+        name: String,
+        available_stock: Number
+      }
     )
-    response(Boolean)
+    response(Any)
   end
 end

@@ -1,6 +1,7 @@
 module Camille
   module ControllerExtension
     class TypeError < ::StandardError; end
+    class ArgumentError < ::ArgumentError; end
 
     def camille_schema
       @camille_schema ||= Camille::Loader.controller_name_to_schema_map[self.class.name]
@@ -13,21 +14,28 @@ module Camille
     def render *args
       if endpoint = camille_endpoint
         render_options = args.last
-        if hash = render_options[:json]
-          error = endpoint.response_type.check(hash)
+        if value = render_options[:json]
+          error = endpoint.response_type.check(value)
           if error
             Camille::TypeErrorPrinter.new(error).print
             raise TypeError.new("Type check failed for response.")
           else
-            hash.deep_transform_keys!{|k| k.to_s.camelize(:lower)}
-            super(json: hash)
+            if value.is_a? Hash
+              value.deep_transform_keys!{|k| k.to_s.camelize(:lower)}
+            end
+            super(json: value)
           end
         else
-          raise "Expected a hash by `render json: hash`."
+          raise ArgumentError.new("Expected key :json for `render` call.")
         end
       else
         super
       end
+    end
+
+    def process_action(*)
+      params.deep_transform_keys!{|key| key.to_s.underscore}
+      super
     end
 
   end
