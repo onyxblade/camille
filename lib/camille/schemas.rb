@@ -1,9 +1,5 @@
 module Camille
   module Schemas
-    def self.loaded_schemas
-      @loaded_schemas ||= []
-    end
-
     def self.controller_schema_map
       @controller_schema_map ||= {}
     end
@@ -20,7 +16,7 @@ module Camille
       def self.namespace_tree
         tree = {}
 
-        @loaded_schemas.sort_by(&:klass_name).each do |s|
+        Camille::Loader.loaded_schemas.sort_by(&:klass_name).each do |s|
           path = s.klass_name.split('::')
           *namespaces, schema_name = path
 

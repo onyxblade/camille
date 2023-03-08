@@ -23,7 +23,7 @@ module Camille
     end
 
     def self.install_controller_extension
-      Camille::Schemas.loaded_schemas.each do |schema|
+      Camille::Loader.loaded_schemas.each do |schema|
         controller_class_name = "#{schema.klass_name}Controller"
         controller = controller_class_name.constantize
 

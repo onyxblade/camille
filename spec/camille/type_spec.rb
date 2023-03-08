@@ -17,9 +17,9 @@ RSpec.describe Camille::Type do
   end
 
   after(:all) do
-    Camille::Types.loaded_types.delete(Camille::Types::TypeSpec)
-    Camille::Types.loaded_types.delete(Camille::Types::TypeSpec::Nested)
-    Camille::Types.loaded_types.delete(Camille::Types::TypeSpec::Empty)
+    Camille::Loader.loaded_types.delete(Camille::Types::TypeSpec)
+    Camille::Loader.loaded_types.delete(Camille::Types::TypeSpec::Nested)
+    Camille::Loader.loaded_types.delete(Camille::Types::TypeSpec::Empty)
     Camille::Types.send(:remove_const, :TypeSpec)
   end
 
@@ -56,8 +56,8 @@ RSpec.describe Camille::Type do
   end
 
   describe '.inherited' do
-    it 'add subclass to Types.loaded_types' do
-      expect(Camille::Types.loaded_types).to contain_exactly(
+    it 'add subclass to Loader.loaded_types' do
+      expect(Camille::Loader.loaded_types).to contain_exactly(
         Camille::Types::TypeSpec,
         Camille::Types::TypeSpec::Nested,
         Camille::Types::TypeSpec::Empty

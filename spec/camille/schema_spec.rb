@@ -33,8 +33,8 @@ RSpec.describe Camille::Schema do
   end
 
   after(:all) do
-    Camille::Schemas.loaded_schemas.delete(Camille::Schemas::SchemaSpec)
-    Camille::Schemas.loaded_schemas.delete(Camille::Schemas::SchemaSpec::Nested)
+    Camille::Loader.loaded_schemas.delete(Camille::Schemas::SchemaSpec)
+    Camille::Loader.loaded_schemas.delete(Camille::Schemas::SchemaSpec::Nested)
     Camille::Schemas.send(:remove_const, :SchemaSpec)
   end
 
@@ -94,8 +94,8 @@ RSpec.describe Camille::Schema do
   end
 
   describe '.inherited' do
-    it 'add subclass to Schemas.loaded_schemas' do
-      expect(Camille::Schemas.loaded_schemas).to contain_exactly(Camille::Schemas::SchemaSpec, Camille::Schemas::SchemaSpec::Nested)
+    it 'add subclass to Loader.loaded_schemas' do
+      expect(Camille::Loader.loaded_schemas).to contain_exactly(Camille::Schemas::SchemaSpec, Camille::Schemas::SchemaSpec::Nested)
     end
   end
 end

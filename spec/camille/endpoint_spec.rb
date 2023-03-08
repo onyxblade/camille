@@ -6,7 +6,7 @@ RSpec.describe Camille::Endpoint do
   end
 
   after(:all) do
-    Camille::Schemas.loaded_schemas.delete(Camille::Schemas::EndpointSpec)
+    Camille::Loader.loaded_schemas.delete(Camille::Schemas::EndpointSpec)
     Camille::Schemas.send(:remove_const, :EndpointSpec)
   end
 

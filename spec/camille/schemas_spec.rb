@@ -31,11 +31,11 @@ RSpec.describe Camille::Schemas do
   end
 
   after(:all) do
-    Camille::Schemas.loaded_schemas.delete(Camille::Schemas::Api::V1::Products)
-    Camille::Schemas.loaded_schemas.delete(Camille::Schemas::Api::V1::Orders)
-    Camille::Schemas.loaded_schemas.delete(Camille::Schemas::Api::V2::OrderProducts)
-    Camille::Schemas.loaded_schemas.delete(Camille::Schemas::Api::Settings)
-    Camille::Schemas.loaded_schemas.delete(Camille::Schemas::Root)
+    Camille::Loader.loaded_schemas.delete(Camille::Schemas::Api::V1::Products)
+    Camille::Loader.loaded_schemas.delete(Camille::Schemas::Api::V1::Orders)
+    Camille::Loader.loaded_schemas.delete(Camille::Schemas::Api::V2::OrderProducts)
+    Camille::Loader.loaded_schemas.delete(Camille::Schemas::Api::Settings)
+    Camille::Loader.loaded_schemas.delete(Camille::Schemas::Root)
     Camille::Schemas.send(:remove_const, :Api)
   end
 

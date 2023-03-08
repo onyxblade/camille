@@ -35,7 +35,7 @@ module Camille
     end
 
     def self.inherited klass
-      Camille::Types.loaded_types << klass
+      Camille::Loader.loaded_types << klass
     end
   end
 end

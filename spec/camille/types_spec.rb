@@ -20,9 +20,9 @@ RSpec.describe Camille::Types do
   end
 
   after(:all) do
-    Camille::Types.loaded_types.delete(Camille::Types::Product)
-    Camille::Types.loaded_types.delete(Camille::Types::DateTime)
-    Camille::Types.loaded_types.delete(Camille::Types::Product::Details)
+    Camille::Loader.loaded_types.delete(Camille::Types::Product)
+    Camille::Loader.loaded_types.delete(Camille::Types::DateTime)
+    Camille::Loader.loaded_types.delete(Camille::Types::Product::Details)
     Camille::Types.send(:remove_const, :Product)
     Camille::Types.send(:remove_const, :DateTime)
   end

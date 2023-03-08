@@ -31,7 +31,7 @@ module Camille
     end
 
     def self.inherited klass
-      Camille::Schemas.loaded_schemas << klass
+      Camille::Loader.loaded_schemas << klass
     end
 
     private
