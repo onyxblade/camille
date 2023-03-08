@@ -11,4 +11,5 @@
 .rspec_status
 
 /spec/dummy/log/*.log
-/spec/dummy/tmp/
+/spec/dummy/tmp/*
+!/spec/dummy/tmp/.keep
