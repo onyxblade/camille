@@ -27,7 +27,11 @@ module Camille
     end
 
     def function
-      "#{signature}{ return request('#{@verb}', '#{path}', params) }"
+      if @params_type
+        "#{signature}{ return request('#{@verb}', '#{path}', params) }"
+      else
+        "#{signature}{ return request('#{@verb}', '#{path}', {}) }"
+      end
     end
 
     private

@@ -80,5 +80,12 @@ RSpec.describe Camille::Endpoint do
 
       expect(endpoint.function).to eq("#{endpoint.signature}{ return request('get', '#{endpoint.path}', params) }")
     end
+
+    it 'returns the function for empty params' do
+      endpoint.instance_exec do
+        response(id: Camille::Types::Number)
+      end
+      expect(endpoint.function).to eq("#{endpoint.signature}{ return request('get', '#{endpoint.path}', {}) }")
+    end
   end
 end

@@ -27,11 +27,16 @@ require_relative "camille/railtie"
 require_relative "camille/controller_extension"
 require_relative "camille/loader"
 require_relative "camille/configuration"
+require_relative "camille/code_generator"
 
 module Camille
   class Error < StandardError; end
 
   def self.configure &block
     Camille::Configuration.instance_eval &block
+  end
+
+  def self.generate_ts
+    Camille::CodeGenerator.generate_ts
   end
 end

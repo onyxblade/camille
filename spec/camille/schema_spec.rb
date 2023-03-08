@@ -85,7 +85,7 @@ RSpec.describe Camille::Schema do
       {
         show(params: {id: number}): Promise<{name: string}>{ return request('get', '/schema_spec/show', params) },
         update(params: {id: number, name: string}): Promise<boolean>{ return request('post', '/schema_spec/update', params) },
-        doSomething(): Promise<boolean>{ return request('post', '/schema_spec/do_something', params) },
+        doSomething(): Promise<boolean>{ return request('post', '/schema_spec/do_something', {}) },
       }
       EOF
 
