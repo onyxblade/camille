@@ -46,6 +46,9 @@ module Camille
       end
 
       def register_routes router_context
+        if exception = Camille::Loader.exception
+          raise exception
+        end
         Camille::Loader.loaded_schemas.each do |schema|
           schema.endpoints.each do |name, endpoint|
             router_context.public_send(endpoint.verb, endpoint.path, controller: schema.path.gsub(/^\//, ''), action: endpoint.name, as: false)
@@ -83,13 +86,37 @@ module Camille
 
       def reload
         synchronize do
-          reload_types_and_schemas
-          Rails.application.reload_routes!
+          begin
+            @exception = nil
+            reload_types_and_schemas
+            Rails.application.reload_routes!
 
-          # just for spec
-          @last_reload = Time.now
+            # just for spec
+            @last_reload = Time.now
+          rescue Exception => e
+            Rails.logger.error e
+            @exception = e
+          end
         end
       end
+
+      def exception
+        synchronize do
+          @exception
+        end
+      end
+
+      def setup_listen app
+        if !app.config.cache_classes
+          require 'listen'
+          listener = Listen.to("#{app.root}/config/camille") do |changed|
+            #puts "Change detected. Camille reloading..."
+            Camille::Loader.reload
+          end
+          listener.start
+        end
+      end
+
     end
 
   end

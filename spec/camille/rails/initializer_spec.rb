@@ -49,12 +49,57 @@ RSpec.describe 'initializer' do
 
   if Rails.env.development?
     context 'when Rails.env.development?' do
+      after(:each) do
+        Camille::Loader.reload
+      end
+
       it 'calls Camille::Loader.reload when `reload!`' do
         last_reload = Camille::Loader.instance_variable_get(:@last_reload)
         Rails.application.reloader.reload!
         new_reload = Camille::Loader.instance_variable_get(:@last_reload)
         expect(new_reload).to be_truthy
         expect(new_reload).not_to eq(last_reload)
+      end
+
+      let(:product_type_content){
+        <<~EOF
+          class Camille::Types::Product < Camille::Type
+            alias_of(Number)
+          end
+        EOF
+      }
+
+      it 'calls Camille::Loader.reload when file changed' do
+        last_reload = Camille::Loader.instance_variable_get(:@last_reload)
+
+        rewrite_file "#{Rails.root}/config/camille/types/product.rb", product_type_content do
+          sleep 0.5
+          new_reload = Camille::Loader.instance_variable_get(:@last_reload)
+          expect(new_reload).to be_truthy
+          expect(new_reload).not_to eq(last_reload)
+        end
+      end
+
+      it 'sets Loader.exception when reloading has error' do
+        wrong_content = <<~EOF
+          class-Camille::Types::Product < Camille::Type
+            alias_of(Number)
+          end
+        EOF
+
+        last_reload = Camille::Loader.instance_variable_get(:@last_reload)
+
+        rewrite_file "#{Rails.root}/config/camille/types/product.rb", wrong_content do
+          sleep 0.5
+          new_reload = Camille::Loader.instance_variable_get(:@last_reload)
+          expect(new_reload).to eq(last_reload)
+          expect(Camille::Loader.exception).to be_an_instance_of(SyntaxError)
+        end
+      end
+
+      it 'raises error when reloading routes if Loader.exception presents' do
+        Camille::Loader.instance_eval { @exception = RuntimeError.new }
+        expect{ Rails.application.reload_routes! }.to raise_error(RuntimeError)
       end
 
     end

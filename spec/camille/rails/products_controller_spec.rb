@@ -45,5 +45,12 @@ RSpec.describe ProductsController, type: :controller do
         expect(response.parsed_body['underscore_param']).to eq(1)
       end
     end
+
+    context 'when Loader.exception presented' do
+      it 'raises the exception' do
+        Camille::Loader.instance_eval { @exception = RuntimeError.new }
+        expect{ get :data }.to raise_error(RuntimeError)
+      end
+    end
   end
 end

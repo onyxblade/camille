@@ -8,6 +8,7 @@ module Camille
       ActionController::Base.include(Camille::ControllerExtension)
 
       Camille::Loader.setup_zeitwerk_loader(app)
+      Camille::Loader.setup_listen(app)
 
       app.routes.prepend do
         Camille::Loader.register_routes(self)
