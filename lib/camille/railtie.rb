@@ -15,7 +15,7 @@ module Camille
 
       app.reloader.to_run do
         require_unload_lock!
-        Camille::Loader.reload_types_and_schemas
+        Camille::Loader.reload
       end
     end
 
