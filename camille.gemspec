@@ -7,9 +7,10 @@ Gem::Specification.new do |spec|
   spec.version = Camille::VERSION
   spec.authors = ["辻彩"]
   spec.email = ["cichol@live.cn"]
+  spec.license = "MIT"
 
-  spec.summary = "Write a short summary, because RubyGems requires one."
-  spec.description = "Write a longer description or delete this line."
+  spec.summary = "Typed API schema for Rails with TypeScript codegen"
+  spec.description = ""
   spec.homepage = "https://github.com/onyxblade/camille"
   spec.required_ruby_version = ">= 2.6.0"
 
@@ -28,8 +29,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Uncomment to register a new dependency of your gem
-  spec.add_dependency "activesupport", ">= 5"
-  spec.add_dependency "listen", ">= 3.3"
+  spec.add_dependency "rails", ">= 6.1", "<8"
+  spec.add_dependency "listen", "~> 3.3"
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html

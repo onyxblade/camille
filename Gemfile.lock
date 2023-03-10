@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     camille (0.1.0)
-      activesupport (>= 5)
-      listen (>= 3.3)
+      listen (~> 3.3)
+      rails (>= 6.1, < 8)
 
 GEM
   remote: https://rubygems.org/
