@@ -17,10 +17,5 @@ module Camille
       io.string
     end
 
-    def self.generate_ts_file
-      if Camille::Configuration.ts_location
-        File.open(Camille::Configuration.ts_location, 'w'){|f| f.write generate_ts}
-      end
-    end
   end
 end

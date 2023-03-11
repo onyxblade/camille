@@ -19,7 +19,6 @@ module Camille
 
           eager_load
           construct_controller_name_to_schema_map
-          Camille::CodeGenerator.generate_ts_file
         end
       end
 
@@ -41,7 +40,6 @@ module Camille
           @zeitwerk_loader.reload
           eager_load
           construct_controller_name_to_schema_map
-          Camille::CodeGenerator.generate_ts_file
         end
       end
 
