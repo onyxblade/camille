@@ -89,17 +89,6 @@ module Camille
         end
       end
 
-      def setup_listen app
-        if !app.config.cache_classes
-          require 'listen'
-          listener = Listen.to("#{app.root}/config/camille") do |changed|
-            #puts "Change detected. Camille reloading..."
-            Camille::Loader.reload
-          end
-          listener.start
-        end
-      end
-
     end
 
   end

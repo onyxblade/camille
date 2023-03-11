@@ -61,25 +61,6 @@ RSpec.describe 'initializer' do
         expect(new_reload).not_to eq(last_reload)
       end
 
-      let(:product_type_content){
-        <<~EOF
-          class Camille::Types::Product < Camille::Type
-            alias_of(Number)
-          end
-        EOF
-      }
-
-      it 'calls Camille::Loader.reload when file changed' do
-        last_reload = Camille::Loader.instance_variable_get(:@last_reload)
-
-        rewrite_file "#{Rails.root}/config/camille/types/product.rb", product_type_content do
-          sleep 0.5
-          new_reload = Camille::Loader.instance_variable_get(:@last_reload)
-          expect(new_reload).to be_truthy
-          expect(new_reload).not_to eq(last_reload)
-        end
-      end
-
     end
 
   end
