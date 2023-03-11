@@ -94,7 +94,7 @@ RSpec.shared_examples 'reloading' do
 
     rewrite_file "#{Rails.root}/config/camille/configuration.rb", configuration do
       do_reload
-      expect(Camille::CodeGenerator.generate_ts.lines.first.chomp).to eq(random_string)
+      expect(Camille::CodeGenerator.generate_ts.lines[1].chomp).to eq(random_string)
     end
   end
 
