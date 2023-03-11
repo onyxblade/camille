@@ -46,11 +46,5 @@ RSpec.describe ProductsController, type: :controller do
       end
     end
 
-    context 'when Loader.exception presented' do
-      it 'raises the exception' do
-        Camille::Loader.instance_eval { @exception = RuntimeError.new }
-        expect{ get :data }.to raise_error(RuntimeError)
-      end
-    end
   end
 end
