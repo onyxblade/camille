@@ -29,6 +29,7 @@ require_relative "camille/loader"
 require_relative "camille/configuration"
 require_relative "camille/code_generator"
 require_relative "camille/main_controller"
+require_relative "camille/generators/install_generator"
 
 module Camille
   class Error < StandardError; end

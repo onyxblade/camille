@@ -10,8 +10,25 @@ module Camille
         synchronize do
           loader = Zeitwerk::Loader.new
           loader.enable_reloading if !app.config.cache_classes
-          loader.push_dir "#{app.root}/config/camille/types", namespace: Camille::Types
-          loader.push_dir "#{app.root}/config/camille/schemas", namespace: Camille::Schemas
+
+          types_dir = "#{app.root}/config/camille/types"
+          schemas_dir = "#{app.root}/config/camille/schemas"
+
+          if Dir.exist? types_dir
+            loader.push_dir types_dir, namespace: Camille::Types
+          else
+            unless inside_generator?
+              puts "[Camille Warning] Expected folder `config/camille/types`. Run `rails g camille:install` to fix it."
+            end
+          end
+
+          if Dir.exist? schemas_dir
+            loader.push_dir schemas_dir, namespace: Camille::Schemas
+          else
+            unless inside_generator?
+              puts "[Camille Warning] Expected folder `config/camille/schemas`. Run `rails g camille:install` to fix it."
+            end
+          end
 
           loader.setup
           @zeitwerk_loader = loader
@@ -24,7 +41,13 @@ module Camille
 
       def eager_load
         @eager_loading = true
-        load @configuration_location
+        if File.exist?(@configuration_location)
+          load @configuration_location
+        else
+          unless inside_generator?
+            puts "[Camille Warning] Expected file `config/camille/configuration.rb`. Run `rails g camille:install` to fix it."
+          end
+        end
         @zeitwerk_loader.eager_load
         @eager_loading = false
       end
@@ -85,6 +108,12 @@ module Camille
           Rails.application.reload_routes!
         end
       end
+
+      private
+        def inside_generator?
+          # https://stackoverflow.com/a/53963584
+          !(Rails.const_defined?(:Server) || Rails.const_defined?(:Console))
+        end
 
     end
 
