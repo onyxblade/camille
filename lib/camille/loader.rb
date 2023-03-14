@@ -83,9 +83,6 @@ module Camille
         synchronize do
           reload_types_and_schemas
           Rails.application.reload_routes!
-
-          # just for spec
-          @last_reload = Time.now
         end
       end
 

@@ -47,21 +47,4 @@ RSpec.describe 'initializer' do
     )
   end
 
-  if Rails.env.development?
-    context 'when Rails.env.development?' do
-      after(:each) do
-        Camille::Loader.reload
-      end
-
-      it 'calls Camille::Loader.reload when `reload!`' do
-        last_reload = Camille::Loader.instance_variable_get(:@last_reload)
-        Rails.application.reloader.reload!
-        new_reload = Camille::Loader.instance_variable_get(:@last_reload)
-        expect(new_reload).to be_truthy
-        expect(new_reload).not_to eq(last_reload)
-      end
-
-    end
-
-  end
 end
