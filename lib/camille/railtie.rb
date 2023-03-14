@@ -17,7 +17,7 @@ module Camille
       dir = "#{Rails.root}/config/camille"
 
       update_checker = ActiveSupport::FileUpdateChecker.new([], {dir => ['rb']}) do
-        Camille::Loader.reload
+        Camille::Loader.reload_types_and_schemas
       end
 
       app.reloaders << update_checker

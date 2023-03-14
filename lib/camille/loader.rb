@@ -39,19 +39,6 @@ module Camille
         end
       end
 
-      def eager_load
-        @eager_loading = true
-        if File.exist?(@configuration_location)
-          load @configuration_location
-        else
-          unless inside_generator?
-            puts "[Camille Warning] Expected file `config/camille/configuration.rb`. Run `rails g camille:install` to fix it."
-          end
-        end
-        @zeitwerk_loader.eager_load
-        @eager_loading = false
-      end
-
       def eager_loading?
         @eager_loading
       end
@@ -92,24 +79,30 @@ module Camille
         end
       end
 
-      def construct_controller_name_to_schema_map
-        synchronize do
-          controller_name_to_schema_map.clear
-          loaded_schemas.each do |schema|
-            controller_class_name = "#{schema.klass_name}Controller"
-            controller_name_to_schema_map[controller_class_name] = schema
+      private
+        def eager_load
+          @eager_loading = true
+          if File.exist?(@configuration_location)
+            load @configuration_location
+          else
+            unless inside_generator?
+              puts "[Camille Warning] Expected file `config/camille/configuration.rb`. Run `rails g camille:install` to fix it."
+            end
+          end
+          @zeitwerk_loader.eager_load
+          @eager_loading = false
+        end
+
+        def construct_controller_name_to_schema_map
+          synchronize do
+            controller_name_to_schema_map.clear
+            loaded_schemas.each do |schema|
+              controller_class_name = "#{schema.klass_name}Controller"
+              controller_name_to_schema_map[controller_class_name] = schema
+            end
           end
         end
-      end
 
-      def reload
-        synchronize do
-          reload_types_and_schemas
-          Rails.application.reload_routes!
-        end
-      end
-
-      private
         def inside_generator?
           # https://stackoverflow.com/a/53963584
           !(Rails.const_defined?(:Server) || Rails.const_defined?(:Console))

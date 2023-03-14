@@ -6,18 +6,12 @@ RSpec.describe 'reloading' do
 
     context 'when Rails.env.development?' do
       after(:each){
-        Camille::Loader.reload
+        Camille::Loader.reload_types_and_schemas
       }
 
       describe 'Rails.application.reloader.reload!' do
         it_behaves_like 'reloading' do
           subject(:do_reload) { Rails.application.reloader.reload! }
-        end
-      end
-
-      describe 'Camille::Loader.reload' do
-        it_behaves_like 'reloading' do
-          subject(:do_reload) { Camille::Loader.reload }
         end
       end
 
