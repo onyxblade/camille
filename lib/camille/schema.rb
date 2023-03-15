@@ -2,8 +2,6 @@ module Camille
   class Schema
     class AlreadyDefinedError < ::ArgumentError; end
 
-    include Camille::Types
-
     def self.endpoints
       @endpoints ||= {}
     end

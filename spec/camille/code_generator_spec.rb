@@ -3,6 +3,8 @@ RSpec.describe Camille::CodeGenerator do
   describe '.generate_ts' do
     before(:all) do
       class Camille::Types::SampleType < Camille::Type
+        include Camille::Types
+
         alias_of(
           id: Number,
           name: String
@@ -10,6 +12,8 @@ RSpec.describe Camille::CodeGenerator do
       end
 
       class Camille::Schemas::SampleSchema < Camille::Schema
+        include Camille::Types
+
         get :data do
           response(sample: SampleType)
         end

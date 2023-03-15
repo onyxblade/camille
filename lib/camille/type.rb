@@ -2,7 +2,6 @@ module Camille
   # This class represents all custom types defined by the user.
   class Type < BasicType
     class NotImplementedError < ::NotImplementedError; end
-    include Camille::Types
 
     attr_reader :underlying
 

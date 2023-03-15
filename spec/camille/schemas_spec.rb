@@ -11,6 +11,8 @@ RSpec.describe Camille::Schemas do
     end
 
     class Camille::Schemas::Api::V1::Products < Camille::Schema
+      include Camille::Types
+
       get :data do
         params(id: Number)
         response(id: Number)

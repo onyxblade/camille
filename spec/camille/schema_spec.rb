@@ -2,6 +2,8 @@
 RSpec.describe Camille::Schema do
   before(:all) do
     class Camille::Schemas::SchemaSpec < Camille::Schema
+      include Camille::Types
+
       get :show do
         params(
           id: Number

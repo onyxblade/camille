@@ -1,6 +1,8 @@
 using Camille::CoreExt
 
 class Camille::Schemas::Products < Camille::Schema
+  include Camille::Types
+
   get :data do
     params(
       id: Number

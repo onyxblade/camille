@@ -2,10 +2,14 @@
 RSpec.describe Camille::Type do
   before(:all) do
     class Camille::Types::TypeSpec < Camille::Type
+      include Camille::Types
+
       alias_of(Number)
     end
 
     class Camille::Types::TypeSpec::Nested < Camille::Type
+      include Camille::Types
+
       alias_of(
         id: Number,
         name: String
@@ -13,6 +17,8 @@ RSpec.describe Camille::Type do
     end
 
     class Camille::Types::TypeSpec::Empty < Camille::Type
+      include Camille::Types
+
       def self.unknown_constant
         UnknownConstant
       end

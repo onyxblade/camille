@@ -2,6 +2,8 @@ RSpec.shared_examples 'reloading' do
   let(:product_type_content){
     <<~EOF
       class Camille::Types::Product < Camille::Type
+        include Camille::Types
+
         alias_of(Number)
       end
     EOF
@@ -9,6 +11,8 @@ RSpec.shared_examples 'reloading' do
   let(:products_schema_content){
     <<~EOF
       class Camille::Schemas::Products < Camille::Schema
+        include Camille::Types
+
         get :data do
           response(Boolean)
         end

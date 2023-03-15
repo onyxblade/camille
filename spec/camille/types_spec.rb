@@ -2,6 +2,8 @@
 RSpec.describe Camille::Types do
   before(:all) do
     class Camille::Types::Product < Camille::Type
+      include Camille::Types
+
       alias_of(
         id: Number,
         name: String
@@ -9,10 +11,14 @@ RSpec.describe Camille::Types do
     end
 
     class Camille::Types::DateTime < Camille::Type
+      include Camille::Types
+
       alias_of(String)
     end
 
     class Camille::Types::Product::Details < Camille::Type
+      include Camille::Types
+
       alias_of(
         price: Number
       )
