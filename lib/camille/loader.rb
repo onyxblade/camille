@@ -39,10 +39,6 @@ module Camille
         end
       end
 
-      def eager_loading?
-        @eager_loading
-      end
-
       def reload_types_and_schemas
         synchronize do
           Camille::Loader.loaded_types.clear
@@ -81,7 +77,6 @@ module Camille
 
       private
         def eager_load
-          @eager_loading = true
           if File.exist?(@configuration_location)
             load @configuration_location
           else
@@ -90,7 +85,6 @@ module Camille
             end
           end
           @zeitwerk_loader.eager_load
-          @eager_loading = false
         end
 
         def construct_controller_name_to_schema_map

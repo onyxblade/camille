@@ -68,24 +68,4 @@ RSpec.describe Camille::Type do
     end
   end
 
-  # The same goes for Camille::Schema
-  describe '.const_missing' do
-    context 'when Camille::Loader.eager_loading?' do
-      it 'raises NameError under Camille::Types' do
-        Camille::Loader.instance_eval{ @eager_loading = true }
-        expect{Camille::Types::TypeSpec::Empty.unknown_constant}.to raise_error(NameError) {|error|
-          expect(error.message).to eq('uninitialized constant Camille::Types::UnknownConstant')
-        }
-        Camille::Loader.instance_eval{ @eager_loading = false }
-      end
-    end
-
-    context 'when after eager loading' do
-      it 'raises NameError' do
-        expect{Camille::Types::TypeSpec::Empty.unknown_constant}.to raise_error(NameError) {|error|
-          expect(error.message).to eq('uninitialized constant Camille::Types::TypeSpec::Empty::UnknownConstant')
-        }
-      end
-    end
-  end
 end

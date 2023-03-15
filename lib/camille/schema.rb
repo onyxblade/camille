@@ -8,14 +8,6 @@ module Camille
       @endpoints ||= {}
     end
 
-    def self.const_missing name
-      if Camille::Loader.eager_loading?
-        Camille::Types.const_get(name)
-      else
-        super
-      end
-    end
-
     def self.path
       "/#{ActiveSupport::Inflector.underscore klass_name}"
     end
