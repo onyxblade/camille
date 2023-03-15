@@ -10,7 +10,10 @@ module Camille
       Camille::Loader.setup_zeitwerk_loader(app)
 
       app.routes.prepend do
-        get '/camille/endpoints.ts' => 'camille/main#endpoints_ts'
+        if Rails.env.development?
+          get '/camille/endpoints.ts' => 'camille/main#endpoints_ts'
+        end
+
         Camille::Loader.register_routes(self)
       end
 

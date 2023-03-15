@@ -47,4 +47,15 @@ RSpec.describe 'initializer' do
     )
   end
 
+  it 'adds route for `/camille/endpoints.ts` when Rails.env.development?' do
+    if Rails.env.development?
+      expect(Rails.application.routes.recognize_path('/camille/endpoints.ts', method: :get)).to eq(
+        controller: 'camille/main',
+        action: 'endpoints_ts'
+      )
+    else
+      expect{Rails.application.routes.recognize_path('/camille/endpoints.ts', method: :get)}.to raise_error(ActionController::RoutingError)
+    end
+  end
+
 end
