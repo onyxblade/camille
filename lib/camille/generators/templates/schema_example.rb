@@ -1,35 +1,35 @@
 using Camille::CoreExt
 
-module Camille::Schemas
-  class Examples < Camille::Schema
-    get :find do
-      params(
-        id: Number
-      )
+class Camille::Schemas::Examples < Camille::Schema
+  include Camille::Types
 
-      response(
-        example?: Example
-      )
-    end
+  get :find do
+    params(
+      id: Number
+    )
 
-    get :list do
-      response(
-        examples: Example[]
-      )
-    end
+    response(
+      example?: Example
+    )
+  end
 
-    post :update do
-      params(
-        id: Number,
-        example: Example
-      )
+  get :list do
+    response(
+      examples: Example[]
+    )
+  end
 
-      response(
-        success: Boolean,
-        errors: {
-          message: String
-        }[]
-      )
-    end
+  post :update do
+    params(
+      id: Number,
+      example: Example
+    )
+
+    response(
+      success: Boolean,
+      errors: {
+        message: String
+      }[]
+    )
   end
 end
