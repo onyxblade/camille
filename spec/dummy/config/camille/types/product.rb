@@ -1,4 +1,4 @@
-using Camille::CoreExt
+using Camille::Syntax
 
 class Camille::Types::Product < Camille::Type
   include Camille::Types

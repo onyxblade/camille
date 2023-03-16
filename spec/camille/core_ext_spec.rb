@@ -1,6 +1,6 @@
-using Camille::CoreExt
+using Camille::Syntax
 
-RSpec.describe Camille::CoreExt do
+RSpec.describe Camille::Syntax do
   describe 'Hash' do
     it 'returns array type for #[]' do
       array = {id: Camille::Types::Number}[]

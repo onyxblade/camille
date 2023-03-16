@@ -1,4 +1,4 @@
-using Camille::CoreExt
+using Camille::Syntax
 
 class Camille::Types::Example < Camille::Type
   include Camille::Types

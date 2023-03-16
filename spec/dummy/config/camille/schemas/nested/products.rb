@@ -1,4 +1,4 @@
-using Camille::CoreExt
+using Camille::Syntax
 
 class Camille::Schemas::Nested::Products < Camille::Schema
   include Camille::Types

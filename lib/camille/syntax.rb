@@ -1,5 +1,5 @@
 module Camille
-  module CoreExt
+  module Syntax
     module NULL_VALUE; end
 
     refine ::Hash do
