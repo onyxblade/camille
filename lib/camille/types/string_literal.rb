@@ -3,6 +3,8 @@ module Camille
     class StringLiteral < Camille::BasicType
       class ArgumentError < ::ArgumentError; end
 
+      attr_reader :value
+
       def initialize value
         if value.is_a?(::String)
           @value = value

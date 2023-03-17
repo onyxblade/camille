@@ -3,6 +3,8 @@ module Camille
     class NumberLiteral < Camille::BasicType
       class ArgumentError < ::ArgumentError; end
 
+      attr_reader :value
+
       def initialize value
         if value.is_a?(Integer) || value.is_a?(Float)
           @value = value

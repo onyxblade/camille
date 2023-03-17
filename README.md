@@ -157,7 +157,10 @@ params(
   number_literal: 1,
   string_literal: 'hello',
   # a custom type we defined above
-  product: Product
+  product: Product,
+  # Pick and Omit use [] to enclose parameters instead of <>
+  pick: Pick[{a: 1, b: 2}, 'a' | 'b'],
+  omit: Omit[Product, 'id']
 )
 ```
 
