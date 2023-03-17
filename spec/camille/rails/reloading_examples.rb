@@ -1,4 +1,8 @@
 RSpec.shared_examples 'reloading' do
+  before(:all) do
+    Camille::Loader.reload_types_and_schemas
+  end
+
   let(:product_type_content){
     <<~EOF
       class Camille::Types::Product < Camille::Type

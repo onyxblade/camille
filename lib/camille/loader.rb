@@ -41,11 +41,23 @@ module Camille
 
       def reload_types_and_schemas
         synchronize do
-          Camille::Loader.loaded_types.clear
-          Camille::Loader.loaded_schemas.clear
-          @zeitwerk_loader.reload
-          eager_load
-          construct_controller_name_to_schema_map
+          begin
+            @exception = nil
+            Camille::Loader.loaded_types.clear
+            Camille::Loader.loaded_schemas.clear
+            @zeitwerk_loader.reload
+            eager_load
+            construct_controller_name_to_schema_map
+          rescue Exception => e
+            @exception = e
+            raise e
+          end
+        end
+      end
+
+      def check_and_raise_exception
+        if @exception
+          raise @exception
         end
       end
 

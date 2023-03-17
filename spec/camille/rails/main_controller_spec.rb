@@ -21,6 +21,26 @@ RSpec.describe Camille::MainController, type: :request do
           }
         end
       end
+
+      it 'raises error from loader' do
+        wrong_content = <<~EOF
+          class-Camille::Types::Product < Camille::Type
+            alias_of(Number)
+          end
+        EOF
+
+        rewrite_file "#{Rails.root}/config/camille/types/product.rb", wrong_content do
+          get '/camille/endpoints.ts'
+          expect(response.status).to eq(500)
+
+          # We need an aditional request here because the first loading error would be rescued by Rails.
+          # We want to ensure that the error keeps being reported until it's fixed.
+
+          get '/camille/endpoints.ts'
+          expect(response.status).to eq(500)
+        end
+
+      end
     end
 
   end

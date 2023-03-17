@@ -1,10 +1,14 @@
 require 'rails_helper'
 
-RSpec.describe ProductsController, type: :controller do
+RSpec.describe ProductsController, type: :request do
+  before(:each) do
+    host! 'localhost'
+  end
+
   describe 'action' do
     context 'when #camille_endpoint not nil' do
       it 'renders camelized keys' do
-        get :data
+        get '/products/data'
         expect(response.parsed_body).to eq(
           'product' => {
             'id' => 1,
@@ -15,11 +19,17 @@ RSpec.describe ProductsController, type: :controller do
       end
 
       it 'typechecks the response' do
-        expect{ get :wrong_data }.to raise_error(Camille::ControllerExtension::TypeError)
+        # Rails development environment will rescue errors.
+        if Rails.env.test?
+          expect{ get '/products/wrong_data' }.to raise_error(Camille::ControllerExtension::TypeError)
+        elsif Rails.env.development?
+          get '/products/wrong_data'
+          expect(response.status).to eq(500)
+        end
       end
 
       it 'transforms params keys' do
-        post :update, params: {
+        post '/products/update', params: {
           id: 1,
           product: {
             name: 'string',
@@ -34,11 +44,33 @@ RSpec.describe ProductsController, type: :controller do
           }
         )
       end
+
+      if Rails.env.development?
+        it 'raises error from loader' do
+          wrong_content = <<~EOF
+            class-Camille::Types::Product < Camille::Type
+              alias_of(Number)
+            end
+          EOF
+
+          rewrite_file "#{Rails.root}/config/camille/types/product.rb", wrong_content do
+            get '/products/data'
+            expect(response.status).to eq(500)
+
+            # We need an aditional request here because the first loading error would be rescued by Rails.
+            # We want to ensure that the error keeps being reported until it's fixed.
+
+            get '/products/data'
+            expect(response.status).to eq(500)
+          end
+
+        end
+      end
     end
 
     context 'when #camille_endpoint is nil' do
       it 'does not camelize keys' do
-        post :non_camille_action, params: {
+        post '/non_camille_action', params: {
           underscore_param: 1
         }, as: :json
 

@@ -35,6 +35,7 @@ module Camille
     end
 
     def process_action(*)
+      Camille::Loader.check_and_raise_exception
       if endpoint = camille_endpoint
         params.deep_transform_keys!{|key| key.to_s.underscore}
         super
