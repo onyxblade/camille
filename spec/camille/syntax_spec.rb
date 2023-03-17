@@ -36,4 +36,49 @@ RSpec.describe Camille::Syntax do
       expect(union.right.elements[0]).to be_an_instance_of(Camille::Types::String)
     end
   end
+
+  describe 'Integer' do
+    it 'returns literal type for #[]' do
+      array = 1[]
+      expect(array).to be_an_instance_of(Camille::Types::Array)
+      expect(array.content).to be_an_instance_of(Camille::Types::NumberLiteral)
+    end
+
+    it 'returns union type for #|' do
+      union = 1 | 2
+      expect(union).to be_an_instance_of(Camille::Types::Union)
+      expect(union.left).to be_an_instance_of(Camille::Types::NumberLiteral)
+      expect(union.right).to be_an_instance_of(Camille::Types::NumberLiteral)
+    end
+  end
+
+  describe 'Float' do
+    it 'returns literal type for #[]' do
+      array = 1.1[]
+      expect(array).to be_an_instance_of(Camille::Types::Array)
+      expect(array.content).to be_an_instance_of(Camille::Types::NumberLiteral)
+    end
+
+    it 'returns union type for #|' do
+      union = 1.1 | 2.1
+      expect(union).to be_an_instance_of(Camille::Types::Union)
+      expect(union.left).to be_an_instance_of(Camille::Types::NumberLiteral)
+      expect(union.right).to be_an_instance_of(Camille::Types::NumberLiteral)
+    end
+  end
+
+  describe 'String' do
+    it 'returns literal type for #[]' do
+      array = 'str'[]
+      expect(array).to be_an_instance_of(Camille::Types::Array)
+      expect(array.content).to be_an_instance_of(Camille::Types::StringLiteral)
+    end
+
+    it 'returns union type for #|' do
+      union = '1' | '2'
+      expect(union).to be_an_instance_of(Camille::Types::Union)
+      expect(union.left).to be_an_instance_of(Camille::Types::StringLiteral)
+      expect(union.right).to be_an_instance_of(Camille::Types::StringLiteral)
+    end
+  end
 end

@@ -149,6 +149,9 @@ params(
   tuple: [Number, String, Boolean],
   # a field followed by '?' is optional, the same as in TypeScript
   optional?: Number,
+  # literal types
+  number_literal: 1,
+  string_literal: 'hello',
   # a custom type we defined above
   product: Product
 )

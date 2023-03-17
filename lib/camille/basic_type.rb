@@ -24,13 +24,18 @@ module Camille
     end
 
     def self.instance value
-      if value.is_a? ::Hash
+      case
+      when value.is_a?(::Hash)
         Camille::Types::Object.new(value)
-      elsif value.is_a? ::Array
+      when value.is_a?(::Array)
         Camille::Types::Tuple.new(value)
-      elsif value.is_a? Camille::BasicType
+      when value.is_a?(Integer) || value.is_a?(Float)
+        Camille::Types::NumberLiteral.new(value)
+      when value.is_a?(::String)
+        Camille::Types::StringLiteral.new(value)
+      when value.is_a?(Camille::BasicType)
         value
-      elsif value.is_a?(Class) && value < Camille::BasicType && value.directly_instantiable?
+      when value.is_a?(Class) && value < Camille::BasicType && value.directly_instantiable?
         value.new
       else
         raise InvalidTypeError.new("#{value} cannot be converted to a type instance.")

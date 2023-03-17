@@ -29,5 +29,47 @@ module Camille
         Camille::Types::Union.new(Camille::Types::Tuple.new(self), other)
       end
     end
+
+    refine Integer do
+      def [] key = NULL_VALUE
+        if key == NULL_VALUE
+          Camille::Types::NumberLiteral.new(self)[]
+        else
+          super
+        end
+      end
+
+      def | other
+        Camille::Types::Union.new(Camille::Types::NumberLiteral.new(self), other)
+      end
+    end
+
+    refine Float do
+      def [] key = NULL_VALUE
+        if key == NULL_VALUE
+          Camille::Types::NumberLiteral.new(self)[]
+        else
+          super
+        end
+      end
+
+      def | other
+        Camille::Types::Union.new(Camille::Types::NumberLiteral.new(self), other)
+      end
+    end
+
+    refine ::String do
+      def [] key = NULL_VALUE
+        if key == NULL_VALUE
+          Camille::Types::StringLiteral.new(self)[]
+        else
+          super
+        end
+      end
+
+      def | other
+        Camille::Types::Union.new(Camille::Types::StringLiteral.new(self), other)
+      end
+    end
   end
 end

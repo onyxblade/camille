@@ -56,11 +56,23 @@ RSpec.describe Camille::BasicType do
     end
 
     it 'raises when value is not a type or a hash' do
-      expect{ Camille::Type.instance 1 }.to raise_error(Camille::Type::InvalidTypeError)
+      expect{ Camille::Type.instance Object.new }.to raise_error(Camille::Type::InvalidTypeError)
     end
 
     it 'converts a non-generic type class to type instance' do
       expect(Camille::Type.instance(Camille::Types::Number)).to be_an_instance_of(Camille::Types::Number)
+    end
+
+    it 'converts a string to string literal type' do
+      type = Camille::Type.instance('1')
+      expect(type).to be_an_instance_of(Camille::Types::StringLiteral)
+    end
+
+    it 'converts a number to number literal type' do
+      integer = Camille::Type.instance(1)
+      expect(integer).to be_an_instance_of(Camille::Types::NumberLiteral)
+      float = Camille::Type.instance(1.1)
+      expect(float).to be_an_instance_of(Camille::Types::NumberLiteral)
     end
 
     it 'raises when receiving a generic type class' do
