@@ -7,7 +7,7 @@ module Camille
         if value.is_a?(Integer) || value.is_a?(Float)
           @value = value
         else
-          raise ArgumentError.new("Expecting an integer or float, got #{value.inspect}")
+          raise ArgumentError.new("Expecting an integer or a float, got #{value.inspect}")
         end
       end
 
