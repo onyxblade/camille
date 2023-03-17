@@ -10,12 +10,12 @@ module Camille
         copy_file "configuration.rb", "config/camille/configuration.rb"
       end
 
-      def copy_type_example
-        copy_file "type_example.rb", "config/camille/types/example.rb"
+      def create_types_folder
+        copy_file ".keep", "config/camille/types/.keep"
       end
 
-      def copy_schema_example
-        copy_file "schema_example.rb", "config/camille/schemas/examples.rb"
+      def create_schemas_folder
+        copy_file ".keep", "config/camille/schemas/.keep"
       end
 
     end
