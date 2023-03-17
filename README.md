@@ -164,8 +164,6 @@ params(
 )
 ```
 
-String literal types and probably enums are planned for the future.
-
 ### TypeScript generation
 
 After you have your types and schemas in place, you can visit `/camille/endpoints.ts` in development environment to have the TypeScript request functions generated.

@@ -13,8 +13,14 @@ jobs:
     name: Ruby ${{ matrix.ruby }}
     strategy:
       matrix:
+        gemfile:
+          - rails-6.1
+          - rails-7.0
         ruby:
+          - '2.7.7'
           - '3.0.5'
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}
 
     steps:
     - uses: actions/checkout@v2
