@@ -2,7 +2,9 @@
 
 ## Why?
 
-Traditionally, the JSON response from a Rails API server isn't typed. So even if we have TypeScript at the front-end, we still have little guarantee that our back-end would return the correct type and structure of data. In order to eliminate type mismatch between both ends, Camille provides a syntax for you to define type schema for your Rails API, and uses these schemas to generate the TypeScript functions for calling the API.
+Traditionally, the JSON response from a Rails API server isn't typed. So even if we have TypeScript at the front-end, we still have little guarantee that our back-end would return the correct type and structure of data.
+
+In order to eliminate type mismatch between both ends, Camille provides a syntax for you to define type schema for your Rails API, and uses these schemas to generate the TypeScript functions for calling the API.
 
 For example, an endpoint defined in Ruby, where `data` is a controller action,
 
@@ -83,6 +85,8 @@ data(params: {id: number}): Promise<{name: string}>
 ```
 
 Therefore, the front-end user is required to provide an `id` when they call this function. And they can expect to get a `name` from the response of this request. There are no more type mismatch between both ends.
+
+The `params` type for an endpoint is required to be an object type, or a hash in Ruby, while `response` type can be any supported type, for example a `Boolean`.
 
 Camille will automatically add a Rails route for each endpoint. You don't need to do anything other than having the schema file in place.
 
@@ -234,6 +238,10 @@ object:
   array:
     [2]: Expected number, got "3".
 ```
+
+### Reloading
+
+Everything in `config/camille/types` and `config/camille/schemas` will automatically reload after changes in development environment, just like other files in Rails.
 
 ## Development
 
