@@ -17,8 +17,9 @@ module Camille
         if value = render_options[:json]
           error = endpoint.response_type.check(value)
           if error
-            Camille::TypeErrorPrinter.new(error).print
-            raise TypeError.new("Type check failed for response.")
+            string_io = StringIO.new
+            Camille::TypeErrorPrinter.new(error).print(string_io)
+            raise TypeError.new("\nType check failed for response.\n#{string_io.string}")
           else
             if value.is_a? Hash
               value.deep_transform_keys!{|k| k.to_s.camelize(:lower)}

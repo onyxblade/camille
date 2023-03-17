@@ -18,9 +18,9 @@ module Camille
       def print_composite_error io, error, indentation
         error.components.each do |key, error|
           if error.basic?
-            io.puts ' ' * indentation + "#{key}: #{error.message}"
+            io.puts "\u00A0" * indentation + "#{key}: #{error.message}"
           else
-            io.puts ' ' * indentation + "#{key}:"
+            io.puts "\u00A0" * indentation + "#{key}:"
             print_composite_error io, error, indentation + 2
           end
         end
