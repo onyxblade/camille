@@ -1,4 +1,3 @@
-require 'camille/custom_types/date'
 
 RSpec.describe Camille::Types::Object do
   describe '#initialize' do
@@ -142,7 +141,7 @@ RSpec.describe Camille::Types::Object do
     let(:object_type_with_date){
       described_class.new(
         id: Camille::Types::Number,
-        date: Camille::CustomTypes::Date
+        date: Camille::Types::DateTime
       )
     }
 
@@ -183,10 +182,7 @@ RSpec.describe Camille::Types::Object do
 
       expect(transformed).to eq({
         id: 1,
-        date: {
-          type: 'Date',
-          value: time.to_i * 1000
-        }
+        date: time.as_json
       })
     end
   end

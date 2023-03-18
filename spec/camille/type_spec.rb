@@ -69,7 +69,9 @@ RSpec.describe Camille::Type do
       expect(Camille::Loader.loaded_types).to contain_exactly(
         Camille::Types::TypeSpec,
         Camille::Types::TypeSpec::Nested,
-        Camille::Types::TypeSpec::Empty
+        Camille::Types::TypeSpec::Empty,
+        Camille::Types::DateTime,
+        Camille::Types::Decimal
       )
     end
   end

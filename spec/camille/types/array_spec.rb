@@ -1,4 +1,3 @@
-require 'camille/custom_types/date'
 
 RSpec.describe Camille::Types::Array do
   describe '#initialize' do
@@ -40,7 +39,7 @@ RSpec.describe Camille::Types::Array do
 
   describe '#transform_and_check' do
     let(:array_type){ described_class.new(Camille::Types::Number) }
-    let(:date_array){ described_class.new(Camille::CustomTypes::Date) }
+    let(:date_array){ described_class.new(Camille::Types::DateTime) }
 
     it 'returns transformed value' do
       _, transformed = array_type.transform_and_check([1, 2, 3])
@@ -51,10 +50,7 @@ RSpec.describe Camille::Types::Array do
       time = Time.now
       _, transformed = date_array.transform_and_check([time, time])
 
-      expect(transformed).to eq([{
-        type: 'Date',
-        value: time.to_i * 1000
-      }] * 2)
+      expect(transformed).to eq([time.as_json] * 2)
     end
   end
 

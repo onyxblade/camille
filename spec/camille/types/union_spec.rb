@@ -1,4 +1,3 @@
-require 'camille/custom_types/date'
 
 RSpec.describe Camille::Types::Union do
   describe '#initialize' do
@@ -45,7 +44,7 @@ RSpec.describe Camille::Types::Union do
     let(:union_type_with_date) {
       described_class.new(
         Camille::Types::Number,
-        Camille::CustomTypes::Date
+        Camille::Types::DateTime
       )
     }
 
@@ -64,10 +63,7 @@ RSpec.describe Camille::Types::Union do
       expect(transformed).to eq(1)
 
       _, transformed = union_type_with_date.transform_and_check(time)
-      expect(transformed).to eq({
-        type: 'Date',
-        value: time.to_i * 1000
-      })
+      expect(transformed).to eq(time.as_json)
     end
   end
 

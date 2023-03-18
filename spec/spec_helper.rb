@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 require "camille"
+
+require_relative "./../lib/camille/generators/templates/date_time"
+require_relative "./../lib/camille/generators/templates/decimal"
+
 require_relative "file_helpers"
 
 RSpec.configure do |config|

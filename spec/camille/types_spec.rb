@@ -10,12 +10,6 @@ RSpec.describe Camille::Types do
       )
     end
 
-    class Camille::Types::DateTime < Camille::Type
-      include Camille::Types
-
-      alias_of(String)
-    end
-
     class Camille::Types::Product::Details < Camille::Type
       include Camille::Types
 
@@ -27,16 +21,15 @@ RSpec.describe Camille::Types do
 
   after(:all) do
     Camille::Loader.loaded_types.delete(Camille::Types::Product)
-    Camille::Loader.loaded_types.delete(Camille::Types::DateTime)
     Camille::Loader.loaded_types.delete(Camille::Types::Product::Details)
     Camille::Types.send(:remove_const, :Product)
-    Camille::Types.send(:remove_const, :DateTime)
   end
 
   describe '.literal_lines' do
     it 'returns the correct literal' do
       text = <<~EOF.chomp
       type DateTime = string
+      type Decimal = number
       type Product = {id: number, name: string}
       type Product_Details = {price: number}
       EOF
