@@ -18,6 +18,22 @@ class Camille::Schemas::Products < Camille::Schema
     )
   end
 
+  get :date_and_decimal do
+    response(
+      date: DateTime,
+      decimal: Decimal
+    )
+  end
+
+  get :nested_date_and_decimal do
+    response(
+      nested: {
+        date: DateTime,
+        decimal: Decimal
+      }
+    )
+  end
+
   post :update do
     params(
       id: Number,

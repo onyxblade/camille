@@ -22,11 +22,26 @@ module Camille
       end
 
       def transform_and_check value
-        transformed = @fields.map do |key, type|
-          [key, type.transform(value[key])]
-        end.to_h
+        if value.is_a? Hash
+          transform_and_check_results = @fields.map do |key, type|
+            [key, type.transform_and_check(value[key])]
+          end
 
-        [check(transformed), transformed]
+          errors = transform_and_check_results.map do |key, (error, transformed)|
+            [key.to_s, error]
+          end.select{|x| x[1]}
+
+          if errors.empty?
+            transformed = transform_and_check_results.map do |key, (error, transformed)|
+              [key, transformed]
+            end.to_h
+            [nil, transformed]
+          else
+            Camille::TypeError.new(**errors.to_h)
+          end
+        else
+          Camille::TypeError.new("Expected hash, got #{value.inspect}.")
+        end
       end
 
       def literal

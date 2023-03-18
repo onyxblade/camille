@@ -45,6 +45,24 @@ RSpec.describe ProductsController, type: :request do
         )
       end
 
+      it 'returns the transformed value' do
+        get '/products/date_and_decimal'
+        expect(response.parsed_body).to include(
+          'date' => '1999-12-31',
+          'decimal' => 1.2
+        )
+      end
+
+      it 'returns the transformed value for nested object' do
+        get '/products/nested_date_and_decimal'
+        expect(response.parsed_body).to include(
+          'nested' => {
+            'date' => '1999-12-31',
+            'decimal' => 1.2
+          }
+        )
+      end
+
       if Rails.env.development?
         it 'raises error from loader' do
           wrong_content = <<~EOF

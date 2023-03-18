@@ -19,6 +19,22 @@ class ProductsController < ApplicationController
     }
   end
 
+  def date_and_decimal
+    render json: {
+      date: Date.new(1999, 12, 31),
+      decimal: BigDecimal('1.2')
+    }
+  end
+
+  def nested_date_and_decimal
+    render json: {
+      nested: {
+        date: Date.new(1999, 12, 31),
+        decimal: BigDecimal('1.2')
+      }
+    }
+  end
+
   def update
     render json: params.to_unsafe_h.to_json
   end
