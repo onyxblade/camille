@@ -36,31 +36,53 @@ RSpec.describe Camille::Types::Object do
     end
   end
 
-  describe '#check' do
+  describe '#transform_and_check' do
     let(:object_type){
       described_class.new(
         id: Camille::Types::Number,
         name: Camille::Types::String
       )
     }
+    let(:nested_object_type){
+      described_class.new(
+        product: {
+          id: Camille::Types::Number,
+          name: Camille::Types::String
+        }
+      )
+    }
+    let(:object_type_with_date){
+      described_class.new(
+        id: Camille::Types::Number,
+        date: Camille::Types::DateTime
+      )
+    }
+    let(:time) { Time.now }
 
     it 'checks if value is correct object type' do
-      expect(object_type.check({
+      error, transformed = object_type.transform_and_check({
         id: 1,
         name: 'name'
-      })).to be nil
+      })
+      expect(error).to be nil
+      expect(transformed).to eq({
+        id: 1,
+        name: 'name'
+      })
     end
 
     it 'returns basic error if value is not a hash' do
-      expect(object_type.check(1)).to be_an_instance_of(Camille::TypeError)
-      expect(object_type.check(1).basic?).to be true
+      error, transformed = object_type.transform_and_check(1)
+      expect(error).to be_an_instance_of(Camille::TypeError)
+      expect(error.basic?).to be true
     end
 
     it 'returns composite error if value is a hash' do
-      error = object_type.check({
+      error, transformed = object_type.transform_and_check({
         id: 1,
         name: 2
       })
+
       expect(error).to be_an_instance_of(Camille::TypeError)
       expect(error.basic?).to be false
       expect(error.components.keys.first).to eq('name')
@@ -78,8 +100,24 @@ RSpec.describe Camille::Types::Object do
         )
       }
 
+      it 'returns transformed values' do
+        error, transformed = nested_object_type.transform_and_check({
+          product: {
+            id: 1,
+            name: '2'
+          }
+        })
+        expect(error).to be nil
+        expect(transformed).to eq({
+          product: {
+            id: 1,
+            name: '2'
+          }
+        })
+      end
+
       it 'returns errors for nested object' do
-        error = nested_object_type.check({
+        error, transformed = nested_object_type.transform_and_check({
           product: {
             id: 1,
             name: 2
@@ -107,11 +145,13 @@ RSpec.describe Camille::Types::Object do
       }
 
       it 'checks if optional fields are nil' do
-        expect(optional_object_type.check({})).to be nil
+        error, transformed = optional_object_type.transform_and_check({})
+        expect(error).to be nil
+        expect(transformed).to eq({})
       end
 
       it 'returns composite error if optional fields are of wrong type' do
-        error = optional_object_type.check({
+        error, transformed = optional_object_type.transform_and_check({
           id: '1'
         })
         expect(error).to be_an_instance_of(Camille::TypeError)
@@ -120,58 +160,6 @@ RSpec.describe Camille::Types::Object do
         expect(error.components.values.first).to be_an_instance_of(Camille::TypeError)
         expect(error.components.values.first.components.keys).to eq(['union.left', 'union.right'])
       end
-    end
-  end
-
-  describe '#transform_and_check' do
-    let(:object_type){
-      described_class.new(
-        id: Camille::Types::Number,
-        name: Camille::Types::String
-      )
-    }
-    let(:nested_object_type){
-      described_class.new(
-        product: {
-          id: Camille::Types::Number,
-          name: Camille::Types::String
-        }
-      )
-    }
-    let(:object_type_with_date){
-      described_class.new(
-        id: Camille::Types::Number,
-        date: Camille::Types::DateTime
-      )
-    }
-    let(:time) { Time.now }
-
-    it 'returns transformed value' do
-      _, transformed = object_type.transform_and_check({
-        id: 1,
-        name: 'name'
-      })
-
-      expect(transformed).to eq({
-        id: 1,
-        name: 'name'
-      })
-    end
-
-    it 'returns transformed value for nested fields' do
-      _, transformed = nested_object_type.transform_and_check({
-        product: {
-          id: 1,
-          name: 'name'
-        }
-      })
-
-      expect(transformed).to eq({
-        product: {
-          id: 1,
-          name: 'name'
-        }
-      })
     end
 
     it 'returns transformed value for date' do

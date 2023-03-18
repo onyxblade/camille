@@ -4,6 +4,7 @@ module Camille
       attr_reader :fields
 
       def initialize fields
+        @optional_keys = []
         @fields = normalize_fields fields
       end
 
@@ -24,8 +25,13 @@ module Camille
       def transform_and_check value
         if value.is_a? Hash
           transform_and_check_results = @fields.map do |key, type|
-            [key, type.transform_and_check(value[key])]
-          end
+            error, transformed = type.transform_and_check(value[key])
+            if @optional_keys.include?(key) && !error && transformed.nil?
+              nil
+            else
+              [key, type.transform_and_check(value[key])]
+            end
+          end.compact
 
           errors = transform_and_check_results.map do |key, (error, transformed)|
             [key.to_s, error]
@@ -54,6 +60,7 @@ module Camille
             type = Camille::Type.instance(value)
             if key.end_with?('?')
               new_key = remove_question_mark(key)
+              @optional_keys << new_key
               [new_key, type | Camille::Types::Undefined.new]
             else
               [key, type]

@@ -15,35 +15,34 @@ RSpec.describe Camille::Types::Array do
     end
   end
 
-  describe '#check' do
+  describe '#transform_and_check' do
     let(:array_type){ described_class.new(Camille::Types::Number) }
+    let(:date_array){ described_class.new(Camille::Types::DateTime) }
 
     it 'checks if value is correct array type' do
-      expect(array_type.check([1, 2])).to be nil
+      array_type = described_class.new(Camille::Types::Number)
+      error, transformed = array_type.transform_and_check([1, 2])
+      expect(error).to be nil
+      expect(transformed).to eq([1, 2])
     end
 
     it 'returns basic error if value is not an array' do
+      array_type = described_class.new(Camille::Types::Number)
+      error, transformed = array_type.transform_and_check(1)
+
       expect(array_type.check(1)).to be_an_instance_of(Camille::TypeError)
       expect(array_type.check(1).basic?).to be true
     end
 
     it 'returns composite error if value is an array' do
-      error = array_type.check([1, '1'])
+      array_type = described_class.new(Camille::Types::Number)
+      error, transformed = array_type.transform_and_check([1, '1'])
+
       expect(error).to be_an_instance_of(Camille::TypeError)
       expect(error.basic?).to be false
       expect(error.components.keys.first).to eq('array[1]')
       expect(error.components.values.first).to be_an_instance_of(Camille::TypeError)
       expect(error.components.values.first.basic?).to be true
-    end
-  end
-
-  describe '#transform_and_check' do
-    let(:array_type){ described_class.new(Camille::Types::Number) }
-    let(:date_array){ described_class.new(Camille::Types::DateTime) }
-
-    it 'returns transformed value' do
-      _, transformed = array_type.transform_and_check([1, 2, 3])
-      expect(transformed).to eq([1, 2, 3])
     end
 
     it 'returns transformed value for date' do

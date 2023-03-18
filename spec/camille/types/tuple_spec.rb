@@ -8,37 +8,34 @@ RSpec.describe Camille::Types::Tuple do
     end
   end
 
-  describe '#check' do
-    let(:tuple_type){
-      described_class.new([Camille::Types::Number, Camille::Types::String])
-    }
-
+  describe '#transform_and_check' do
     it 'checks if value is correct tuple type' do
-      expect(tuple_type.check([1, 'name'])).to be nil
+      tuple_type = described_class.new([Camille::Types::Number, Camille::Types::String])
+
+      error, transformed = tuple_type.transform_and_check([1, 'name'])
+      expect(error).to be nil
+      expect(transformed).to eq([1, 'name'])
     end
 
     it 'returns basic error if value is not an array' do
-      expect(tuple_type.check(1)).to be_an_instance_of(Camille::TypeError)
-      expect(tuple_type.check(1).basic?).to be true
+      tuple_type = described_class.new([Camille::Types::Number, Camille::Types::String])
+
+      error, transformed = tuple_type.transform_and_check(1)
+
+      expect(error).to be_an_instance_of(Camille::TypeError)
+      expect(error.basic?).to be true
     end
 
     it 'returns composite error if value is an array' do
-      error = tuple_type.check([1, 1])
+      tuple_type = described_class.new([Camille::Types::Number, Camille::Types::String])
+
+      error, transformed = tuple_type.transform_and_check([1, 1])
+
       expect(error).to be_an_instance_of(Camille::TypeError)
       expect(error.basic?).to be false
       expect(error.components.keys.first).to eq('tuple[1]')
       expect(error.components.values.first).to be_an_instance_of(Camille::TypeError)
       expect(error.components.values.first.basic?).to be true
-    end
-
-  end
-
-  describe '#transform_and_check' do
-    it 'returns transformed value' do
-      type = described_class.new([Camille::Types::Number, Camille::Types::String])
-      error, transformed = type.transform_and_check([1, '2'])
-      expect(error).to be nil
-      expect(transformed).to eq([1, '2'])
     end
 
     it 'returns transformed value for date' do
