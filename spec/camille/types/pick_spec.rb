@@ -50,6 +50,19 @@ RSpec.describe Camille::Types::Pick do
     end
   end
 
+  describe '#check_and_transform' do
+    it 'returns the transformed value' do
+      object = {
+        a: Camille::Types::Number,
+        b: Camille::Types::Number,
+        c: Camille::Types::Number
+      }
+
+      _, transformed = Camille::Types::Pick.new(object, 'a').check_and_transform({a: 1})
+      expect(transformed).to eq({a: 1})
+    end
+  end
+
   describe '#literal' do
     it 'returns literal for objects' do
       expect(Camille::Types::Pick.new({a: 1}, 'a').literal).to eq('Pick<{a: 1}, "a">')

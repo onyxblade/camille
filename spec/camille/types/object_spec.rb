@@ -123,6 +123,51 @@ RSpec.describe Camille::Types::Object do
     end
   end
 
+  describe '#check_and_transform' do
+    let(:object_type){
+      described_class.new(
+        id: Camille::Types::Number,
+        name: Camille::Types::String
+      )
+    }
+    let(:nested_object_type){
+      described_class.new(
+        product: {
+          id: Camille::Types::Number,
+          name: Camille::Types::String
+        }
+      )
+    }
+
+    it 'returns transformed value' do
+      _, transformed = object_type.check_and_transform({
+        id: 1,
+        name: 'name'
+      })
+
+      expect(transformed).to eq({
+        id: 1,
+        name: 'name'
+      })
+    end
+
+    it 'returns transformed value for nested fields' do
+      _, transformed = nested_object_type.check_and_transform({
+        product: {
+          id: 1,
+          name: 'name'
+        }
+      })
+
+      expect(transformed).to eq({
+        product: {
+          id: 1,
+          name: 'name'
+        }
+      })
+    end
+  end
+
   describe '#literal' do
     it 'returns correct literal' do
       object = described_class.new(

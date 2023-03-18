@@ -21,6 +21,24 @@ module Camille
         end
       end
 
+      def check_and_transform value
+        left_result = @left.check value
+        if left_result
+          right_result = @right.check value
+          if right_result
+            error = Camille::TypeError.new(
+              'union.left' => left_result,
+              'union.right' => right_result
+            )
+            [error, nil]
+          else
+            [nil, @right.transform(value)]
+          end
+        else
+          [nil, @left.transform(value)]
+        end
+      end
+
       def literal
         "#{@left.literal} | #{@right.literal}"
       end

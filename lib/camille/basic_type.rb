@@ -11,6 +11,14 @@ module Camille
       Camille::Types::Array.new(self)
     end
 
+    def check_and_transform value
+      [check(value), transform(value)]
+    end
+
+    def transform value
+      value
+    end
+
     def self.| other
       Camille::Type.instance(self) | other
     end

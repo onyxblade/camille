@@ -37,6 +37,15 @@ RSpec.describe Camille::Types::Array do
     end
   end
 
+  describe '#check_and_transform' do
+    let(:array_type){ described_class.new(Camille::Types::Number) }
+
+    it 'returns transformed value' do
+      _, transformed = array_type.check_and_transform([1, 2, 3])
+      expect(transformed).to eq([1, 2, 3])
+    end
+  end
+
   describe '#literal' do
     it 'returns correct literal' do
       array = described_class.new(

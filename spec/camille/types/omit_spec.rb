@@ -54,6 +54,19 @@ RSpec.describe Camille::Types::Omit do
     end
   end
 
+  describe '#check_and_transform' do
+    it 'returns the transformed value' do
+      object = {
+        a: Camille::Types::Number,
+        b: Camille::Types::Number,
+        c: Camille::Types::Number
+      }
+
+      _, transformed = Camille::Types::Omit.new(object, 'a').check_and_transform({b: 1, c: 2})
+      expect(transformed).to eq({b: 1, c: 2})
+    end
+  end
+
   describe '#literal' do
     it 'returns literal for objects' do
       expect(Camille::Types::Omit.new({a: 1}, 'a').literal).to eq('Omit<{a: 1}, "a">')

@@ -34,6 +34,23 @@ RSpec.describe Camille::Types::Union do
     end
   end
 
+  describe '#check_and_transform' do
+    let(:union_type){
+      described_class.new(
+        Camille::Types::Number,
+        Camille::Types::String
+      )
+    }
+
+    it 'returns transformed value based on check result' do
+      _, transformed = union_type.check_and_transform(1)
+      expect(transformed).to eq(1)
+
+      _, transformed = union_type.check_and_transform('1')
+      expect(transformed).to eq('1')
+    end
+  end
+
   describe '#literal' do
     it 'returns correct literal' do
       union = described_class.new(
