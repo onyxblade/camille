@@ -21,6 +21,11 @@ module Camille
       @underlying.check value
     end
 
+    def transform_and_check value
+      transformed = transform value
+      @underlying.transform_and_check transformed
+    end
+
     def self.klass_name
       name.gsub(/^Camille::Types::/, '')
     end
