@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.2
+
+### Added
+
+* Supported `transform` for custom types
+* Added default DateTime and Decimal type to install generator
+
 ## 0.4.1
 
 ### Added
