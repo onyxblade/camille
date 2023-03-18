@@ -52,6 +52,15 @@ RSpec.describe Camille::Types::Array do
 
       expect(transformed).to eq([time.as_json] * 2)
     end
+
+    it 'returns nested transformed values' do
+      type = Camille::Types::DateTime[][]
+      time = Time.now
+
+      errors, transformed = type.transform_and_check([[time]])
+      expect(errors).to be nil
+      expect(transformed).to eq([[time.as_json]])
+    end
   end
 
   describe '#literal' do

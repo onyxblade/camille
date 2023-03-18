@@ -65,6 +65,22 @@ RSpec.describe Camille::Types::Union do
       _, transformed = union_type_with_date.transform_and_check(time)
       expect(transformed).to eq(time.as_json)
     end
+
+    it 'returns transformed value if it is on left' do
+      time = Time.now
+      type = Camille::Types::DateTime | Camille::Types::Number
+      error, transformed = type.transform_and_check(time)
+      expect(error).to be nil
+      expect(transformed).to eq(time.as_json)
+    end
+
+    it 'returns nested transformed values' do
+      type = Camille::Types::Number | (Camille::Types::String | Camille::Types::DateTime)
+      time = Time.now
+      error, transformed = type.transform_and_check(time)
+      expect(error).to be nil
+      expect(transformed).to eq(time.as_json)
+    end
   end
 
   describe '#literal' do

@@ -33,6 +33,33 @@ RSpec.describe Camille::Types::Tuple do
 
   end
 
+  describe '#transform_and_check' do
+    it 'returns transformed value' do
+      type = described_class.new([Camille::Types::Number, Camille::Types::String])
+      error, transformed = type.transform_and_check([1, '2'])
+      expect(error).to be nil
+      expect(transformed).to eq([1, '2'])
+    end
+
+    it 'returns transformed value for date' do
+      time = Time.now
+      type = described_class.new([Camille::Types::Number, Camille::Types::DateTime])
+      error, transformed = type.transform_and_check([1, time])
+
+      expect(error).to be nil
+      expect(transformed).to eq([1, time.as_json])
+    end
+
+    it 'returns nested transformed values' do
+      time = Time.now
+      type = described_class.new([described_class.new([1, Camille::Types::DateTime])])
+
+      errors, transformed = type.transform_and_check([[1, time]])
+      expect(errors).to be nil
+      expect(transformed).to eq([[1, time.as_json]])
+    end
+  end
+
   describe '#literal' do
     it 'returns correct literal' do
       tuple = described_class.new([Camille::Types::Number, Camille::Types::String])

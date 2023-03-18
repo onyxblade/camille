@@ -237,7 +237,7 @@ Camille will print the following error:
 ```
 object:
   array:
-    [2]: Expected number, got "3".
+    array[2]: Expected number, got "3".
 ```
 
 ### Reloading

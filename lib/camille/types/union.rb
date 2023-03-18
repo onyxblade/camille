@@ -22,15 +22,14 @@ module Camille
       end
 
       def transform_and_check value
-        left_transformed = @left.transform value
-        left_result = @left.check left_transformed
-        if left_result
-          right_transformed = @right.transform value
-          right_result = @right.check right_transformed
-          if right_result
+        left_error, left_transformed = @left.transform_and_check value
+        if left_error
+          right_error, right_transformed = @right.transform_and_check value
+          right_error = @right.check right_transformed
+          if right_error
             error = Camille::TypeError.new(
-              'union.left' => left_result,
-              'union.right' => right_result
+              'union.left' => right_error,
+              'union.right' => right_error
             )
             [error, nil]
           else

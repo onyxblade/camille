@@ -37,10 +37,10 @@ module Camille
             end.to_h
             [nil, transformed]
           else
-            Camille::TypeError.new(**errors.to_h)
+            [Camille::TypeError.new(**errors.to_h), nil]
           end
         else
-          Camille::TypeError.new("Expected hash, got #{value.inspect}.")
+          [Camille::TypeError.new("Expected hash, got #{value.inspect}."), nil]
         end
       end
 

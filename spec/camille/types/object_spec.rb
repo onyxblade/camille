@@ -144,6 +144,7 @@ RSpec.describe Camille::Types::Object do
         date: Camille::Types::DateTime
       )
     }
+    let(:time) { Time.now }
 
     it 'returns transformed value' do
       _, transformed = object_type.transform_and_check({
@@ -183,6 +184,26 @@ RSpec.describe Camille::Types::Object do
       expect(transformed).to eq({
         id: 1,
         date: time.as_json
+      })
+    end
+
+    it 'returns nested transformed values' do
+      type = described_class.new(
+        nested: {
+          date: Camille::Types::DateTime
+        }
+      )
+
+      errors, transformed = type.transform_and_check({
+        nested: {
+          date: time
+        }
+      })
+      expect(errors).to be nil
+      expect(transformed).to eq({
+        nested: {
+          date: time.as_json
+        }
       })
     end
   end
