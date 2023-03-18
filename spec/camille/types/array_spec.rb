@@ -39,10 +39,21 @@ RSpec.describe Camille::Types::Array do
 
   describe '#check_and_transform' do
     let(:array_type){ described_class.new(Camille::Types::Number) }
+    let(:date_array){ described_class.new(Camille::Types::Date) }
 
     it 'returns transformed value' do
       _, transformed = array_type.check_and_transform([1, 2, 3])
       expect(transformed).to eq([1, 2, 3])
+    end
+
+    it 'returns transformed value for date' do
+      time = Time.now
+      _, transformed = date_array.check_and_transform([time, time])
+
+      expect(transformed).to eq([{
+        '?': 'Date',
+        value: time.to_i * 1000
+      }] * 2)
     end
   end
 

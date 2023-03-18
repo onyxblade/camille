@@ -138,6 +138,12 @@ RSpec.describe Camille::Types::Object do
         }
       )
     }
+    let(:object_type_with_date){
+      described_class.new(
+        id: Camille::Types::Number,
+        date: Camille::Types::Date
+      )
+    }
 
     it 'returns transformed value' do
       _, transformed = object_type.check_and_transform({
@@ -163,6 +169,22 @@ RSpec.describe Camille::Types::Object do
         product: {
           id: 1,
           name: 'name'
+        }
+      })
+    end
+
+    it 'returns transformed value for date' do
+      time = Time.now
+      _, transformed = object_type_with_date.check_and_transform({
+        id: 1,
+        date: time
+      })
+
+      expect(transformed).to eq({
+        id: 1,
+        date: {
+          '?': 'Date',
+          value: time.to_i * 1000
         }
       })
     end
