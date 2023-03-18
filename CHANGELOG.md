@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.3
+
+### Fixed
+
+* Fixed the error that values not getting transformed in array/tuple/union types
+* Fixed optional fields getting `nil` due to transformation
+
 ## 0.4.2
 
 ### Added
