@@ -1,10 +1,6 @@
 module Camille
   module Types
     class Pick < PickAndOmit
-      def check value
-        processed_object.check(value)
-      end
-
       def transform_and_check value
         processed_object.transform_and_check(value)
       end

@@ -7,33 +7,6 @@ RSpec.describe Camille::Types::Union do
     end
   end
 
-  describe '#check' do
-    let(:union_type){
-      described_class.new(
-        Camille::Types::Number,
-        Camille::Types::String
-      )
-    }
-
-    it 'checks if value is acceptable type' do
-      expect(union_type.check(1)).to be nil
-      expect(union_type.check('1')).to be nil
-    end
-
-    it 'returns composite error if value is not acceptable type' do
-      error = union_type.check(true)
-
-      expect(error).to be_an_instance_of(Camille::TypeError)
-      expect(error.basic?).to be false
-      expect(error.components.keys.first).to eq('union.left')
-      expect(error.components.values.first).to be_an_instance_of(Camille::TypeError)
-      expect(error.components.values.first.basic?).to be true
-      expect(error.components.keys.last).to eq('union.right')
-      expect(error.components.values.last).to be_an_instance_of(Camille::TypeError)
-      expect(error.components.values.last.basic?).to be true
-    end
-  end
-
   describe '#transform_and_check' do
     let(:union_type){
       described_class.new(
@@ -48,12 +21,27 @@ RSpec.describe Camille::Types::Union do
       )
     }
 
-    it 'returns transformed value based on check result' do
-      _, transformed = union_type.transform_and_check(1)
+    it 'checks if value is acceptable type' do
+      error, transformed = union_type.transform_and_check(1)
+      expect(error).to be nil
       expect(transformed).to eq(1)
 
-      _, transformed = union_type.transform_and_check('1')
-      expect(transformed).to eq('1')
+      error, transformed = union_type.transform_and_check('2')
+      expect(error).to be nil
+      expect(transformed).to eq('2')
+    end
+
+    it 'returns composite error if value is not acceptable type' do
+      error, transformed = union_type.transform_and_check(true)
+
+      expect(error).to be_an_instance_of(Camille::TypeError)
+      expect(error.basic?).to be false
+      expect(error.components.keys.first).to eq('union.left')
+      expect(error.components.values.first).to be_an_instance_of(Camille::TypeError)
+      expect(error.components.values.first.basic?).to be true
+      expect(error.components.keys.last).to eq('union.right')
+      expect(error.components.values.last).to be_an_instance_of(Camille::TypeError)
+      expect(error.components.values.last.basic?).to be true
     end
 
     it 'returns transformed value for date' do

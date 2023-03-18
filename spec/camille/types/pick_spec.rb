@@ -32,7 +32,7 @@ RSpec.describe Camille::Types::Pick do
     end
   end
 
-  describe '#check' do
+  describe '#transform_and_check' do
     it 'checks the value with keys picked' do
       object = {
         a: Camille::Types::Number,
@@ -40,17 +40,27 @@ RSpec.describe Camille::Types::Pick do
         c: Camille::Types::Number
       }
 
-      expect(Camille::Types::Pick.new(object, 'a').check({a: 1})).to be nil
-      expect(Camille::Types::Pick.new(object, 'a' | 'b').check({a: 1, b: 2})).to be nil
-      expect(Camille::Types::Pick.new(object, 'a' | 'b' | 'c').check({a: 1, b: 2})).to be_instance_of(Camille::TypeError)
+      error, transformed = Camille::Types::Pick.new(object, 'a').transform_and_check({a: 1})
+      expect(error).to be nil
+      expect(transformed).to eq({a: 1})
 
-      expect(Camille::Types::Pick.new(Camille::Types::ObjectAlias, 'a').check({a: 1})).to be nil
-      expect(Camille::Types::Pick.new(Camille::Types::ObjectAlias, 'a' | 'b').check({a: 1, b: 2})).to be nil
-      expect(Camille::Types::Pick.new(Camille::Types::ObjectAlias, 'a' | 'b' | 'c').check({a: 1, b: 2})).to be_instance_of(Camille::TypeError)
+      error, transformed = Camille::Types::Pick.new(object, 'a' | 'b').transform_and_check({a: 1, b: 2})
+      expect(error).to be nil
+      expect(transformed).to eq({a: 1, b: 2})
+
+      expect(Camille::Types::Pick.new(object, 'a' | 'b' | 'c').transform_and_check({a: 1, b: 2})[0]).to be_instance_of(Camille::TypeError)
+
+      error, transformed = Camille::Types::Pick.new(Camille::Types::ObjectAlias, 'a').transform_and_check({a: 1})
+      expect(error).to be nil
+      expect(transformed).to eq({a: 1})
+
+      error, transformed = Camille::Types::Pick.new(Camille::Types::ObjectAlias, 'a' | 'b').transform_and_check({a: 1, b: 2})
+      expect(error).to be nil
+      expect(transformed).to eq({a: 1, b: 2})
+
+      expect(Camille::Types::Pick.new(Camille::Types::ObjectAlias, 'a' | 'b' | 'c').transform_and_check({a: 1, b: 2})[0]).to be_instance_of(Camille::TypeError)
     end
-  end
 
-  describe '#transform_and_check' do
     it 'returns the transformed value' do
       object = {
         a: Camille::Types::Number,

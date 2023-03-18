@@ -30,8 +30,8 @@ RSpec.describe Camille::Types::Array do
       array_type = described_class.new(Camille::Types::Number)
       error, transformed = array_type.transform_and_check(1)
 
-      expect(array_type.check(1)).to be_an_instance_of(Camille::TypeError)
-      expect(array_type.check(1).basic?).to be true
+      expect(error).to be_an_instance_of(Camille::TypeError)
+      expect(error.basic?).to be true
     end
 
     it 'returns composite error if value is an array' do

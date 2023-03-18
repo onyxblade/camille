@@ -32,28 +32,6 @@ RSpec.describe Camille::Types::Omit do
     end
   end
 
-  describe '#check' do
-    it 'checks the value with keys omited' do
-      object = {
-        a: Camille::Types::Number,
-        b: Camille::Types::Number,
-        c: Camille::Types::Number
-      }
-
-      expect(Camille::Types::Omit.new(object, 'a').check({b: 1, c: 2})).to be nil
-      expect(Camille::Types::Omit.new(object, 'a').check({b: 1})).to be_instance_of(Camille::TypeError)
-      expect(Camille::Types::Omit.new(object, 'a' | 'b').check({c: 1})).to be nil
-      expect(Camille::Types::Omit.new(object, 'a' | 'b').check({})).to be_instance_of(Camille::TypeError)
-      expect(Camille::Types::Omit.new(object, 'a' | 'b' | 'c').check({})).to be nil
-
-      expect(Camille::Types::Omit.new(Camille::Types::ObjectAlias, 'a').check({b: 1, c: 2})).to be nil
-      expect(Camille::Types::Omit.new(Camille::Types::ObjectAlias, 'a').check({b: 1})).to be_instance_of(Camille::TypeError)
-      expect(Camille::Types::Omit.new(Camille::Types::ObjectAlias, 'a' | 'b').check({c: 1})).to be nil
-      expect(Camille::Types::Omit.new(Camille::Types::ObjectAlias, 'a' | 'b').check({})).to be_instance_of(Camille::TypeError)
-      expect(Camille::Types::Omit.new(Camille::Types::ObjectAlias, 'a' | 'b' | 'c').check({})).to be nil
-    end
-  end
-
   describe '#transform_and_check' do
     it 'returns the transformed value' do
       object = {
@@ -62,8 +40,37 @@ RSpec.describe Camille::Types::Omit do
         c: Camille::Types::Number
       }
 
-      _, transformed = Camille::Types::Omit.new(object, 'a').transform_and_check({b: 1, c: 2})
+      error, transformed = Camille::Types::Omit.new(object, 'a').transform_and_check({b: 1, c: 2})
+      expect(error).to be nil
       expect(transformed).to eq({b: 1, c: 2})
+
+      expect(Camille::Types::Omit.new(object, 'a').transform_and_check({b: 1})[0]).to be_instance_of(Camille::TypeError)
+
+      error, transformed = Camille::Types::Omit.new(object, 'a' | 'b').transform_and_check({c: 1})
+      expect(error).to be nil
+      expect(transformed).to eq({c: 1})
+
+      expect(Camille::Types::Omit.new(object, 'a' | 'b').transform_and_check({})[0]).to be_instance_of(Camille::TypeError)
+
+      error, transformed = Camille::Types::Omit.new(object, 'a' | 'b' | 'c').transform_and_check({})
+      expect(error).to be nil
+      expect(transformed).to eq({})
+
+      error, transformed = Camille::Types::Omit.new(Camille::Types::ObjectAlias, 'a').transform_and_check({b: 1, c: 2})
+      expect(error).to be nil
+      expect(transformed).to eq({b: 1, c: 2})
+
+      expect(Camille::Types::Omit.new(Camille::Types::ObjectAlias, 'a').transform_and_check({b: 1})[0]).to be_instance_of(Camille::TypeError)
+
+      error, transformed = Camille::Types::Omit.new(Camille::Types::ObjectAlias, 'a' | 'b').transform_and_check({c: 1})
+      expect(error).to be nil
+      expect(transformed).to eq({c: 1})
+
+      expect(Camille::Types::Omit.new(Camille::Types::ObjectAlias, 'a' | 'b').transform_and_check({})[0]).to be_instance_of(Camille::TypeError)
+
+      error, transformed = Camille::Types::Omit.new(Camille::Types::ObjectAlias, 'a' | 'b' | 'c').transform_and_check({})
+      expect(error).to be nil
+      expect(transformed).to eq({})
     end
   end
 
