@@ -1,3 +1,4 @@
+require 'camille/custom_types/date'
 
 RSpec.describe Camille::Types::Object do
   describe '#initialize' do
@@ -123,7 +124,7 @@ RSpec.describe Camille::Types::Object do
     end
   end
 
-  describe '#check_and_transform' do
+  describe '#transform_and_check' do
     let(:object_type){
       described_class.new(
         id: Camille::Types::Number,
@@ -141,12 +142,12 @@ RSpec.describe Camille::Types::Object do
     let(:object_type_with_date){
       described_class.new(
         id: Camille::Types::Number,
-        date: Camille::Types::Date
+        date: Camille::CustomTypes::Date
       )
     }
 
     it 'returns transformed value' do
-      _, transformed = object_type.check_and_transform({
+      _, transformed = object_type.transform_and_check({
         id: 1,
         name: 'name'
       })
@@ -158,7 +159,7 @@ RSpec.describe Camille::Types::Object do
     end
 
     it 'returns transformed value for nested fields' do
-      _, transformed = nested_object_type.check_and_transform({
+      _, transformed = nested_object_type.transform_and_check({
         product: {
           id: 1,
           name: 'name'
@@ -175,7 +176,7 @@ RSpec.describe Camille::Types::Object do
 
     it 'returns transformed value for date' do
       time = Time.now
-      _, transformed = object_type_with_date.check_and_transform({
+      _, transformed = object_type_with_date.transform_and_check({
         id: 1,
         date: time
       })
@@ -183,7 +184,7 @@ RSpec.describe Camille::Types::Object do
       expect(transformed).to eq({
         id: 1,
         date: {
-          '?': 'Date',
+          type: 'Date',
           value: time.to_i * 1000
         }
       })

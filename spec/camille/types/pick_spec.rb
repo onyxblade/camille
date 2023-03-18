@@ -50,7 +50,7 @@ RSpec.describe Camille::Types::Pick do
     end
   end
 
-  describe '#check_and_transform' do
+  describe '#transform_and_check' do
     it 'returns the transformed value' do
       object = {
         a: Camille::Types::Number,
@@ -58,7 +58,7 @@ RSpec.describe Camille::Types::Pick do
         c: Camille::Types::Number
       }
 
-      _, transformed = Camille::Types::Pick.new(object, 'a').check_and_transform({a: 1})
+      _, transformed = Camille::Types::Pick.new(object, 'a').transform_and_check({a: 1})
       expect(transformed).to eq({a: 1})
     end
   end

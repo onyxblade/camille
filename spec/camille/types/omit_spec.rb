@@ -54,7 +54,7 @@ RSpec.describe Camille::Types::Omit do
     end
   end
 
-  describe '#check_and_transform' do
+  describe '#transform_and_check' do
     it 'returns the transformed value' do
       object = {
         a: Camille::Types::Number,
@@ -62,7 +62,7 @@ RSpec.describe Camille::Types::Omit do
         c: Camille::Types::Number
       }
 
-      _, transformed = Camille::Types::Omit.new(object, 'a').check_and_transform({b: 1, c: 2})
+      _, transformed = Camille::Types::Omit.new(object, 'a').transform_and_check({b: 1, c: 2})
       expect(transformed).to eq({b: 1, c: 2})
     end
   end

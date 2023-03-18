@@ -1,3 +1,4 @@
+require 'camille/custom_types/date'
 
 RSpec.describe Camille::Types::Union do
   describe '#initialize' do
@@ -34,7 +35,7 @@ RSpec.describe Camille::Types::Union do
     end
   end
 
-  describe '#check_and_transform' do
+  describe '#transform_and_check' do
     let(:union_type){
       described_class.new(
         Camille::Types::Number,
@@ -44,27 +45,27 @@ RSpec.describe Camille::Types::Union do
     let(:union_type_with_date) {
       described_class.new(
         Camille::Types::Number,
-        Camille::Types::Date
+        Camille::CustomTypes::Date
       )
     }
 
     it 'returns transformed value based on check result' do
-      _, transformed = union_type.check_and_transform(1)
+      _, transformed = union_type.transform_and_check(1)
       expect(transformed).to eq(1)
 
-      _, transformed = union_type.check_and_transform('1')
+      _, transformed = union_type.transform_and_check('1')
       expect(transformed).to eq('1')
     end
 
     it 'returns transformed value for date' do
       time = Time.now
 
-      _, transformed = union_type_with_date.check_and_transform(1)
+      _, transformed = union_type_with_date.transform_and_check(1)
       expect(transformed).to eq(1)
 
-      _, transformed = union_type_with_date.check_and_transform(time)
+      _, transformed = union_type_with_date.transform_and_check(time)
       expect(transformed).to eq({
-        '?': 'Date',
+        type: 'Date',
         value: time.to_i * 1000
       })
     end

@@ -5,8 +5,8 @@ module Camille
         processed_object.check(value)
       end
 
-      def check_and_transform value
-        processed_object.check_and_transform(value)
+      def transform_and_check value
+        processed_object.transform_and_check(value)
       end
 
       private

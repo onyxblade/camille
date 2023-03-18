@@ -21,16 +21,12 @@ module Camille
         end
       end
 
-      def check_and_transform value
-        check_result = check(value)
-        if check_result
-          [check_result, nil]
-        else
-          transformed = @fields.map do |key, type|
-            [key, type.transform(value[key])]
-          end.to_h
-          [check_result, transformed]
-        end
+      def transform_and_check value
+        transformed = @fields.map do |key, type|
+          [key, type.transform(value[key])]
+        end.to_h
+
+        [check(transformed), transformed]
       end
 
       def literal
