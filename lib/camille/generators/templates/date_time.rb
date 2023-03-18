@@ -5,6 +5,7 @@ class Camille::Types::DateTime < Camille::Type
 
   alias_of(String)
 
+  # transforms a DateTime into a String of ISO 8601 format
   def transform value
     value.as_json
   end
