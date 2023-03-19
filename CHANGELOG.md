@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0
+
+### Changed
+
+* Pick and Omit now use a new syntax, so it can handle snake to camel case conversion correctly
+
 ## 0.4.3
 
 ### Fixed
