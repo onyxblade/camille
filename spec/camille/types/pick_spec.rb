@@ -20,15 +20,15 @@ RSpec.describe Camille::Types::Pick do
 
   describe '#initialize' do
     it 'raises unless receiving an object type or an alias of object type' do
-      expect{Camille::Types::Pick.new({a: 1}, 'a')}.not_to raise_error
-      expect{Camille::Types::Pick.new(Camille::Types::ObjectAlias, 'a')}.not_to raise_error
-      expect{Camille::Types::Pick.new(Camille::Types::Number, 'a')}.to raise_error(Camille::Types::Pick::ArgumentError)
+      expect{Camille::Types::Pick.new({a: 1}, [:a])}.not_to raise_error
+      expect{Camille::Types::Pick.new(Camille::Types::ObjectAlias, [:a])}.not_to raise_error
+      expect{Camille::Types::Pick.new(Camille::Types::Number, [:a])}.to raise_error(Camille::Types::Pick::ArgumentError)
     end
 
     it 'raises unless receiving a string literal or a union of literals' do
-      expect{Camille::Types::Pick.new({a: 1}, 'a')}.not_to raise_error
-      expect{Camille::Types::Pick.new({a: 1}, 'a' | 'b')}.not_to raise_error
-      expect{Camille::Types::Pick.new({a: 1}, 'a' | 'b' | 1)}.to raise_error(Camille::Types::Pick::ArgumentError)
+      expect{Camille::Types::Pick.new({a: 1}, [:a])}.not_to raise_error
+      expect{Camille::Types::Pick.new({a: 1}, [:a, :b])}.not_to raise_error
+      expect{Camille::Types::Pick.new({a: 1}, [:a, :b, 1])}.to raise_error(Camille::Types::Pick::ArgumentError)
     end
   end
 
@@ -40,25 +40,25 @@ RSpec.describe Camille::Types::Pick do
         c: Camille::Types::Number
       }
 
-      error, transformed = Camille::Types::Pick.new(object, 'a').transform_and_check({a: 1})
+      error, transformed = Camille::Types::Pick.new(object, [:a]).transform_and_check({a: 1})
       expect(error).to be nil
       expect(transformed).to eq({a: 1})
 
-      error, transformed = Camille::Types::Pick.new(object, 'a' | 'b').transform_and_check({a: 1, b: 2})
+      error, transformed = Camille::Types::Pick.new(object, [:a, :b]).transform_and_check({a: 1, b: 2})
       expect(error).to be nil
       expect(transformed).to eq({a: 1, b: 2})
 
-      expect(Camille::Types::Pick.new(object, 'a' | 'b' | 'c').transform_and_check({a: 1, b: 2})[0]).to be_instance_of(Camille::TypeError)
+      expect(Camille::Types::Pick.new(object, [:a, :b, :c]).transform_and_check({a: 1, b: 2})[0]).to be_instance_of(Camille::TypeError)
 
-      error, transformed = Camille::Types::Pick.new(Camille::Types::ObjectAlias, 'a').transform_and_check({a: 1})
+      error, transformed = Camille::Types::Pick.new(Camille::Types::ObjectAlias, [:a]).transform_and_check({a: 1})
       expect(error).to be nil
       expect(transformed).to eq({a: 1})
 
-      error, transformed = Camille::Types::Pick.new(Camille::Types::ObjectAlias, 'a' | 'b').transform_and_check({a: 1, b: 2})
+      error, transformed = Camille::Types::Pick.new(Camille::Types::ObjectAlias, [:a, :b]).transform_and_check({a: 1, b: 2})
       expect(error).to be nil
       expect(transformed).to eq({a: 1, b: 2})
 
-      expect(Camille::Types::Pick.new(Camille::Types::ObjectAlias, 'a' | 'b' | 'c').transform_and_check({a: 1, b: 2})[0]).to be_instance_of(Camille::TypeError)
+      expect(Camille::Types::Pick.new(Camille::Types::ObjectAlias, [:a, :b, :c]).transform_and_check({a: 1, b: 2})[0]).to be_instance_of(Camille::TypeError)
     end
 
     it 'returns the transformed value' do
@@ -68,26 +68,48 @@ RSpec.describe Camille::Types::Pick do
         c: Camille::Types::Number
       }
 
-      _, transformed = Camille::Types::Pick.new(object, 'a').transform_and_check({a: 1})
+      _, transformed = Camille::Types::Pick.new(object, [:a]).transform_and_check({a: 1})
       expect(transformed).to eq({a: 1})
+    end
+
+    it 'handles keys of snake case' do
+      object = {
+        long_name: Camille::Types::Number
+      }
+      type = Camille::Types::Pick.new(object, [:long_name])
+
+      error, transformed = type.transform_and_check({})
+      expect(error).to be_instance_of(Camille::TypeError)
+
+      error, transformed = type.transform_and_check({long_name: 1})
+      expect(error).to be nil
     end
   end
 
   describe '#literal' do
     it 'returns literal for objects' do
-      expect(Camille::Types::Pick.new({a: 1}, 'a').literal).to eq('Pick<{a: 1}, "a">')
-      expect(Camille::Types::Pick.new({a: 1}, 'a' | 'b').literal).to eq('Pick<{a: 1}, "a" | "b">')
-      expect(Camille::Types::Pick.new({a: 1}, 'a' | 'b' | 'c').literal).to eq('Pick<{a: 1}, "a" | "b" | "c">')
+      expect(Camille::Types::Pick.new({a: 1}, [:a]).literal).to eq('Pick<{a: 1}, "a">')
+      expect(Camille::Types::Pick.new({a: 1}, [:a, :b]).literal).to eq('Pick<{a: 1}, "a" | "b">')
+      expect(Camille::Types::Pick.new({a: 1}, [:a, :b, :c]).literal).to eq('Pick<{a: 1}, "a" | "b" | "c">')
     end
 
     it 'returns liter for object aliases' do
-      expect(Camille::Types::Pick.new(Camille::Types::ObjectAlias, 'a' | 'b').literal).to eq('Pick<ObjectAlias, "a" | "b">')
+      expect(Camille::Types::Pick.new(Camille::Types::ObjectAlias, [:a, :b]).literal).to eq('Pick<ObjectAlias, "a" | "b">')
+    end
+
+    it 'handles keys of snake case' do
+      object = {
+        long_name: Camille::Types::Number
+      }
+      type = Camille::Types::Pick.new(object, [:long_name])
+
+      expect(type.literal).to eq('Pick<{longName: number}, "longName">')
     end
   end
 
   describe '.[]' do
     it 'instantiates a pick type' do
-      expect(Camille::Types::Pick[{a: 1}, 'a']).to be_instance_of(Camille::Types::Pick)
+      expect(Camille::Types::Pick[{a: 1}, [:a]]).to be_instance_of(Camille::Types::Pick)
     end
   end
 

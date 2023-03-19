@@ -14,24 +14,14 @@ module Camille
         raise ArgumentError.new("Currently onle an object type or an alias of object type is supported in #{klass_name}. Got #{type.inspect}.")
       end
 
-      @keys = Camille::Type.instance(keys)
-      case
-      when @keys.is_a?(Camille::Types::StringLiteral)
-        @keys_array = [@keys.value].map(&:to_sym)
-      when @keys.is_a?(Camille::Types::Union)
-        unfolded = unfold_union(@keys).flatten
-        if unfolded.all?{|x| x.is_a?(Camille::Types::StringLiteral)}
-          @keys_array = unfolded.map(&:value).map(&:to_sym)
-        else
-          raise ArgumentError.new("The second argument of #{klass_name} has to be a string literal or an union of string literals. Got #{keys.inspect}.")
-        end
-      else
-        raise ArgumentError.new("The second argument of #{klass_name} has to be a string literal or an union of string literals. Got #{keys.inspect}.")
+      unless keys.is_a?(::Array) && !keys.empty? && keys.all?{|x| x.is_a? Symbol}
+        raise ArgumentError.new("The second argument of #{klass_name} has to be an array of symbols. Got #{keys.inspect}.")
       end
+      @keys = keys
     end
 
     def literal
-      "#{klass_name}<#{@type.literal}, #{@keys.literal}>"
+      "#{klass_name}<#{@type.literal}, #{keys_in_literal}>"
     end
 
     def self.[] type, keys
@@ -39,12 +29,8 @@ module Camille
     end
 
     private
-      def unfold_union type
-        if type.is_a?(Camille::Types::Union)
-          [unfold_union(type.left), unfold_union(type.right)]
-        else
-          [type]
-        end
+      def keys_in_literal
+        @keys.map{|k| "\"#{k.to_s.camelize(:lower)}\""}.join(' | ')
       end
 
   end

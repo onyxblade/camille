@@ -11,7 +11,7 @@ module Camille
         end
 
         def processed_object
-          fields = @target_object.fields.select{|k, _| @keys_array.include?(k)}
+          fields = @target_object.fields.select{|k, _| @keys.include?(k)}
           Camille::Types::Object.new(fields)
         end
 
