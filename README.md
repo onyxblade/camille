@@ -29,6 +29,10 @@ Therefore, if the front-end requests the API by calling `data`, we have guarante
 
 By using these request functions, we also don't need to know about HTTP verbs and paths. It's impossible to have unrecognized routes, since Camille will make sure that each function handled by the correct Rails action.
 
+## Tutorial
+
+There's a step by step tutorial for setting up and showcasing Camille: https://github.com/onyxblade/camille-tutorial.
+
 ## Installation
 
 Add this line to your application's Gemfile:
