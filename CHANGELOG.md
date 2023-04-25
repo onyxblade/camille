@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.1
+
+### Fixed
+
+* Fixed the wrong error returned for `union.left`
+
 ## 0.5.0
 
 ### Changed
