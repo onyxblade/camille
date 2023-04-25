@@ -14,7 +14,7 @@ module Camille
           right_error, right_transformed = @right.transform_and_check value
           if right_error
             error = Camille::TypeError.new(
-              'union.left' => right_error,
+              'union.left' => left_error,
               'union.right' => right_error
             )
             [error, nil]

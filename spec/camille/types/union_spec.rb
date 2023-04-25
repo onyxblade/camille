@@ -39,9 +39,11 @@ RSpec.describe Camille::Types::Union do
       expect(error.components.keys.first).to eq('union.left')
       expect(error.components.values.first).to be_an_instance_of(Camille::TypeError)
       expect(error.components.values.first.basic?).to be true
+      expect(error.components.values.first.message).to eq("Expected an integer or a float, got true.")
       expect(error.components.keys.last).to eq('union.right')
       expect(error.components.values.last).to be_an_instance_of(Camille::TypeError)
       expect(error.components.values.last.basic?).to be true
+      expect(error.components.values.last.message).to eq("Expected string, got true.")
     end
 
     it 'returns transformed value for date' do
