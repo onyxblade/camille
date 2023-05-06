@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.2
+
+### Added
+
+* Symbols are now accepted in string types
+* When omitted, the response type of an endpoint will now have the default `{}`
+
 ## 0.5.1
 
 ### Fixed
