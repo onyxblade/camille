@@ -75,6 +75,11 @@ RSpec.describe Camille::BasicType do
       expect(float).to be_an_instance_of(Camille::Types::NumberLiteral)
     end
 
+    it 'converts a boolean to boolean literal type' do
+      type = Camille::Type.instance(true)
+      expect(type).to be_an_instance_of(Camille::Types::BooleanLiteral)
+    end
+
     it 'raises when receiving a generic type class' do
       expect{ Camille::Type.instance Camille::Types::Array }.to raise_error(Camille::Type::InvalidTypeError)
     end

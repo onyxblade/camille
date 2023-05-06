@@ -42,6 +42,8 @@ module Camille
         Camille::Types::NumberLiteral.new(value)
       when value.is_a?(::String)
         Camille::Types::StringLiteral.new(value)
+      when value == true || value == false
+        Camille::Types::BooleanLiteral.new(value)
       when value.is_a?(Camille::BasicType)
         value
       when value.is_a?(Class) && value < Camille::BasicType && value.directly_instantiable?
