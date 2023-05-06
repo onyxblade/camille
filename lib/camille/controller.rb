@@ -1,5 +1,5 @@
 module Camille
-  module ControllerExtension
+  module Controller
     class TypeError < ::StandardError; end
     class ArgumentError < ::ArgumentError; end
 

@@ -4,8 +4,8 @@ module Camille
   class Railtie < ::Rails::Railtie
 
     initializer "camille.configure_rails" do |app|
-      ActionController::API.include(Camille::ControllerExtension)
-      ActionController::Base.include(Camille::ControllerExtension)
+      ActionController::API.include(Camille::Controller)
+      ActionController::Base.include(Camille::Controller)
 
       Camille::Loader.setup_zeitwerk_loader(app)
 

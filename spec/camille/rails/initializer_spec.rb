@@ -19,8 +19,8 @@ RSpec.describe 'initializer' do
   end
 
   it 'installs controller extension to base controller' do
-    expect(ActionController::Base.included_modules).to include(Camille::ControllerExtension)
-    expect(ActionController::API.included_modules).to include(Camille::ControllerExtension)
+    expect(ActionController::Base.included_modules).to include(Camille::Controller)
+    expect(ActionController::API.included_modules).to include(Camille::Controller)
   end
 
   it 'constructs Loader.controller_name_to_schema_map' do

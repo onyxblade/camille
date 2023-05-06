@@ -21,7 +21,7 @@ RSpec.describe ProductsController, type: :request do
       it 'typechecks the response' do
         # Rails development environment will rescue errors.
         if Rails.env.test?
-          expect{ get '/products/wrong_data' }.to raise_error(Camille::ControllerExtension::TypeError)
+          expect{ get '/products/wrong_data' }.to raise_error(Camille::Controller::TypeError)
         elsif Rails.env.development?
           get '/products/wrong_data'
           expect(response.status).to eq(500)
