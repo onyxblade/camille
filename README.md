@@ -160,6 +160,7 @@ params(
   # literal types
   number_literal: 1,
   string_literal: 'hello',
+  boolean_literal: false,
   # a custom type we defined above
   product: Product,
   # Pick and Omit accepts a type and an array of symbols

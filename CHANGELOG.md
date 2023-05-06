@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.3
+
+### Added
+
+* Added boolean literal types
+
+### Changed
+
+* Renamed `Camille::ControllerExtension` to `Camille::Controller`
+
 ## 0.5.2
 
 ### Added
