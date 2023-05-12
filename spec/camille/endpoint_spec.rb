@@ -57,11 +57,11 @@ RSpec.describe Camille::Endpoint do
       expect(endpoint.signature).to eq('func(): Promise<{id: number}>')
     end
 
-    it 'returns the signature for empty response' do
+    it 'raises when response_type is nil' do
       endpoint.instance_exec do
         params(id: Camille::Types::Number)
       end
-      expect(endpoint.signature).to eq('func(params: {id: number}): Promise<{}>')
+      expect{endpoint.signature}.to raise_error(Camille::Endpoint::UnknownResponseError)
     end
   end
 

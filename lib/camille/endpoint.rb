@@ -12,7 +12,9 @@ module Camille
     end
 
     def signature
-      @response_type ||= Camille::Types::Object.new({})
+      unless @response_type
+        raise UnknownResponseError.new("Endpoint lacking a `response` definition.")
+      end
       if @params_type
         "#{ActiveSupport::Inflector.camelize @name, false}(params: #{@params_type.literal}): Promise<#{@response_type.literal}>"
       else
