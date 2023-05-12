@@ -14,7 +14,8 @@ module Camille
       end
 
       def check value
-        unless value == @value
+        transformed = value.is_a?(Symbol) ? value.to_s : value
+        unless transformed == @value
           Camille::TypeError.new("Expected string literal #{@value.inspect}, got #{value.inspect}.")
         end
       end

@@ -15,6 +15,13 @@ RSpec.describe Camille::Types::StringLiteral do
       expect(literal.check(1)).to be_an_instance_of(Camille::TypeError)
       expect(literal.check(1).basic?).to be true
     end
+
+    it 'accepts symbols' do
+      literal = described_class.new('a')
+      expect(literal.check(:a)).to be nil
+      expect(literal.check(:b)).to be_an_instance_of(Camille::TypeError)
+      expect(literal.check(:b).basic?).to be true
+    end
   end
 
   describe '#literal' do
