@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.4
+
+### Added
+
+* Symbols are now accepted in string literal types
+
+### Changed
+
+* Reverted previous change to use `{}` for omitted response type
+
 ## 0.5.3
 
 ### Added
