@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.5
+
+### Added
+
+* Added case conversion check for object keys.
+
 ## 0.5.4
 
 ### Added
