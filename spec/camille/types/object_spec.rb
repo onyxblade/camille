@@ -34,6 +34,14 @@ RSpec.describe Camille::Types::Object do
       expect(object.fields[:id].left).to be_an_instance_of(Camille::Types::Number)
       expect(object.fields[:id].right).to be_an_instance_of(Camille::Types::Undefined)
     end
+
+    it 'raises when given unsafe keys' do
+      expect{
+        Camille::Types::Object.new(
+          address_line_1: Camille::Types::String
+        )
+      }.to raise_error(Camille::Types::Object::ArgumentError)
+    end
   end
 
   describe '#transform_and_check' do

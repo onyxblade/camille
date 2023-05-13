@@ -1,6 +1,7 @@
 module Camille
   module Types
     class Object < Camille::BasicType
+      class ArgumentError < ::ArgumentError; end
       attr_reader :fields
 
       def initialize fields
@@ -43,6 +44,7 @@ module Camille
       private
         def normalize_fields fields
           fields.map do |key, value|
+            check_case_conversion_safe key
             type = Camille::Type.instance(value)
             if key.end_with?('?')
               new_key = remove_question_mark(key)
@@ -56,6 +58,13 @@ module Camille
 
         def remove_question_mark sym
           sym.to_s.gsub(/\?$/, '').to_sym
+        end
+
+        def check_case_conversion_safe sym
+          str = sym.to_s
+          if str != str.camelize.underscore
+            raise ArgumentError.new("Only keys satisfying `key.to_s == key.to_s.caamelize.underscore` can be used.")
+          end
         end
     end
   end
