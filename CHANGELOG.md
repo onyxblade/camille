@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.7
+
+### Added
+
+* Camille::Controller::MissingRenderError will now be raised if `render json:` is missing in action body
+* ActionController::MissingExactTemplate is re-raised as Camille::Controller::MissingRenderError
+
 ## 0.5.6
 
 ### Added
