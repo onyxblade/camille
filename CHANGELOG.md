@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.6
+
+### Added
+
+* Added record type
+
 ## 0.5.5
 
 ### Added

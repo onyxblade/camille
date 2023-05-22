@@ -163,9 +163,11 @@ params(
   boolean_literal: false,
   # a custom type we defined above
   product: Product,
-  # Pick and Omit accepts a type and an array of symbols
+  # Pick and Omit accept a type and an array of symbols
   pick: Pick[{a: 1, b: 2}, [:a, :b]],
-  omit: Omit[Product, [:id]]
+  omit: Omit[Product, [:id]],
+  # Record accepts a key type and a value type
+  record: Record[Number, String]
 )
 ```
 
