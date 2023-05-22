@@ -45,4 +45,8 @@ class ProductsController < ApplicationController
       underscore_param: params[:underscore_param]
     }
   end
+
+  def missing_render
+
+  end
 end

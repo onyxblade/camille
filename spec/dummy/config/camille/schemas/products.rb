@@ -44,4 +44,8 @@ class Camille::Schemas::Products < Camille::Schema
     )
     response(Any)
   end
+
+  get :missing_render do
+    response(Any)
+  end
 end
