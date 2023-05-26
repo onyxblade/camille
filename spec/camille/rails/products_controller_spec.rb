@@ -85,14 +85,27 @@ RSpec.describe ProductsController, type: :request do
         end
       end
 
-      it 'raises when render call is missing' do
-        if Rails.env.test?
-          expect{ get '/products/missing_render' }.to raise_error(Camille::Controller::MissingRenderError)
-        elsif Rails.env.development?
-          get '/products/missing_render'
-          expect(response.status).to eq(500)
+      context 'when render call is missing' do
+        it 'raises if status is 204' do
+          if Rails.env.test?
+            expect{ get '/products/missing_render' }.to raise_error(Camille::Controller::MissingRenderError)
+          elsif Rails.env.development?
+            get '/products/missing_render'
+            expect(response.status).to eq(500)
+          end
+        end
+
+        it 'does not raise if status is not 204' do
+          if Rails.env.test?
+            expect{ get '/products/head_401' }.not_to raise_error
+          elsif Rails.env.development?
+            get '/products/head_401'
+            expect(response.status).to eq(401)
+          end
         end
       end
+
+
     end
 
     context 'when #camille_endpoint is nil' do

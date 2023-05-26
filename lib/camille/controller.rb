@@ -25,7 +25,6 @@ module Camille
             if transformed.is_a? Hash
               transformed.deep_transform_keys!{|k| k.to_s.camelize(:lower)}
             end
-            @camille_rendered = true
             super(json: transformed)
           end
         else
@@ -42,7 +41,8 @@ module Camille
         begin
           params.deep_transform_keys!{|key| key.to_s.underscore}
           result = super
-          unless @camille_rendered
+          # When there's no `render` call, Rails will return status 204
+          if response.status == 204
             raise_missing_render_error
           end
           result

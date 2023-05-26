@@ -48,4 +48,8 @@ class Camille::Schemas::Products < Camille::Schema
   get :missing_render do
     response(Any)
   end
+
+  get :head_401 do
+    response(Any)
+  end
 end

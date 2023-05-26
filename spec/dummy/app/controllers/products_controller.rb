@@ -49,4 +49,8 @@ class ProductsController < ApplicationController
   def missing_render
 
   end
+
+  def head_401
+    head 401
+  end
 end
