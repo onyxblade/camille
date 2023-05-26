@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.8
+
+### Added
+
+* `render` call with a status code other than 200 will skip the typecheck
+
+### Fixed
+
+* `head 401` will no longer raise Camille::Controller::MissingRenderError
+
 ## 0.5.7
 
 ### Added
