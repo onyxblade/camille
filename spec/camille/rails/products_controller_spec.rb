@@ -105,6 +105,13 @@ RSpec.describe ProductsController, type: :request do
         end
       end
 
+      context 'when `render` called with a non 200 status code' do
+        it 'skips the typecheck' do
+          get '/products/render_401'
+          expect(response.status).to eq(401)
+          expect(response.body).to eq('error')
+        end
+      end
 
     end
 

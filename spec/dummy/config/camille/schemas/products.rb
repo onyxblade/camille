@@ -52,4 +52,8 @@ class Camille::Schemas::Products < Camille::Schema
   get :head_401 do
     response(Any)
   end
+
+  get :render_401 do
+    response(id: Number)
+  end
 end

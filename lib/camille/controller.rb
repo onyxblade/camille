@@ -15,20 +15,25 @@ module Camille
     def render *args
       if endpoint = camille_endpoint
         render_options = args.last
-        if value = render_options[:json]
-          error, transformed = endpoint.response_type.transform_and_check(value)
-          if error
-            string_io = StringIO.new
-            Camille::TypeErrorPrinter.new(error).print(string_io)
-            raise TypeError.new("\nType check failed for response.\n#{string_io.string}")
-          else
-            if transformed.is_a? Hash
-              transformed.deep_transform_keys!{|k| k.to_s.camelize(:lower)}
+        intended_status = render_options[:status] || 200
+        if intended_status == 200 || intended_status == :ok
+          if value = render_options[:json]
+            error, transformed = endpoint.response_type.transform_and_check(value)
+            if error
+              string_io = StringIO.new
+              Camille::TypeErrorPrinter.new(error).print(string_io)
+              raise TypeError.new("\nType check failed for response.\n#{string_io.string}")
+            else
+              if transformed.is_a? Hash
+                transformed.deep_transform_keys!{|k| k.to_s.camelize(:lower)}
+              end
+              super(json: transformed)
             end
-            super(json: transformed)
+          else
+            raise ArgumentError.new("Expected key :json for `render` call.")
           end
         else
-          raise ArgumentError.new("Expected key :json for `render` call.")
+          super
         end
       else
         super
