@@ -153,6 +153,8 @@ params(
   }[]
   # a union type is two types connected by '|'
   union: Number | String,
+  # an intersection type is two types connected by '&'
+  intersection: { id: Number } & { name: String },
   # a tuple type is several types put inside '[]'
   tuple: [Number, String, Boolean],
   # a field followed by '?' is optional, the same as in TypeScript
