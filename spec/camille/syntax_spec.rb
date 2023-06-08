@@ -17,6 +17,15 @@ RSpec.describe Camille::Syntax do
       expect(union.right).to be_an_instance_of(Camille::Types::Object)
       expect(union.right.fields[:name]).to be_an_instance_of(Camille::Types::String)
     end
+
+    it 'returns intersection type for #&' do
+      intersection = {id: Camille::Types::Number} & {name: Camille::Types::String}
+      expect(intersection).to be_an_instance_of(Camille::Types::Intersection)
+      expect(intersection.left).to be_an_instance_of(Camille::Types::Object)
+      expect(intersection.left.fields[:id]).to be_an_instance_of(Camille::Types::Number)
+      expect(intersection.right).to be_an_instance_of(Camille::Types::Object)
+      expect(intersection.right.fields[:name]).to be_an_instance_of(Camille::Types::String)
+    end
   end
 
   describe 'Array' do
@@ -79,6 +88,35 @@ RSpec.describe Camille::Syntax do
       expect(union).to be_an_instance_of(Camille::Types::Union)
       expect(union.left).to be_an_instance_of(Camille::Types::StringLiteral)
       expect(union.right).to be_an_instance_of(Camille::Types::StringLiteral)
+    end
+  end
+
+  describe 'Boolean' do
+    shared_examples 'a type' do
+      it 'returns literal type for #[]' do
+        array = value[]
+        expect(array).to be_an_instance_of(Camille::Types::Array)
+        expect(array.content).to be_an_instance_of(Camille::Types::BooleanLiteral)
+        expect(array.content.value).to eq(value)
+      end
+
+      it 'returns union type for #|' do
+        union = value | '2'
+        expect(union).to be_an_instance_of(Camille::Types::Union)
+        expect(union.left).to be_an_instance_of(Camille::Types::BooleanLiteral)
+        expect(union.right).to be_an_instance_of(Camille::Types::StringLiteral)
+        expect(union.left.value).to eq(value)
+      end
+    end
+
+    context 'for true' do
+      let(:value){ true }
+      it_behaves_like 'a type'
+    end
+
+    context 'for false' do
+      let(:value){ false }
+      it_behaves_like 'a type'
     end
   end
 end

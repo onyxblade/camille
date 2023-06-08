@@ -14,6 +14,10 @@ module Camille
       def | other
         Camille::Types::Union.new(Camille::Types::Object.new(self), other)
       end
+
+      def & other
+        Camille::Types::Intersection.new(Camille::Types::Object.new(self), other)
+      end
     end
 
     refine ::Array do
@@ -69,6 +73,34 @@ module Camille
 
       def | other
         Camille::Types::Union.new(Camille::Types::StringLiteral.new(self), other)
+      end
+    end
+
+    refine TrueClass do
+      def [] key = NULL_VALUE
+        if key == NULL_VALUE
+          Camille::Types::BooleanLiteral.new(true)[]
+        else
+          super
+        end
+      end
+
+      def | other
+        Camille::Types::Union.new(Camille::Types::BooleanLiteral.new(true), other)
+      end
+    end
+
+    refine FalseClass do
+      def [] key = NULL_VALUE
+        if key == NULL_VALUE
+          Camille::Types::BooleanLiteral.new(false)[]
+        else
+          super
+        end
+      end
+
+      def | other
+        Camille::Types::Union.new(Camille::Types::BooleanLiteral.new(false), other)
       end
     end
   end
