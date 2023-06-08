@@ -17,5 +17,9 @@ module Camille
     def basic?
       !!@message
     end
+
+    def print io = STDOUT
+      Camille::TypeErrorPrinter.new(self).print io
+    end
   end
 end

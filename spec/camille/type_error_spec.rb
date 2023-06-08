@@ -14,4 +14,12 @@ RSpec.describe Camille::TypeError do
       expect(Camille::TypeError.new(a: '1').basic?).to be false
     end
   end
+
+  describe '#print' do
+    it 'prints the error' do
+      io = StringIO.new
+      Camille::TypeError.new('string').print(io)
+      expect(io.string).to eq("string\n")
+    end
+  end
 end
