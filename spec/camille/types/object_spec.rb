@@ -202,6 +202,15 @@ RSpec.describe Camille::Types::Object do
         }
       })
     end
+
+    it 'preserves fields that are not in object schema' do
+      errors, transformed = object_type.transform_and_check({
+        id: 1,
+        name: 'a',
+        other: 'c'
+      })
+      expect(transformed[:other]).to eq('c')
+    end
   end
 
   describe '#literal' do

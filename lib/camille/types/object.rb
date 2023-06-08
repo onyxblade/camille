@@ -11,12 +11,17 @@ module Camille
 
       def transform_and_check value
         if value.is_a? Hash
-          transform_and_check_results = @fields.map do |key, type|
-            error, transformed = type.transform_and_check(value[key])
-            if @optional_keys.include?(key) && !error && transformed.nil?
-              nil
+          keys = (@fields.keys + value.keys).uniq
+          transform_and_check_results = keys.map do |key|
+            if type = @fields[key]
+              error, transformed = type.transform_and_check(value[key])
+              if @optional_keys.include?(key) && !error && transformed.nil?
+                nil
+              else
+                [key, [error, transformed]]
+              end
             else
-              [key, type.transform_and_check(value[key])]
+              [key, [nil, value[key]]]
             end
           end.compact
 
