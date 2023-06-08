@@ -7,6 +7,10 @@ module Camille
       Camille::Types::Union.new(self, other)
     end
 
+    def & other
+      Camille::Types::Intersection.new(self, other)
+    end
+
     def []
       Camille::Types::Array.new(self)
     end
@@ -22,6 +26,10 @@ module Camille
 
     def self.| other
       Camille::Type.instance(self) | other
+    end
+
+    def self.& other
+      Camille::Type.instance(self) & other
     end
 
     def self.[]

@@ -68,7 +68,7 @@ module Camille
         def check_case_conversion_safe sym
           str = sym.to_s
           if str != str.camelize.underscore
-            raise ArgumentError.new("Only keys satisfying `key.to_s == key.to_s.caamelize.underscore` can be used.")
+            raise ArgumentError.new("Only keys satisfying `key.to_s == key.to_s.camelize.underscore` can be used.")
           end
         end
     end

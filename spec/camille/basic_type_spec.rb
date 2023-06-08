@@ -8,6 +8,14 @@ RSpec.describe Camille::BasicType do
     end
   end
 
+  describe '#&' do
+    it 'generates an intersection type' do
+      intersection = Camille::Types::Number.new & Camille::Types::String.new
+      expect(intersection.left).to be_an_instance_of(Camille::Types::Number)
+      expect(intersection.right).to be_an_instance_of(Camille::Types::String)
+    end
+  end
+
   describe '#[]' do
     it 'generates an array type' do
       array = Camille::Types::Number.new[]
@@ -21,6 +29,14 @@ RSpec.describe Camille::BasicType do
       union = Camille::Types::Number | Camille::Types::String
       expect(union.left).to be_an_instance_of(Camille::Types::Number)
       expect(union.right).to be_an_instance_of(Camille::Types::String)
+    end
+  end
+
+  describe '.&' do
+    it 'generates an intersection type' do
+      intersection = Camille::Types::Number & Camille::Types::String
+      expect(intersection.left).to be_an_instance_of(Camille::Types::Number)
+      expect(intersection.right).to be_an_instance_of(Camille::Types::String)
     end
   end
 
