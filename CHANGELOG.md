@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.10
+
+### Added
+
+* Added intersection and boolean literal support to `Camille::Syntax`
+
 ## 0.5.9
 
 ### Added
