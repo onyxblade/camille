@@ -74,12 +74,19 @@ RSpec.describe Camille::Types::Union do
   end
 
   describe '#literal' do
-    it 'returns correct literal' do
-      union = described_class.new(
+    let(:union){
+      described_class.new(
         Camille::Types::Number,
         Camille::Types::String
       )
-      expect(union.literal).to eq('number | string')
+    }
+
+    it 'returns correct literal' do
+      expect(union.literal).to eq('(number | string)')
+    end
+
+    it 'returns correct literal for union array' do
+      expect(union[].literal).to eq('(number | string)[]')
     end
   end
 end

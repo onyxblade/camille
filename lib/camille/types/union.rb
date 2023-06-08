@@ -27,7 +27,7 @@ module Camille
       end
 
       def literal
-        "#{@left.literal} | #{@right.literal}"
+        "(#{@left.literal} | #{@right.literal})"
       end
     end
   end
