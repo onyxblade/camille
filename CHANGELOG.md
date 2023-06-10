@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.11
+
+### Changed
+
+* Optional fields are now preserved in generated TypeScript as having `?` suffix
+
 ## 0.5.10
 
 ### Added
