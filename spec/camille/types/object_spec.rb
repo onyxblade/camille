@@ -25,16 +25,6 @@ RSpec.describe Camille::Types::Object do
       expect(object.fields[:product].fields[:price].fields[:regular]).to be_an_instance_of(Camille::Types::Number)
     end
 
-    it 'creates union type with undefined for all keys ending with ?' do
-      object = Camille::Types::Object.new(
-        id?: Camille::Types::Number
-      )
-
-      expect(object.fields[:id]).to be_an_instance_of(Camille::Types::Union)
-      expect(object.fields[:id].left).to be_an_instance_of(Camille::Types::Number)
-      expect(object.fields[:id].right).to be_an_instance_of(Camille::Types::Undefined)
-    end
-
     it 'raises when given unsafe keys' do
       expect{
         Camille::Types::Object.new(
@@ -166,7 +156,13 @@ RSpec.describe Camille::Types::Object do
         expect(error.basic?).to be false
         expect(error.components.keys.first).to eq('id')
         expect(error.components.values.first).to be_an_instance_of(Camille::TypeError)
-        expect(error.components.values.first.components.keys).to eq(['union.left', 'union.right'])
+        expect(error.components.values.first.message).to eq('Expected an integer or a float, got "1".')
+      end
+
+      it 'removes optional fields if passed nil' do
+        error, transformed = optional_object_type.transform_and_check({id: nil, name: nil})
+        expect(error).to be nil
+        expect(transformed).to eq({})
       end
     end
 
@@ -239,6 +235,13 @@ RSpec.describe Camille::Types::Object do
         }
       )
       expect(object.literal).to eq('{orderProduct: {longName: number}}')
+    end
+
+    it 'preserves optional fields' do
+      object = described_class.new(
+        optional?: Camille::Types::Number
+      )
+      expect(object.literal).to eq('{optional?: number}')
     end
   end
 end

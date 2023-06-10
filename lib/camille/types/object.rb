@@ -14,11 +14,10 @@ module Camille
           keys = (@fields.keys + value.keys).uniq
           transform_and_check_results = keys.map do |key|
             if type = @fields[key]
-              error, transformed = type.transform_and_check(value[key])
-              if @optional_keys.include?(key) && !error && transformed.nil?
+              if @optional_keys.include?(key) && value[key].nil?
                 nil
               else
-                [key, [error, transformed]]
+                [key, type.transform_and_check(value[key])]
               end
             else
               [key, [nil, value[key]]]
@@ -43,7 +42,7 @@ module Camille
       end
 
       def literal
-        "{#{@fields.map{|k,v| "#{ActiveSupport::Inflector.camelize k.to_s, false}: #{v.literal}"}.join(', ')}}"
+        "{#{@fields.map{|k,v| "#{literal_key k}: #{v.literal}"}.join(', ')}}"
       end
 
       private
@@ -54,7 +53,7 @@ module Camille
             if key.end_with?('?')
               new_key = remove_question_mark(key)
               @optional_keys << new_key
-              [new_key, type | Camille::Types::Undefined.new]
+              [new_key, type]
             else
               [key, type]
             end
@@ -63,6 +62,10 @@ module Camille
 
         def remove_question_mark sym
           sym.to_s.gsub(/\?$/, '').to_sym
+        end
+
+        def literal_key key
+          "#{ActiveSupport::Inflector.camelize key.to_s, false}#{@optional_keys.include?(key) ? '?' : ''}"
         end
 
         def check_case_conversion_safe sym
