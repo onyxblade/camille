@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.12
+
+### Added
+
+* Added `.test` to `Camille::Type`
+* Added error details to `Camille::TypeError#inspect` and `#to_s`
+
+### Changed
+
+* Removed `Camille::TypeError#print` since details are now in `#inspect`
+
 ## 0.5.11
 
 ### Changed
