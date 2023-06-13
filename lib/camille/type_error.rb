@@ -18,8 +18,14 @@ module Camille
       !!@message
     end
 
-    def print io = STDOUT
-      Camille::TypeErrorPrinter.new(self).print io
+    def inspect
+      string_io = StringIO.new
+      Camille::TypeErrorPrinter.new(self).print string_io
+      "#<Camille::TypeError\n#{string_io.string}>"
+    end
+
+    def to_s
+      inspect
     end
   end
 end

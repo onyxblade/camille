@@ -26,6 +26,15 @@ module Camille
       @underlying.transform_and_check transformed
     end
 
+    def test value
+      error, _ = transform_and_check value
+      error
+    end
+
+    def self.test value
+      new.test value
+    end
+
     def self.klass_name
       name.gsub(/^Camille::Types::/, '')
     end

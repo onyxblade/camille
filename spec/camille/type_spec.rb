@@ -76,4 +76,18 @@ RSpec.describe Camille::Type do
     end
   end
 
+  describe '#test' do
+    it 'typechecks the value' do
+      expect(Camille::Types::TypeSpec.new.test(1)).to be nil
+      expect(Camille::Types::TypeSpec.new.test('1')).to be_an_instance_of(Camille::TypeError)
+    end
+  end
+
+  describe '.test' do
+    it 'typechecks the value' do
+      expect(Camille::Types::TypeSpec.test(1)).to be nil
+      expect(Camille::Types::TypeSpec.test('1')).to be_an_instance_of(Camille::TypeError)
+    end
+  end
+
 end
