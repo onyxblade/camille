@@ -5,8 +5,8 @@ require_relative "lib/camille/version"
 Gem::Specification.new do |spec|
   spec.name = "camille"
   spec.version = Camille::VERSION
-  spec.authors = ["辻彩"]
-  spec.email = ["cichol@live.cn"]
+  spec.authors = ["Alyssa"]
+  spec.email = ["git@alyssa.fm"]
   spec.license = "MIT"
 
   spec.summary = "Typed API schema for Rails with TypeScript codegen"

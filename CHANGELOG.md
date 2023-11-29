@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.13
+
+### Fixed
+
+* Fixed that `Omit` and `Pick` did not preserve optional fields
+
 ## 0.5.12
 
 ### Added

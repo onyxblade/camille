@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    camille (0.5.12)
+    camille (0.5.13)
       rails (>= 6.1, < 8)
 
 GEM
@@ -75,11 +75,11 @@ GEM
     builder (3.2.4)
     concurrent-ruby (1.2.2)
     crass (1.0.6)
-    date (3.3.3)
+    date (3.3.4)
     diff-lcs (1.5.0)
     erubi (1.12.0)
-    globalid (1.1.0)
-      activesupport (>= 5.0)
+    globalid (1.2.1)
+      activesupport (>= 6.1)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     loofah (2.19.1)
@@ -92,18 +92,18 @@ GEM
       net-smtp
     marcel (1.0.2)
     method_source (1.0.0)
-    mini_mime (1.1.2)
+    mini_mime (1.1.5)
     minitest (5.17.0)
-    net-imap (0.3.4)
+    net-imap (0.4.7)
       date
       net-protocol
     net-pop (0.1.2)
       net-protocol
-    net-protocol (0.2.1)
+    net-protocol (0.2.2)
       timeout
-    net-smtp (0.3.3)
+    net-smtp (0.4.0)
       net-protocol
-    nio4r (2.5.9)
+    nio4r (2.6.1)
     nokogiri (1.14.2-x86_64-linux)
       racc (~> 1.4)
     racc (1.6.2)
@@ -159,10 +159,10 @@ GEM
       rspec-support (~> 3.11)
     rspec-support (3.12.0)
     thor (1.2.1)
-    timeout (0.3.2)
+    timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    websocket-driver (0.7.5)
+    websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     zeitwerk (2.6.7)
