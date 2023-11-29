@@ -84,6 +84,17 @@ RSpec.describe Camille::Types::Pick do
       error, transformed = type.transform_and_check({long_name: 1})
       expect(error).to be nil
     end
+
+    it 'preserves optional fields' do
+      object = {
+        id: Camille::Types::Number,
+        name?: Camille::Types::String,
+        price: Camille::Types::Number
+      }
+      type = Camille::Types::Pick.new(object, [:id, :name])
+      error, transformed = type.transform_and_check({id: 1})
+      expect(error).to be nil
+    end
   end
 
   describe '#literal' do

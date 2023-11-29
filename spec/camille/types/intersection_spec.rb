@@ -198,6 +198,26 @@ RSpec.describe Camille::Types::Intersection do
       end
 
     end
+
+    context 'when intersection has optional fields' do
+      let(:intersection_type) {
+        described_class.new(
+          {
+            id: Camille::Types::Number,
+          },
+          {
+            name?: Camille::Types::String,
+          }
+        )
+      }
+
+      it 'preserves the optional field' do
+        error, transformed = intersection_type.transform_and_check({
+          id: 1
+        })
+        expect(error).to be nil
+      end
+    end
   end
 
   describe '#literal' do

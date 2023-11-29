@@ -81,6 +81,17 @@ RSpec.describe Camille::Types::Omit do
       error, transformed = type.transform_and_check({})
       expect(error).to be nil
     end
+
+    it 'preserves optional fields' do
+      object = {
+        id: Camille::Types::Number,
+        name?: Camille::Types::String,
+        price: Camille::Types::Number
+      }
+      type = Camille::Types::Omit.new(object, [:price])
+      error, transformed = type.transform_and_check({id: 1})
+      expect(error).to be nil
+    end
   end
 
   describe '#literal' do

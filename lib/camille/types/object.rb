@@ -2,7 +2,7 @@ module Camille
   module Types
     class Object < Camille::BasicType
       class ArgumentError < ::ArgumentError; end
-      attr_reader :fields
+      attr_reader :fields, :optional_keys
 
       def initialize fields
         @optional_keys = []
