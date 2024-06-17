@@ -17,7 +17,8 @@ module Camille
         render_options = args.last
         intended_status = render_options[:status] || 200
         if intended_status == 200 || intended_status == :ok
-          if value = render_options[:json]
+          if render_options.has_key? :json
+            value = render_options[:json]
             error, transformed = endpoint.response_type.transform_and_check(value)
             if error
               string_io = StringIO.new

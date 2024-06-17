@@ -57,4 +57,8 @@ class ProductsController < ApplicationController
   def render_401
     render json: 'error', status: 401
   end
+
+  def response_false
+    render json: false
+  end
 end

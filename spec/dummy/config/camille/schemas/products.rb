@@ -56,4 +56,8 @@ class Camille::Schemas::Products < Camille::Schema
   get :render_401 do
     response(id: Number)
   end
+
+  get :response_false do
+    response(Boolean)
+  end
 end

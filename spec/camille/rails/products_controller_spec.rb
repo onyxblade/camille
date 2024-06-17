@@ -63,6 +63,11 @@ RSpec.describe ProductsController, type: :request do
         )
       end
 
+      it 'supports returning false' do
+        get '/products/response_false'
+        expect(response.parsed_body).to eq(false)
+      end
+
       if Rails.env.development?
         it 'raises error from loader' do
           wrong_content = <<~EOF
