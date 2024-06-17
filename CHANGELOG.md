@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.14
+
+### Fixed
+
+* Fixed support for `render json: false`
+
 ## 0.5.13
 
 ### Fixed
