@@ -37,6 +37,7 @@ require_relative "camille/loader"
 require_relative "camille/configuration"
 require_relative "camille/code_generator"
 require_relative "camille/main_controller"
+require_relative "camille/key_converter"
 
 require "rails/generators"
 require_relative "camille/generators/install_generator"
