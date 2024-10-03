@@ -30,7 +30,7 @@ module Camille
 
     private
       def keys_in_literal
-        @keys.map{|k| "\"#{k.to_s.camelize(:lower)}\""}.join(' | ')
+        @keys.map{|k| "\"#{Camille::Configuration.response_key_converter.call(k)}\""}.join(' | ')
       end
 
   end

@@ -26,7 +26,7 @@ module Camille
               raise TypeError.new("\nType check failed for response.\n#{string_io.string}")
             else
               if transformed.is_a? Hash
-                transformed.deep_transform_keys!{|k| k.to_s.camelize(:lower)}
+                transformed.deep_transform_keys!{|k| Camille::Configuration.response_key_converter.call(k)}
               end
               super(json: transformed)
             end
@@ -45,7 +45,7 @@ module Camille
       Camille::Loader.check_and_raise_exception
       if endpoint = camille_endpoint
         begin
-          params.deep_transform_keys!{|key| key.to_s.underscore}
+          params.deep_transform_keys!{|key| Camille::Configuration.params_key_converter.call(key.to_s)}
           result = super
           # When there's no `render` call, Rails will return status 204
           if response.status == 204

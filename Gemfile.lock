@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    camille (0.5.13)
+    camille (0.5.14)
       rails (>= 6.1, < 8)
 
 GEM
@@ -90,20 +90,20 @@ GEM
       net-imap
       net-pop
       net-smtp
-    marcel (1.0.2)
+    marcel (1.0.4)
     method_source (1.0.0)
     mini_mime (1.1.5)
     minitest (5.17.0)
-    net-imap (0.4.7)
+    net-imap (0.4.16)
       date
       net-protocol
     net-pop (0.1.2)
       net-protocol
     net-protocol (0.2.2)
       timeout
-    net-smtp (0.4.0)
+    net-smtp (0.5.0)
       net-protocol
-    nio4r (2.6.1)
+    nio4r (2.7.3)
     nokogiri (1.14.2-x86_64-linux)
       racc (~> 1.4)
     racc (1.6.2)

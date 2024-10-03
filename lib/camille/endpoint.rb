@@ -16,9 +16,9 @@ module Camille
         raise UnknownResponseError.new("Endpoint lacking a `response` definition.")
       end
       if @params_type
-        "#{ActiveSupport::Inflector.camelize @name, false}(params: #{@params_type.literal}): Promise<#{@response_type.literal}>"
+        "#{Camille::Configuration.response_key_converter.call(@name)}(params: #{@params_type.literal}): Promise<#{@response_type.literal}>"
       else
-        "#{ActiveSupport::Inflector.camelize @name, false}(): Promise<#{@response_type.literal}>"
+        "#{Camille::Configuration.response_key_converter.call(@name)}(): Promise<#{@response_type.literal}>"
       end
     end
 

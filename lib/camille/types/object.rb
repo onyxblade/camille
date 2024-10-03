@@ -48,7 +48,7 @@ module Camille
       private
         def normalize_fields fields
           fields.map do |key, value|
-            check_case_conversion_safe key
+            check_key_conversion_safe key
             type = Camille::Type.instance(value)
             if key.end_with?('?')
               new_key = remove_question_mark(key)
@@ -65,13 +65,13 @@ module Camille
         end
 
         def literal_key key
-          "#{ActiveSupport::Inflector.camelize key.to_s, false}#{@optional_keys.include?(key) ? '?' : ''}"
+          "#{Camille::Configuration.response_key_converter.call(key)}#{@optional_keys.include?(key) ? '?' : ''}"
         end
 
-        def check_case_conversion_safe sym
+        def check_key_conversion_safe sym
           str = sym.to_s
-          if str != str.camelize.underscore
-            raise ArgumentError.new("Only keys satisfying `key.to_s == key.to_s.camelize.underscore` can be used.")
+          if str != Camille::Configuration.params_key_converter.call(Camille::Configuration.response_key_converter.call(str))
+            raise ArgumentError.new("Only keys satisfying `key == key.to_s.camelize.underscore` can be used.")
           end
         end
     end
