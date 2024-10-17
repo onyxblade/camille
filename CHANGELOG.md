@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.15
+
+### Added
+
+* Added key conversion cache
+
+### Changed
+
+* When generating TS, endpoints are now sorted by name
+
 ## 0.5.14
 
 ### Fixed
