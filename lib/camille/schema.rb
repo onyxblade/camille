@@ -17,7 +17,7 @@ module Camille
     def self.literal_lines
       [
         Camille::Line.new('{'),
-        *endpoints.map do |k, e|
+        *endpoints.sort_by{|k, e| k}.map do |k, e|
           Camille::Line.new("#{e.function},")
         end.map(&:do_indent),
         Camille::Line.new('}')
