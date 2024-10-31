@@ -60,4 +60,10 @@ class Camille::Schemas::Products < Camille::Schema
   get :response_false do
     response(Boolean)
   end
+
+  get :string_records do
+    response({
+      string_records: Record[String, Number]
+    })
+  end
 end

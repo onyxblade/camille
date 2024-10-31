@@ -61,4 +61,12 @@ class ProductsController < ApplicationController
   def response_false
     render json: false
   end
+
+  def string_records
+    render json: {
+      string_records: {
+        'long_name' => 1
+      }
+    }
+  end
 end

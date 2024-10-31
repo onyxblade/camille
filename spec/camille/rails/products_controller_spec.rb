@@ -118,6 +118,17 @@ RSpec.describe ProductsController, type: :request do
         end
       end
 
+      context 'when returning records with string keys' do
+        it 'does not camelize keys' do
+          get '/products/string_records'
+          expect(response.parsed_body).to eq({
+            'stringRecords' => {
+              'long_name' => 1
+            }
+          })
+        end
+      end
+
     end
 
     context 'when #camille_endpoint is nil' do
