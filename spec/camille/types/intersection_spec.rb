@@ -218,6 +218,48 @@ RSpec.describe Camille::Types::Intersection do
         expect(error).to be nil
       end
     end
+
+    context 'when intersection contains object of the same name on both sides' do
+      let(:intersection_type) {
+        described_class.new(
+          {
+            object: {
+              id: Camille::Types::Number,
+            }
+          },
+          {
+            object: {
+              name: Camille::Types::String,
+            }
+          }
+        )
+      }
+
+      it 'perform type checks correctly' do
+        error, transformed = intersection_type.transform_and_check({
+          object: {
+            id: 1,
+            name: '2',
+          }
+        })
+        expect(error).to be nil
+
+        error, transformed = intersection_type.transform_and_check({
+          object: {
+            id: 1,
+          }
+        })
+
+        expect(error).to be_an_instance_of(Camille::TypeError)
+        expect(error.basic?).to be false
+        expect(error.components.values.first).to be_an_instance_of(Camille::TypeError)
+        expect(error.components.values.first.basic?).to be false
+        expect(error.components.values.first.components.size).to eq(1)
+        expect(error.components.values.first.components.keys.first).to eq('object')
+        expect(error.components.values.first.components.values.first.components.keys.first).to eq('name')
+        expect(error.components.values.first.components.values.first.components.values.first.message).to eq("Expected string, got nil.")
+      end
+    end
   end
 
   describe '#literal' do
