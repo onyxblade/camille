@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.16
+
+### Fixed
+
+* Record keys will no longer be case converted
+
 ## 0.5.15
 
 ### Added
