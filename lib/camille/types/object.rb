@@ -65,7 +65,7 @@ module Camille
         end
 
         def literal_key key
-          "#{Camille::Configuration.response_key_converter.call(key)}#{@optional_keys.include?(key) ? '?' : ''}"
+          "#{Camille::Configuration.response_key_converter.call(key.to_s)}#{@optional_keys.include?(key) ? '?' : ''}"
         end
 
         def check_key_conversion_safe sym

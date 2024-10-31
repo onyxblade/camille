@@ -31,13 +31,13 @@ module Camille
         tree.map do |key, value|
           if value.is_a? ::Hash
             [
-              Camille::Line.new("#{Camille::Configuration.response_key_converter.call(key)}: {"),
+              Camille::Line.new("#{Camille::Configuration.response_key_converter.call(key.to_s)}: {"),
               tree_literal_lines(value).map(&:do_indent),
               Camille::Line.new('},')
             ]
           else
             value.literal_lines.tap do |lines|
-              lines.first.prepend("#{Camille::Configuration.response_key_converter.call(key)}: ")
+              lines.first.prepend("#{Camille::Configuration.response_key_converter.call(key.to_s)}: ")
               lines.last.append(',')
             end
           end

@@ -6,8 +6,8 @@ module Camille
       attr_accessor :ts_header, :ts_location
 
       def load_default_configurations
-        self.response_key_converter = lambda do |symbol|
-          symbol.to_s.camelize(:lower)
+        self.response_key_converter = lambda do |string|
+          string.camelize(:lower)
         end
 
         self.params_key_converter = lambda do |string|
