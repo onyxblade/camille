@@ -25,9 +25,6 @@ module Camille
               Camille::TypeErrorPrinter.new(error).print(string_io)
               raise TypeError.new("\nType check failed for response.\n#{string_io.string}")
             else
-              if transformed.is_a? Hash
-                transformed.deep_transform_keys!{|k| Camille::KeyConverter.convert_response_key(k)}
-              end
               super(json: transformed)
             end
           else

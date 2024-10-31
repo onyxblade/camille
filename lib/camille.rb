@@ -3,6 +3,7 @@
 require "active_support"
 
 require_relative "camille/version"
+require_relative "camille/object_hash"
 require_relative "camille/basic_type"
 require_relative "camille/types"
 require_relative "camille/types/number"

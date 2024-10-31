@@ -32,7 +32,7 @@ module Camille
             transformed = transform_and_check_results.map do |key, (error, transformed)|
               [key, transformed]
             end.to_h
-            [nil, transformed]
+            [nil, Camille::ObjectHash[transformed]]
           else
             [Camille::TypeError.new(**errors.to_h), nil]
           end
