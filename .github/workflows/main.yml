@@ -15,6 +15,7 @@ jobs:
       matrix:
         gemfile:
           - rails-7.2
+          - rails-8.0
         ruby:
           - '3.3.5'
     env:
