@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0
+
+### Added
+
+* Support Rails 8.0
+
 ## 0.5.16
 
 ### Fixed
