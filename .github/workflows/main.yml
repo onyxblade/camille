@@ -14,11 +14,9 @@ jobs:
     strategy:
       matrix:
         gemfile:
-          - rails-6.1
-          - rails-7.0
+          - rails-7.2
         ruby:
-          - '2.7.7'
-          - '3.0.5'
+          - '3.3.5'
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}
 
