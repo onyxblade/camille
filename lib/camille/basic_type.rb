@@ -1,7 +1,15 @@
+require 'digest/md5'
+
 module Camille
   # This class specifies the methods available for all types includeing built-in and custom ones.
   class BasicType
     class InvalidTypeError < ::ArgumentError; end
+
+    attr_reader :fingerprint
+
+    def initialize
+      @fingerprint = Digest::MD5.hexdigest self.class.name
+    end
 
     def | other
       Camille::Types::Union.new(self, other)

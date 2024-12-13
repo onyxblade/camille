@@ -5,6 +5,7 @@ module Camille
 
       def initialize content
         @content = Camille::Type.instance content
+        @fingerprint = Digest::MD5.hexdigest "#{self.class.name}#{@content.fingerprint}"
       end
 
       def transform_and_check value

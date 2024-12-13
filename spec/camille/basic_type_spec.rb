@@ -100,4 +100,11 @@ RSpec.describe Camille::BasicType do
       expect{ Camille::Type.instance Camille::Types::Array }.to raise_error(Camille::Type::InvalidTypeError)
     end
   end
+
+  describe '#fingerprint' do
+    it 'returns fingerprint based on class name' do
+      type = Camille::Types::Number.new
+      expect(type.fingerprint).to eq(Digest::MD5.hexdigest(type.class.name))
+    end
+  end
 end

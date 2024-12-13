@@ -71,4 +71,23 @@ RSpec.describe Camille::Types::Array do
     end
   end
 
+  describe '#fingerprint' do
+    it 'returns fingerprint based on content' do
+      array1 = described_class.new(
+        Camille::Types::Number
+      )
+
+      array2 = described_class.new(
+        Camille::Types::Number
+      )
+
+      array3 = described_class.new(
+        Camille::Types::String
+      )
+
+      expect(array1.fingerprint).to eq(array2.fingerprint)
+      expect(array1.fingerprint).not_to eq(array3.fingerprint)
+    end
+  end
+
 end
