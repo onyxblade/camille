@@ -6,6 +6,7 @@ module Camille
       def initialize left, right
         @left = Camille::Type.instance left
         @right = Camille::Type.instance right
+        @fingerprint = Digest::MD5.hexdigest "#{self.class.name}#{[@left.fingerprint, @right.fingerprint].sort}"
       end
 
       def transform_and_check value

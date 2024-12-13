@@ -288,4 +288,26 @@ RSpec.describe Camille::Types::Intersection do
       expect(intersection_with_union.literal).to eq('(number & (string | boolean))')
     end
   end
+
+  describe '#fingerprint' do
+    it 'returns fingerprint based on content regardless of order' do
+      intersection_a = described_class.new(
+        Camille::Types::Number,
+        Camille::Types::String
+      )
+
+      intersection_a1 = described_class.new(
+        Camille::Types::String,
+        Camille::Types::Number
+      )
+
+      intersection_b = described_class.new(
+        Camille::Types::Number,
+        Camille::Types::Boolean
+      )
+
+      expect(intersection_a.fingerprint).to eq(intersection_a1.fingerprint)
+      expect(intersection_a.fingerprint).not_to eq(intersection_b.fingerprint)
+    end
+  end
 end

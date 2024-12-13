@@ -90,4 +90,10 @@ RSpec.describe Camille::Type do
     end
   end
 
+  describe '#fingerprint' do
+    it 'returns fingerprint of underlying type' do
+      expect(Camille::Types::TypeSpec.new.fingerprint).to eq(Camille::Types::Number.new.fingerprint)
+    end
+  end
+
 end

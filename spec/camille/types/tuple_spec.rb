@@ -64,4 +64,15 @@ RSpec.describe Camille::Types::Tuple do
     end
   end
 
+  describe '#fingerprint' do
+    it 'returns fingerprint based on elements' do
+      tuple_a = described_class.new([Camille::Types::Number, Camille::Types::String])
+      tuple_a1 = described_class.new([Camille::Types::Number, Camille::Types::String])
+      tuple_b = described_class.new([Camille::Types::String, Camille::Types::Number])
+
+      expect(tuple_a.fingerprint).to eq(tuple_a1.fingerprint)
+      expect(tuple_a.fingerprint).not_to eq(tuple_b.fingerprint)
+    end
+  end
+
 end

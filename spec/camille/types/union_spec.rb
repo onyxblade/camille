@@ -89,4 +89,26 @@ RSpec.describe Camille::Types::Union do
       expect(union[].literal).to eq('(number | string)[]')
     end
   end
+
+  describe '#fingerprint' do
+    it 'returns fingerprint based on content regardless of order' do
+      union_a = described_class.new(
+        Camille::Types::Number,
+        Camille::Types::String
+      )
+
+      union_a1 = described_class.new(
+        Camille::Types::String,
+        Camille::Types::Number
+      )
+
+      union_b = described_class.new(
+        Camille::Types::Number,
+        Camille::Types::Boolean
+      )
+
+      expect(union_a.fingerprint).to eq(union_a1.fingerprint)
+      expect(union_a.fingerprint).not_to eq(union_b.fingerprint)
+    end
+  end
 end

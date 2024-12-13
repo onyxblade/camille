@@ -11,9 +11,11 @@ module Camille
 
     def self.alias_of type
       underlying = Camille::Type.instance(type)
+      fingerprint = underlying.fingerprint
 
       define_method(:initialize) do
         @underlying = underlying
+        @fingerprint = fingerprint
       end
     end
 

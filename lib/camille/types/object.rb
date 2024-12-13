@@ -79,7 +79,7 @@ module Camille
         def generate_fingerprint
           sorted_fields = @fields.sort_by{|k, v| k}.map{|k, v| [k, v.fingerprint]}
           sorted_optional_keys = @optional_keys.sort
-          Digest::MD5.hexdigest "Camille::Types::Object#{sorted_fields}#{sorted_optional_keys}"
+          Digest::MD5.hexdigest "#{self.class.name}#{sorted_fields}#{sorted_optional_keys}"
         end
     end
   end

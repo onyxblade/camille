@@ -5,6 +5,7 @@ module Camille
 
       def initialize elements
         @elements = elements.map{|e| Camille::Type.instance e}
+        @fingerprint = Digest::MD5.hexdigest "#{self.class.name}#{@elements.map(&:fingerprint)}"
       end
 
       def transform_and_check value
