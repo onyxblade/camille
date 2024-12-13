@@ -244,4 +244,53 @@ RSpec.describe Camille::Types::Object do
       expect(object.literal).to eq('{optional?: number}')
     end
   end
+
+  describe '#fingerprint' do
+    it 'returns fingerprint based on fields regardless of order' do
+      object_a = described_class.new(
+        id: Camille::Types::Number,
+        name: Camille::Types::String
+      )
+
+      object_a1 = described_class.new(
+        name: Camille::Types::String,
+        id: Camille::Types::Number
+      )
+
+      object_b = described_class.new(
+        id: Camille::Types::Number,
+      )
+
+      expect(object_a.fingerprint).to eq(object_a1.fingerprint)
+      expect(object_a.fingerprint).not_to eq(object_b.fingerprint)
+    end
+
+    it 'returns different fingerprint based on optional fields' do
+      object_a = described_class.new(
+        id: Camille::Types::Number,
+        name: Camille::Types::String
+      )
+
+      object_b = described_class.new(
+        id: Camille::Types::Number,
+        name?: Camille::Types::String
+      )
+
+      expect(object_a.fingerprint).not_to eq(object_b.fingerprint)
+    end
+
+    it 'returns fingerprint based on optional fields regardless of order' do
+      object_a = described_class.new(
+        id?: Camille::Types::Number,
+        name?: Camille::Types::String
+      )
+
+      object_a1 = described_class.new(
+        name?: Camille::Types::String,
+        id?: Camille::Types::Number
+      )
+
+      expect(object_a.fingerprint).to eq(object_a1.fingerprint)
+    end
+  end
 end

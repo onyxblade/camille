@@ -7,6 +7,7 @@ module Camille
       def initialize fields
         @optional_keys = []
         @fields = normalize_fields fields
+        @fingerprint = generate_fingerprint
       end
 
       def transform_and_check value
@@ -73,6 +74,12 @@ module Camille
           if str != Camille::Configuration.params_key_converter.call(Camille::Configuration.response_key_converter.call(str))
             raise ArgumentError.new("Only keys satisfying `key == key.to_s.camelize.underscore` can be used.")
           end
+        end
+
+        def generate_fingerprint
+          sorted_fields = @fields.sort_by{|k, v| k}.map{|k, v| [k, v.fingerprint]}
+          sorted_optional_keys = @optional_keys.sort
+          Digest::MD5.hexdigest "Camille::Types::Object#{sorted_fields}#{sorted_optional_keys}"
         end
     end
   end
