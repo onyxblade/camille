@@ -94,12 +94,8 @@ RSpec.describe ProductsController, type: :request do
         end
 
         it 'does not raise if status is not 204' do
-          if Rails.env.test?
-            expect{ get '/products/head_401' }.not_to raise_error
-          elsif Rails.env.development?
-            get '/products/head_401'
-            expect(response.status).to eq(401)
-          end
+          get '/products/head_401'
+          expect(response.status).to eq(401)
         end
       end
 
