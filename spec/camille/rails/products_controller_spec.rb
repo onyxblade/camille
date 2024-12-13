@@ -19,13 +19,9 @@ RSpec.describe ProductsController, type: :request do
       end
 
       it 'typechecks the response' do
-        # Rails development environment will rescue errors.
-        if Rails.env.test?
-          expect{ get '/products/wrong_data' }.to raise_error(Camille::Controller::TypeError)
-        elsif Rails.env.development?
-          get '/products/wrong_data'
-          expect(response.status).to eq(500)
-        end
+        get '/products/wrong_data'
+        expect(response.status).to eq(500)
+        expect(response.body).to include('Camille::Controller::TypeError')
       end
 
       it 'transforms params keys' do
@@ -92,12 +88,9 @@ RSpec.describe ProductsController, type: :request do
 
       context 'when render call is missing' do
         it 'raises if status is 204' do
-          if Rails.env.test?
-            expect{ get '/products/missing_render' }.to raise_error(Camille::Controller::MissingRenderError)
-          elsif Rails.env.development?
-            get '/products/missing_render'
-            expect(response.status).to eq(500)
-          end
+          get '/products/missing_render'
+          expect(response.status).to eq(500)
+          expect(response.body).to include('Camille::Controller::MissingRenderError')
         end
 
         it 'does not raise if status is not 204' do
