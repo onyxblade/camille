@@ -6,4 +6,4 @@ gem "rake", "~> 13.0"
 gem "rspec", "~> 3.0"
 gem "rspec-rails"
 
-gem 'rails', '~> 7.0.0'
+gem 'rails', '~> 8.0.0'
