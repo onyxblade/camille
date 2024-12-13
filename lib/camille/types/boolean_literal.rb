@@ -8,6 +8,7 @@ module Camille
       def initialize value
         if value == true || value == false
           @value = value
+          @fingerprint = Digest::MD5.hexdigest "#{self.class.name}#{@value}"
         else
           raise ArgumentError.new("Expecting true or false, got #{value.inspect}")
         end

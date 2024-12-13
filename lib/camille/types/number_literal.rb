@@ -8,6 +8,7 @@ module Camille
       def initialize value
         if value.is_a?(Integer) || value.is_a?(Float)
           @value = value
+          @fingerprint = Digest::MD5.hexdigest "#{self.class.name}#{@value}"
         else
           raise ArgumentError.new("Expecting an integer or a float, got #{value.inspect}")
         end

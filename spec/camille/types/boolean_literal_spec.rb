@@ -30,4 +30,15 @@ RSpec.describe Camille::Types::BooleanLiteral do
       expect(literal.literal).to eq('true')
     end
   end
+
+  describe '#fingerprint' do
+    it 'returns fingerprint based on value' do
+      literal_a = described_class.new(true)
+      literal_a1 = described_class.new(true)
+      literal_b = described_class.new(false)
+
+      expect(literal_a.fingerprint).to eq(literal_a1.fingerprint)
+      expect(literal_a.fingerprint).not_to eq(literal_b.fingerprint)
+    end
+  end
 end

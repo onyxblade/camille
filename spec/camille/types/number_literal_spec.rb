@@ -23,4 +23,15 @@ RSpec.describe Camille::Types::NumberLiteral do
       expect(literal.literal).to eq('1')
     end
   end
+
+  describe '#fingerprint' do
+    it 'returns fingerprint based on value' do
+      literal_a = described_class.new(1)
+      literal_a1 = described_class.new(1)
+      literal_b = described_class.new(2)
+
+      expect(literal_a.fingerprint).to eq(literal_a1.fingerprint)
+      expect(literal_a.fingerprint).not_to eq(literal_b.fingerprint)
+    end
+  end
 end

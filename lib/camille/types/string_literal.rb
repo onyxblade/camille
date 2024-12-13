@@ -8,6 +8,7 @@ module Camille
       def initialize value
         if value.is_a?(::String)
           @value = value
+          @fingerprint = Digest::MD5.hexdigest "#{self.class.name}#{@value}"
         else
           raise ArgumentError.new("Expecting a string, got #{value.inspect}")
         end
