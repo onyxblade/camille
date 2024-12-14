@@ -22,7 +22,17 @@ module Camille
       when Camille::TypeError
         value
       else
-        check_value value
+        check value
+      end
+    end
+
+    def __check value
+      result = check value
+      case result
+      when Camille::Checked
+        nil
+      else
+        result
       end
     end
 

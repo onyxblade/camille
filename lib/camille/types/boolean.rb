@@ -1,13 +1,7 @@
 module Camille
   module Types
     class Boolean < Camille::BasicType
-      def __check value
-        unless value == false || value == true
-          Camille::TypeError.new("Expected boolean, got #{value.inspect}.")
-        end
-      end
-
-      def check_value value
+      def check value
         if value == false || value == true
           Camille::Checked.new(fingerprint, value)
         else

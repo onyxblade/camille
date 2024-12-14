@@ -1,10 +1,7 @@
 module Camille
   module Types
     class Any < Camille::BasicType
-      def __check value
-      end
-
-      def check_value value
+      def check value
         Camille::Checked.new(fingerprint, value)
       end
 
