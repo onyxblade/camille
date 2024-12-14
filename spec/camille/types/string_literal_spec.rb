@@ -24,6 +24,25 @@ RSpec.describe Camille::Types::StringLiteral do
     end
   end
 
+  describe '#check' do
+    it 'returns Checked if value is the literal' do
+      literal = described_class.new('1')
+      expect(literal.check('1')).to be_checked
+    end
+
+    it 'returns TypeError if value is not the literal' do
+      literal = described_class.new('1')
+      expect(literal.check('2')).to be_basic_type_error
+      expect(literal.check(1)).to be_basic_type_error
+    end
+
+    it 'accepts symbols' do
+      literal = described_class.new('a')
+      expect(literal.check(:a)).to be_checked
+      expect(literal.check(:b)).to be_basic_type_error
+    end
+  end
+
   describe '#literal' do
     it 'returns the correct literal' do
       literal = described_class.new('1')

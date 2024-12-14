@@ -8,4 +8,16 @@ RSpec.describe Camille::Types::Undefined do
       expect(number.__check(false).basic?).to be true
     end
   end
+
+  describe '#check' do
+    it 'returns Checked if value is nil' do
+      undefined = described_class.new
+      expect(undefined.check(nil)).to be_checked
+    end
+
+    it 'returns TypeError if value is not nil' do
+      undefined = described_class.new
+      expect(undefined.check(false)).to be_basic_type_error
+    end
+  end
 end

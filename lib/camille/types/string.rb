@@ -1,8 +1,10 @@
 module Camille
   module Types
     class String < Camille::BasicType
-      def __check value
-        unless value.is_a?(::String) || value.is_a?(Symbol)
+      def check value
+        if value.is_a?(::String) || value.is_a?(Symbol)
+          Camille::Checked.new(fingerprint, value)
+        else
           Camille::TypeError.new("Expected string, got #{value.inspect}.")
         end
       end
