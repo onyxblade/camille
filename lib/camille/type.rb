@@ -19,8 +19,8 @@ module Camille
       end
     end
 
-    def check value
-      @underlying.check value
+    def __check value
+      @underlying.__check value
     end
 
     def transform_and_check value

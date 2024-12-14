@@ -6,21 +6,21 @@ RSpec.describe Camille::Types::StringLiteral do
     end
   end
 
-  describe '#check' do
+  describe '#__check' do
     it 'returns TypeError if value is not the literal' do
       literal = described_class.new('1')
-      expect(literal.check('1')).to be nil
-      expect(literal.check('2')).to be_an_instance_of(Camille::TypeError)
-      expect(literal.check('2').basic?).to be true
-      expect(literal.check(1)).to be_an_instance_of(Camille::TypeError)
-      expect(literal.check(1).basic?).to be true
+      expect(literal.__check('1')).to be nil
+      expect(literal.__check('2')).to be_an_instance_of(Camille::TypeError)
+      expect(literal.__check('2').basic?).to be true
+      expect(literal.__check(1)).to be_an_instance_of(Camille::TypeError)
+      expect(literal.__check(1).basic?).to be true
     end
 
     it 'accepts symbols' do
       literal = described_class.new('a')
-      expect(literal.check(:a)).to be nil
-      expect(literal.check(:b)).to be_an_instance_of(Camille::TypeError)
-      expect(literal.check(:b).basic?).to be true
+      expect(literal.__check(:a)).to be nil
+      expect(literal.__check(:b)).to be_an_instance_of(Camille::TypeError)
+      expect(literal.__check(:b).basic?).to be true
     end
   end
 

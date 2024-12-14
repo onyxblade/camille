@@ -1,7 +1,7 @@
 module Camille
   module Types
     class Any < Camille::BasicType
-      def check value
+      def __check value
       end
 
       def check_value value

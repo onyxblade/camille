@@ -14,7 +14,7 @@ module Camille
         end
       end
 
-      def check value
+      def __check value
         unless value == @value
           Camille::TypeError.new("Expected boolean literal #{@value.inspect}, got #{value.inspect}.")
         end

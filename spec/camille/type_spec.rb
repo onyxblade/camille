@@ -38,10 +38,10 @@ RSpec.describe Camille::Type do
     end
   end
 
-  describe '#check' do
+  describe '#__check' do
     it 'uses the underlying type to check' do
-      expect(Camille::Types::TypeSpec.new.check(1)).to be nil
-      expect(Camille::Types::TypeSpec.new.check('1')).to be_an_instance_of(Camille::TypeError)
+      expect(Camille::Types::TypeSpec.new.__check(1)).to be nil
+      expect(Camille::Types::TypeSpec.new.__check('1')).to be_an_instance_of(Camille::TypeError)
     end
   end
 

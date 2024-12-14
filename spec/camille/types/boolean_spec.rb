@@ -1,12 +1,12 @@
 
 RSpec.describe Camille::Types::Boolean do
-  describe '#check' do
+  describe '#__check' do
     it 'returns TypeError if value is not a boolean' do
       number = described_class.new
-      expect(number.check(true)).to be nil
-      expect(number.check(false)).to be nil
-      expect(number.check(1)).to be_an_instance_of(Camille::TypeError)
-      expect(number.check(1).basic?).to be true
+      expect(number.__check(true)).to be nil
+      expect(number.__check(false)).to be nil
+      expect(number.__check(1)).to be_an_instance_of(Camille::TypeError)
+      expect(number.__check(1).basic?).to be true
     end
   end
 
@@ -19,7 +19,7 @@ RSpec.describe Camille::Types::Boolean do
 
     it 'returns TypeError if value is not a boolean' do
       boolean = described_class.new
-      expect(boolean.check(1)).to be_basic_type_error
+      expect(boolean.check_value(1)).to be_basic_type_error
     end
   end
 end

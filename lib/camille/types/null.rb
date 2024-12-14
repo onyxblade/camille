@@ -1,7 +1,7 @@
 module Camille
   module Types
     class Null < Camille::BasicType
-      def check value
+      def __check value
         unless value == nil
           Camille::TypeError.new("Expected nil, got #{value.inspect}.")
         end

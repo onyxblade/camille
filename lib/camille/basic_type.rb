@@ -40,7 +40,7 @@ module Camille
 
     def transform_and_check value
       transformed = transform value
-      [check(value), transformed]
+      [__check(value), transformed]
     end
 
     def transform value
