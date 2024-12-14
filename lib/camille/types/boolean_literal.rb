@@ -20,6 +20,14 @@ module Camille
         end
       end
 
+      def check_value value
+        if value == @value
+          Camille::Checked.new(fingerprint, value)
+        else
+          Camille::TypeError.new("Expected boolean literal #{@value.inspect}, got #{value.inspect}.")
+        end
+      end
+
       def literal
         @value.to_s
       end
