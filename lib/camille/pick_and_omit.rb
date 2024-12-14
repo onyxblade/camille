@@ -18,6 +18,7 @@ module Camille
         raise ArgumentError.new("The second argument of #{klass_name} has to be an array of symbols. Got #{keys.inspect}.")
       end
       @keys = keys
+      @fingerprint = Digest::MD5.hexdigest "#{self.class.name}#{@type.fingerprint}#{@keys.sort}"
     end
 
     def literal

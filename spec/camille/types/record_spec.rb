@@ -88,4 +88,26 @@ RSpec.describe Camille::Types::Record do
       expect(record.literal).to eq('Record<number, string>')
     end
   end
+
+  describe '#fingerprint' do
+    it 'returns fingerprint based on key and value' do
+      record_a = described_class.new(
+        Camille::Types::Number,
+        Camille::Types::String
+      )
+
+      record_a1 = described_class.new(
+        Camille::Types::Number,
+        Camille::Types::String
+      )
+
+      record_b = described_class.new(
+        Camille::Types::String,
+        Camille::Types::Number
+      )
+
+      expect(record_a.fingerprint).to eq(record_a1.fingerprint)
+      expect(record_a.fingerprint).not_to eq(record_b.fingerprint)
+    end
+  end
 end

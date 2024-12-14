@@ -124,4 +124,40 @@ RSpec.describe Camille::Types::Pick do
     end
   end
 
+  describe '#fingerprint' do
+    it 'returns fingerprint based on content' do
+      pick_a = described_class.new(
+        {a: 1, b: 2, c: 3},
+        [:a, :b]
+      )
+
+      pick_a1 = described_class.new(
+        {a: 1, b: 2, c: 3},
+        [:b, :a]
+      )
+
+      pick_b = described_class.new(
+        {a: 1, b: 2, c: 3},
+        [:a]
+      )
+
+      expect(pick_a.fingerprint).to eq(pick_a1.fingerprint)
+      expect(pick_a.fingerprint).not_to eq(pick_b.fingerprint)
+    end
+
+    it 'returns different fingerprint from omit' do
+      pick = Camille::Types::Pick.new(
+        {a: 1, b: 2, c: 3},
+        [:a, :b]
+      )
+
+      omit = Camille::Types::Omit.new(
+        {a: 1, b: 2, c: 3},
+        [:a, :b]
+      )
+
+      expect(pick.fingerprint).not_to eq(omit.fingerprint)
+    end
+  end
+
 end

@@ -7,6 +7,7 @@ module Camille
       def initialize key, value
         @key = Camille::Type.instance key
         @value = Camille::Type.instance value
+        @fingerprint = Digest::MD5.hexdigest "#{self.class.name}#{@key.fingerprint}#{@value.fingerprint}"
       end
 
       def transform_and_check value

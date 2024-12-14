@@ -120,4 +120,26 @@ RSpec.describe Camille::Types::Omit do
       expect(Camille::Types::Omit[{a: 1}, [:a]]).to be_instance_of(Camille::Types::Omit)
     end
   end
+
+  describe '#fingerprint' do
+    it 'returns fingerprint based on content' do
+      omit_a = described_class.new(
+        {a: 1, b: 2, c: 3},
+        [:a, :b]
+      )
+
+      omit_a1 = described_class.new(
+        {a: 1, b: 2, c: 3},
+        [:b, :a]
+      )
+
+      omit_b = described_class.new(
+        {a: 1, b: 2, c: 3},
+        [:a]
+      )
+
+      expect(omit_a.fingerprint).to eq(omit_a1.fingerprint)
+      expect(omit_a.fingerprint).not_to eq(omit_b.fingerprint)
+    end
+  end
 end
