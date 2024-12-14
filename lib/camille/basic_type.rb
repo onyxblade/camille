@@ -11,6 +11,21 @@ module Camille
       @fingerprint = Digest::MD5.hexdigest self.class.name
     end
 
+    def check_with_fingerprint value
+      case value
+      when Camille::Checked
+        if fingerprint == value.fingerprint
+          value
+        else
+          Camille::TypeError.new('fingerprint mismatch')
+        end
+      when Camille::TypeError
+        value
+      else
+        check_value value
+      end
+    end
+
     def | other
       Camille::Types::Union.new(self, other)
     end

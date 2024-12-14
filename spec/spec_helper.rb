@@ -20,3 +20,27 @@ RSpec.configure do |config|
 
   config.include FileHelpers
 end
+
+RSpec::Matchers.define :be_checked do |expected|
+  match do |actual|
+    actual.instance_of? Camille::Checked
+  end
+end
+
+RSpec::Matchers.define :be_type_error do |expected|
+  match do |actual|
+    actual.instance_of? Camille::TypeError
+  end
+end
+
+RSpec::Matchers.define :be_basic_type_error do |expected|
+  match do |actual|
+    actual.instance_of?(Camille::TypeError) && actual.basic?
+  end
+end
+
+RSpec::Matchers.define :be_composite_type_error do |expected|
+  match do |actual|
+    actual.instance_of?(Camille::TypeError) && !actual.basic?
+  end
+end

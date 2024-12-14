@@ -4,6 +4,10 @@ module Camille
       def check value
       end
 
+      def check_value value
+        Camille::Checked.new(fingerprint, value)
+      end
+
       def literal
         "any"
       end
