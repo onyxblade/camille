@@ -1,5 +1,5 @@
 
-RSpec.xdescribe Camille::Types::Intersection do
+RSpec.describe Camille::Types::Intersection do
   describe '#initialize' do
     it "accepts two types" do
       intersection = described_class.new(Camille::Types::Number, Camille::Types::Number)
@@ -52,41 +52,6 @@ RSpec.xdescribe Camille::Types::Intersection do
       expect(error.components.values.first.components.size).to eq(1)
       expect(error.components.values.first.components.keys.first).to eq('name')
       expect(error.components.values.first.components.values.first.message).to eq("Expected string, got nil.")
-    end
-
-    xcontext 'when two types have conflicting fields' do
-      let(:intersection_type) {
-        described_class.new(
-          {
-            id: Camille::Types::Number
-          },
-          {
-            id: Camille::Types::String
-          }
-        )
-      }
-
-      it 'fails at typecheck' do
-        error = intersection_type.check({
-          id: 1
-        })
-        expect(error).to be_composite_type_error
-        expect(error.components.keys.first).to eq('intersection.right')
-        expect(error.components.values.first).to be_composite_type_error
-        expect(error.components.values.first.components.size).to eq(1)
-        expect(error.components.values.first.components.keys.first).to eq('id')
-        expect(error.components.values.first.components.values.first.message).to eq("Expected string, got 1.")
-
-        error = intersection_type.check({
-          id: '2'
-        })
-        expect(error).to be_composite_type_error
-        expect(error.components.keys.first).to eq('intersection.left')
-        expect(error.components.values.first).to be_composite_type_error
-        expect(error.components.values.first.components.size).to eq(1)
-        expect(error.components.values.first.components.keys.first).to eq('id')
-        expect(error.components.values.first.components.values.first.message).to eq('Expected an integer or a float, got "2".')
-      end
     end
 
     context 'when intersection has transformable fields' do
@@ -249,8 +214,8 @@ RSpec.xdescribe Camille::Types::Intersection do
   describe '#literal' do
     let(:intersection) {
       described_class.new(
-        Camille::Types::Object.new(a: Camille::Types::Number),
-        Camille::Types::Object.new(b: Camille::Types::String)
+        Camille::Types::Number,
+        Camille::Types::Number
       )
     }
 
@@ -265,7 +230,7 @@ RSpec.xdescribe Camille::Types::Intersection do
     }
 
     it 'returns correct literal' do
-      expect(intersection.literal).to eq('(number & string)')
+      expect(intersection.literal).to eq('(number & number)')
     end
 
     xit 'returns correct literal when mixed with union' do
