@@ -9,9 +9,4 @@ class Camille::Types::DateTime < Camille::Type
   def transform value
     value.as_json
   end
-
-  def check value
-    normalized = value.as_json
-    super normalized
-  end
 end

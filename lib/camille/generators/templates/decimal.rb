@@ -13,9 +13,4 @@ class Camille::Types::Decimal < Camille::Type
       value
     end
   end
-
-  def check value
-    normalized = transform value
-    super normalized
-  end
 end
