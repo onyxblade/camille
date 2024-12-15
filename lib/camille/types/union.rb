@@ -9,24 +9,6 @@ module Camille
         @fingerprint = Digest::MD5.hexdigest "#{self.class.name}#{[@left.fingerprint, @right.fingerprint].sort}"
       end
 
-      def transform_and_check value
-        left_error, left_transformed = @left.transform_and_check value
-        if left_error
-          right_error, right_transformed = @right.transform_and_check value
-          if right_error
-            error = Camille::TypeError.new(
-              'union.left' => left_error,
-              'union.right' => right_error
-            )
-            [error, nil]
-          else
-            [nil, right_transformed]
-          end
-        else
-          [nil, left_transformed]
-        end
-      end
-
       def check value
         left_result = @left.check value
         if left_result.type_error?

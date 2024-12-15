@@ -32,69 +32,7 @@ RSpec.describe Camille::Types::Omit do
     end
   end
 
-  describe '#transform_and_check' do
-    it 'returns the transformed value' do
-      object = {
-        a: Camille::Types::Number,
-        b: Camille::Types::Number,
-        c: Camille::Types::Number
-      }
-
-      error, transformed = Camille::Types::Omit.new(object, [:a]).transform_and_check({b: 1, c: 2})
-      expect(error).to be nil
-      expect(transformed).to eq({b: 1, c: 2})
-
-      expect(Camille::Types::Omit.new(object, [:a]).transform_and_check({b: 1})[0]).to be_instance_of(Camille::TypeError)
-
-      error, transformed = Camille::Types::Omit.new(object, [:a, :b]).transform_and_check({c: 1})
-      expect(error).to be nil
-      expect(transformed).to eq({c: 1})
-
-      expect(Camille::Types::Omit.new(object, [:a, :b]).transform_and_check({})[0]).to be_instance_of(Camille::TypeError)
-
-      error, transformed = Camille::Types::Omit.new(object, [:a, :b, :c]).transform_and_check({})
-      expect(error).to be nil
-      expect(transformed).to eq({})
-
-      error, transformed = Camille::Types::Omit.new(Camille::Types::ObjectAlias, [:a]).transform_and_check({b: 1, c: 2})
-      expect(error).to be nil
-      expect(transformed).to eq({b: 1, c: 2})
-
-      expect(Camille::Types::Omit.new(Camille::Types::ObjectAlias, [:a]).transform_and_check({b: 1})[0]).to be_instance_of(Camille::TypeError)
-
-      error, transformed = Camille::Types::Omit.new(Camille::Types::ObjectAlias, [:a, :b]).transform_and_check({c: 1})
-      expect(error).to be nil
-      expect(transformed).to eq({c: 1})
-
-      expect(Camille::Types::Omit.new(Camille::Types::ObjectAlias, [:a, :b]).transform_and_check({})[0]).to be_instance_of(Camille::TypeError)
-
-      error, transformed = Camille::Types::Omit.new(Camille::Types::ObjectAlias, [:a, :b, :c]).transform_and_check({})
-      expect(error).to be nil
-      expect(transformed).to eq({})
-    end
-
-    it 'handles keys of snake case' do
-      object = {
-        long_name: Camille::Types::Number
-      }
-      type = Camille::Types::Omit.new(object, [:long_name])
-      error, transformed = type.transform_and_check({})
-      expect(error).to be nil
-    end
-
-    it 'preserves optional fields' do
-      object = {
-        id: Camille::Types::Number,
-        name?: Camille::Types::String,
-        price: Camille::Types::Number
-      }
-      type = Camille::Types::Omit.new(object, [:price])
-      error, transformed = type.transform_and_check({id: 1})
-      expect(error).to be nil
-    end
-  end
-
-  describe '#transform_and_check' do
+  describe '#check' do
     it 'returns the transformed value' do
       object = {
         a: Camille::Types::Number,

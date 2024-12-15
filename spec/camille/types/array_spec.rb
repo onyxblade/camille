@@ -15,53 +15,6 @@ RSpec.describe Camille::Types::Array do
     end
   end
 
-  describe '#transform_and_check' do
-    let(:array_type){ described_class.new(Camille::Types::Number) }
-    let(:date_array){ described_class.new(Camille::Types::DateTime) }
-
-    it 'checks if value is correct array type' do
-      array_type = described_class.new(Camille::Types::Number)
-      error, transformed = array_type.transform_and_check([1, 2])
-      expect(error).to be nil
-      expect(transformed).to eq([1, 2])
-    end
-
-    it 'returns basic error if value is not an array' do
-      array_type = described_class.new(Camille::Types::Number)
-      error, transformed = array_type.transform_and_check(1)
-
-      expect(error).to be_an_instance_of(Camille::TypeError)
-      expect(error.basic?).to be true
-    end
-
-    it 'returns composite error if value is an array' do
-      array_type = described_class.new(Camille::Types::Number)
-      error, transformed = array_type.transform_and_check([1, '1'])
-
-      expect(error).to be_an_instance_of(Camille::TypeError)
-      expect(error.basic?).to be false
-      expect(error.components.keys.first).to eq('array[1]')
-      expect(error.components.values.first).to be_an_instance_of(Camille::TypeError)
-      expect(error.components.values.first.basic?).to be true
-    end
-
-    it 'returns transformed value for date' do
-      time = Time.now
-      _, transformed = date_array.transform_and_check([time, time])
-
-      expect(transformed).to eq([time.as_json] * 2)
-    end
-
-    it 'returns nested transformed values' do
-      type = Camille::Types::DateTime[][]
-      time = Time.now
-
-      errors, transformed = type.transform_and_check([[time]])
-      expect(errors).to be nil
-      expect(transformed).to eq([[time.as_json]])
-    end
-  end
-
   describe '#check' do
     let(:array_type){ described_class.new(Camille::Types::Number) }
     let(:date_array){ described_class.new(Camille::Types::DateTime) }
@@ -95,7 +48,6 @@ RSpec.describe Camille::Types::Array do
       type = Camille::Types::DateTime[][]
       time = Time.now
 
-      errors, transformed = type.transform_and_check([[time]])
       expect(type.check([[time]])).to have_checked_value([[time.as_json]])
     end
   end

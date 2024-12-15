@@ -11,19 +11,6 @@ RSpec.describe Camille::Types::BooleanLiteral do
     end
   end
 
-  describe '#__check' do
-    it 'returns TypeError if value is not the literal' do
-      literal = described_class.new(false)
-      expect(literal.__check(false)).to be nil
-      expect(literal.__check(1.1)).to be_an_instance_of(Camille::TypeError)
-      expect(literal.__check(1.1).basic?).to be true
-      expect(literal.__check('1')).to be_an_instance_of(Camille::TypeError)
-      expect(literal.__check('1').basic?).to be true
-      expect(literal.__check(true)).to be_an_instance_of(Camille::TypeError)
-      expect(literal.__check(true).basic?).to be true
-    end
-  end
-
   describe '#check' do
     it 'returns Checked if value is the literal' do
       literal = described_class.new(false)

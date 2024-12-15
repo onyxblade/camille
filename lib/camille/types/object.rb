@@ -10,38 +10,6 @@ module Camille
         @fingerprint = generate_fingerprint
       end
 
-      def transform_and_check value
-        if value.is_a? Hash
-          keys = (@fields.keys + value.keys).uniq
-          transform_and_check_results = keys.map do |key|
-            if type = @fields[key]
-              if @optional_keys.include?(key) && value[key].nil?
-                nil
-              else
-                [key, type.transform_and_check(value[key])]
-              end
-            else
-              [key, [nil, value[key]]]
-            end
-          end.compact
-
-          errors = transform_and_check_results.map do |key, (error, transformed)|
-            [key.to_s, error]
-          end.select{|x| x[1]}
-
-          if errors.empty?
-            transformed = transform_and_check_results.map do |key, (error, transformed)|
-              [key, transformed]
-            end.to_h
-            [nil, Camille::ObjectHash[transformed]]
-          else
-            [Camille::TypeError.new(**errors.to_h), nil]
-          end
-        else
-          [Camille::TypeError.new("Expected hash, got #{value.inspect}."), nil]
-        end
-      end
-
       def check value
         if value.is_a? Hash
           keys = (@fields.keys + value.keys).uniq
@@ -69,7 +37,8 @@ module Camille
           end
 
           if errors.empty?
-            Camille::Checked.new(fingerprint, results.map{|key, checked| [key, checked.value]}.concat(skipped_pairs).to_h)
+            object = Camille::ObjectHash[results.map{|key, checked| [key, checked.value]}.concat(skipped_pairs).to_h]
+            Camille::Checked.new(fingerprint, object)
           else
             Camille::TypeError.new(**errors.to_h)
           end

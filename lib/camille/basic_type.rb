@@ -26,16 +26,6 @@ module Camille
       end
     end
 
-    def __check value
-      result = check value
-      case result
-      when Camille::Checked
-        nil
-      else
-        result
-      end
-    end
-
     def | other
       Camille::Types::Union.new(self, other)
     end
@@ -46,11 +36,6 @@ module Camille
 
     def []
       Camille::Types::Array.new(self)
-    end
-
-    def transform_and_check value
-      transformed = transform value
-      [__check(value), transformed]
     end
 
     def transform value

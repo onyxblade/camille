@@ -8,15 +8,6 @@ module Camille
         @fingerprint = Digest::MD5.hexdigest "#{self.class.name}#{@content.fingerprint}"
       end
 
-      def transform_and_check value
-        result = check value
-        if result.type_error?
-          [result, nil]
-        else
-          [nil, result.value]
-        end
-      end
-
       def check value
         if value.is_a? ::Array
           results = value.map.with_index do |element, index|

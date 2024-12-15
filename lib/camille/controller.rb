@@ -19,13 +19,13 @@ module Camille
         if intended_status == 200 || intended_status == :ok
           if render_options.has_key? :json
             value = render_options[:json]
-            error, transformed = endpoint.response_type.transform_and_check(value)
-            if error
+            result = endpoint.response_type.check(value)
+            if result.type_error?
               string_io = StringIO.new
-              Camille::TypeErrorPrinter.new(error).print(string_io)
+              Camille::TypeErrorPrinter.new(result).print(string_io)
               raise TypeError.new("\nType check failed for response.\n#{string_io.string}")
             else
-              super(json: transformed)
+              super(json: result.value)
             end
           else
             raise ArgumentError.new("Expected key :json for `render` call.")

@@ -23,18 +23,9 @@ module Camille
       @underlying.check value
     end
 
-    def __check value
-      @underlying.__check value
-    end
-
-    def transform_and_check value
-      transformed = transform value
-      @underlying.transform_and_check transformed
-    end
-
     def test value
-      error, _ = transform_and_check value
-      error
+      result = check value
+      result.type_error? ? result : nil
     end
 
     def self.test value
