@@ -19,6 +19,10 @@ module Camille
       end
     end
 
+    def check value
+      @underlying.check value
+    end
+
     def __check value
       @underlying.__check value
     end

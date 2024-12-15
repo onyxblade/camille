@@ -371,7 +371,7 @@ RSpec.describe Camille::Types::Intersection do
           expect(error.components.values.first).to be_composite_type_error
           expect(error.components.values.first.components.size).to eq(1)
           expect(error.components.values.first.components.keys.first).to eq('time')
-          expect(error.components.values.first.components.values.first.message).to eq("Expected DateTime like object, got nil.")
+          expect(error.components.values.first.components.values.first.message).to eq("Expected string, got nil.")
         end
 
         it 'returns error if transformable field is of wrong type' do
@@ -385,7 +385,7 @@ RSpec.describe Camille::Types::Intersection do
           expect(error.components.values.first).to be_composite_type_error
           expect(error.components.values.first.components.size).to eq(1)
           expect(error.components.values.first.components.keys.first).to eq('time')
-          expect(error.components.values.first.components.values.first.message).to eq("Expected DateTime like object, got 1.")
+          expect(error.components.values.first.components.values.first.message).to eq("Expected string, got 1.")
         end
       end
 
@@ -421,7 +421,7 @@ RSpec.describe Camille::Types::Intersection do
         it_behaves_like 'performing transformation'
       end
 
-      xcontext 'when both sides have transformable value' do
+      context 'when both sides have transformable value' do
         let(:intersection_type) {
           described_class.new(
             {
