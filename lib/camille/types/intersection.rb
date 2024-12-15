@@ -9,24 +9,11 @@ module Camille
         @left = Camille::Type.instance left
         @right = Camille::Type.instance right
         @fingerprint = Digest::MD5.hexdigest "#{self.class.name}#{[@left.fingerprint, @right.fingerprint].sort}"
+        @processed_object = Camille::IntersectionSolver.solve(@left, @right)
       end
 
       def check value
-        left_result = @left.check value
-        if left_result.type_error?
-          Camille::TypeError.new(
-            'intersection.left' => left_result
-          )
-        else
-          right_result = @right.check left_result.value
-          if right_result.type_error?
-            Camille::TypeError.new(
-              'intersection.right' => right_result
-            )
-          else
-            Camille::Checked.new(fingerprint, right_result.value)
-          end
-        end
+        @processed_object.check value
       end
 
       def literal

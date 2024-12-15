@@ -10,9 +10,9 @@ RSpec.describe Camille::BasicType do
 
   describe '#&' do
     it 'generates an intersection type' do
-      intersection = Camille::Types::Number.new & Camille::Types::String.new
+      intersection = Camille::Types::Number.new & Camille::Types::Number.new
       expect(intersection.left).to be_an_instance_of(Camille::Types::Number)
-      expect(intersection.right).to be_an_instance_of(Camille::Types::String)
+      expect(intersection.right).to be_an_instance_of(Camille::Types::Number)
     end
   end
 
@@ -34,9 +34,9 @@ RSpec.describe Camille::BasicType do
 
   describe '.&' do
     it 'generates an intersection type' do
-      intersection = Camille::Types::Number & Camille::Types::String
+      intersection = Camille::Types::Number & Camille::Types::Number
       expect(intersection.left).to be_an_instance_of(Camille::Types::Number)
-      expect(intersection.right).to be_an_instance_of(Camille::Types::String)
+      expect(intersection.right).to be_an_instance_of(Camille::Types::Number)
     end
   end
 
