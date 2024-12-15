@@ -38,6 +38,13 @@ RSpec.describe Camille::Type do
     end
   end
 
+  describe '#check' do
+    it 'uses the underlying type to check' do
+      expect(Camille::Types::TypeSpec.new.check(1)).to be_checked
+      expect(Camille::Types::TypeSpec.new.check('1')).to be_basic_type_error
+    end
+  end
+
   describe '#directly_instantiable?' do
     it 'returns true' do
       expect(Camille::Types::TypeSpec.directly_instantiable?).to be true
