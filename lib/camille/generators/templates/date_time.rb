@@ -9,4 +9,14 @@ class Camille::Types::DateTime < Camille::Type
   def transform value
     value.as_json
   end
+
+  def check value
+    check_with_fingerprint value do
+      if value.is_a? ::Time
+        Camille::Checked.new(fingerprint, value.as_json)
+      else
+        Camille::TypeError.new("Expected DateTime like object, got #{value.inspect}.")
+      end
+    end
+  end
 end

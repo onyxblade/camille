@@ -22,7 +22,7 @@ module Camille
       when Camille::TypeError
         value
       else
-        check value
+        yield
       end
     end
 

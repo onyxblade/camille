@@ -97,6 +97,67 @@ RSpec.describe Camille::Types::Pick do
     end
   end
 
+  describe '#check' do
+    it 'checks the value with keys picked' do
+      object = {
+        a: Camille::Types::Number,
+        b: Camille::Types::Number,
+        c: Camille::Types::Number
+      }
+
+      result = Camille::Types::Pick.new(object, [:a]).check({a: 1})
+      expect(result).to have_checked_value({a: 1})
+
+      result = Camille::Types::Pick.new(object, [:a, :b]).check({a: 1, b: 2})
+      expect(result).to have_checked_value({a: 1, b: 2})
+
+      expect(Camille::Types::Pick.new(object, [:a, :b, :c]).check({a: 1, b: 2})).to be_composite_type_error
+
+      result = Camille::Types::Pick.new(Camille::Types::ObjectAlias, [:a]).check({a: 1})
+      expect(result).to have_checked_value({a: 1})
+
+      result = Camille::Types::Pick.new(Camille::Types::ObjectAlias, [:a, :b]).check({a: 1, b: 2})
+      expect(result).to have_checked_value({a: 1, b: 2})
+
+      expect(Camille::Types::Pick.new(Camille::Types::ObjectAlias, [:a, :b, :c]).check({a: 1, b: 2})).to be_composite_type_error
+    end
+
+    it 'returns the transformed value' do
+      object = {
+        a: Camille::Types::Number,
+        b: Camille::Types::Number,
+        c: Camille::Types::Number
+      }
+
+      result = Camille::Types::Pick.new(object, [:a]).check({a: 1})
+      expect(result).to have_checked_value({a: 1})
+    end
+
+    it 'handles keys of snake case' do
+      object = {
+        long_name: Camille::Types::Number
+      }
+      type = Camille::Types::Pick.new(object, [:long_name])
+
+      error = type.check({})
+      expect(error).to be_composite_type_error
+
+      result = type.check({long_name: 1})
+      expect(result).to be_checked
+    end
+
+    it 'preserves optional fields' do
+      object = {
+        id: Camille::Types::Number,
+        name?: Camille::Types::String,
+        price: Camille::Types::Number
+      }
+      type = Camille::Types::Pick.new(object, [:id, :name])
+      result = type.check({id: 1})
+      expect(result).to be_checked
+    end
+  end
+
   describe '#literal' do
     it 'returns literal for objects' do
       expect(Camille::Types::Pick.new({a: 1}, [:a]).literal).to eq('Pick<{a: 1}, "a">')

@@ -42,6 +42,42 @@ module Camille
         end
       end
 
+      def check value
+        if value.is_a? Hash
+          keys = (@fields.keys + value.keys).uniq
+          keys_to_check, keys_to_skip = keys.partition{|key| @fields[key]}
+
+          results = keys_to_check.map do |key|
+            type = @fields[key]
+            if @optional_keys.include?(key) && value[key].nil?
+              nil
+            else
+              [key, type.check(value[key])]
+            end
+          end.compact
+
+          errors = results.map do |key, result|
+            if result.type_error?
+              [key.to_s, result]
+            else
+              nil
+            end
+          end.compact
+
+          skipped_pairs = keys_to_skip.map do |key|
+            [key, value[key]]
+          end
+
+          if errors.empty?
+            Camille::Checked.new(fingerprint, results.map{|key, checked| [key, checked.value]}.concat(skipped_pairs).to_h)
+          else
+            Camille::TypeError.new(**errors.to_h)
+          end
+        else
+          Camille::TypeError.new("Expected hash, got #{value.inspect}.")
+        end
+      end
+
       def literal
         "{#{@fields.map{|k,v| "#{literal_key k}: #{v.literal}"}.join(', ')}}"
       end

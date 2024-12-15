@@ -209,6 +209,170 @@ RSpec.describe Camille::Types::Object do
     end
   end
 
+  describe '#check' do
+    let(:object_type){
+      described_class.new(
+        id: Camille::Types::Number,
+        name: Camille::Types::String
+      )
+    }
+    let(:nested_object_type){
+      described_class.new(
+        product: {
+          id: Camille::Types::Number,
+          name: Camille::Types::String
+        }
+      )
+    }
+    let(:object_type_with_date){
+      described_class.new(
+        id: Camille::Types::Number,
+        date: Camille::Types::DateTime
+      )
+    }
+    let(:time) { Time.now }
+
+    it 'checks if value is correct object type' do
+      result = object_type.check({
+        id: 1,
+        name: 'name'
+      })
+      expect(result).to have_checked_value({
+        id: 1,
+        name: 'name'
+      })
+    end
+
+    it 'returns basic error if value is not a hash' do
+      error = object_type.check(1)
+      expect(error).to be_basic_type_error
+    end
+
+    it 'returns composite error if value is a hash' do
+      error = object_type.check({
+        id: 1,
+        name: 2
+      })
+
+      expect(error).to be_composite_type_error
+      expect(error.components.keys.first).to eq('name')
+      expect(error.components.values.first).to be_basic_type_error
+    end
+
+    context 'when object has nested fields' do
+      let(:nested_object_type){
+        described_class.new(
+          product: {
+            id: Camille::Types::Number,
+            name: Camille::Types::String
+          }
+        )
+      }
+
+      it 'returns checked values' do
+        result = nested_object_type.check({
+          product: {
+            id: 1,
+            name: '2'
+          }
+        })
+        expect(result).to have_checked_value({
+          product: {
+            id: 1,
+            name: '2'
+          }
+        })
+      end
+
+      it 'returns errors for nested object' do
+        error = nested_object_type.check({
+          product: {
+            id: 1,
+            name: 2
+          }
+        })
+        expect(error).to be_composite_type_error
+        expect(error.components.keys.first).to eq('product')
+
+        nested_error = error.components.values.first
+        expect(nested_error).to be_composite_type_error
+        expect(nested_error.components.keys.first).to eq('name')
+        expect(nested_error.components.values.first).to be_basic_type_error
+      end
+    end
+
+    context 'when object has optional fields' do
+      let(:optional_object_type){
+        described_class.new(
+          id?: Camille::Types::Number,
+          name?: Camille::Types::String
+        )
+      }
+
+      it 'checks if optional fields are nil' do
+        result = optional_object_type.check({})
+        expect(result).to have_checked_value({})
+      end
+
+      it 'returns composite error if optional fields are of wrong type' do
+        error = optional_object_type.check({
+          id: '1'
+        })
+        expect(error).to be_composite_type_error
+        expect(error.components.keys.first).to eq('id')
+        expect(error.components.values.first).to be_basic_type_error
+        expect(error.components.values.first.message).to eq('Expected an integer or a float, got "1".')
+      end
+
+      it 'removes optional fields if passed nil' do
+        result = optional_object_type.check({id: nil, name: nil})
+        expect(result).to have_checked_value({})
+      end
+    end
+
+    it 'returns transformed value for date' do
+      time = Time.now
+      result = object_type_with_date.check({
+        id: 1,
+        date: time
+      })
+
+      expect(result).to have_checked_value({
+        id: 1,
+        date: time.as_json
+      })
+    end
+
+    it 'returns nested transformed values' do
+      type = described_class.new(
+        nested: {
+          date: Camille::Types::DateTime
+        }
+      )
+
+      result = type.check({
+        nested: {
+          date: time
+        }
+      })
+      expect(result).to have_checked_value({
+        nested: {
+          date: time.as_json
+        }
+      })
+    end
+
+    it 'preserves fields that are not in object schema' do
+      result = object_type.check({
+        id: 1,
+        name: 'a',
+        other: 'c'
+      })
+      expect(result).to be_checked
+      expect(result.value[:other]).to eq('c')
+    end
+  end
+
   describe '#literal' do
     it 'returns correct literal' do
       object = described_class.new(

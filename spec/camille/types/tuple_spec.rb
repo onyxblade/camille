@@ -57,6 +57,57 @@ RSpec.describe Camille::Types::Tuple do
     end
   end
 
+  describe '#check' do
+    it 'checks if value is correct tuple type' do
+      tuple_type = described_class.new([Camille::Types::Number, Camille::Types::String])
+
+      result = tuple_type.check([1, 'name'])
+      expect(result).to have_checked_value([1, 'name'])
+    end
+
+    it 'returns basic error if value is not an array' do
+      tuple_type = described_class.new([Camille::Types::Number, Camille::Types::String])
+
+      error = tuple_type.check(1)
+
+      expect(error).to be_basic_type_error
+    end
+
+    it 'returns basic error if value is of wrong size' do
+      tuple_type = described_class.new([Camille::Types::Number, Camille::Types::String])
+
+      error = tuple_type.check([1, '2', 3])
+
+      expect(error).to be_basic_type_error
+    end
+
+    it 'returns composite error if value is an array' do
+      tuple_type = described_class.new([Camille::Types::Number, Camille::Types::String])
+
+      error = tuple_type.check([1, 1])
+
+      expect(error).to be_composite_type_error
+      expect(error.components.keys.first).to eq('tuple[1]')
+      expect(error.components.values.first).to be_basic_type_error
+    end
+
+    it 'returns transformed value for date' do
+      time = Time.now
+      type = described_class.new([Camille::Types::Number, Camille::Types::DateTime])
+      result = type.check([1, time])
+
+      expect(result).to have_checked_value([1, time.as_json])
+    end
+
+    it 'returns nested transformed values' do
+      time = Time.now
+      type = described_class.new([described_class.new([1, Camille::Types::DateTime])])
+
+      result = type.check([[1, time]])
+      expect(result).to have_checked_value([[1, time.as_json]])
+    end
+  end
+
   describe '#literal' do
     it 'returns correct literal' do
       tuple = described_class.new([Camille::Types::Number, Camille::Types::String])

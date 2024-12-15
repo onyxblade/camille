@@ -94,6 +94,62 @@ RSpec.describe Camille::Types::Omit do
     end
   end
 
+  describe '#transform_and_check' do
+    it 'returns the transformed value' do
+      object = {
+        a: Camille::Types::Number,
+        b: Camille::Types::Number,
+        c: Camille::Types::Number
+      }
+
+      result = Camille::Types::Omit.new(object, [:a]).check({b: 1, c: 2})
+      expect(result).to have_checked_value({b: 1, c: 2})
+
+      expect(Camille::Types::Omit.new(object, [:a]).check({b: 1})).to be_composite_type_error
+
+      result = Camille::Types::Omit.new(object, [:a, :b]).check({c: 1})
+      expect(result).to have_checked_value({c: 1})
+
+      expect(Camille::Types::Omit.new(object, [:a, :b]).check({})).to be_composite_type_error
+
+      result = Camille::Types::Omit.new(object, [:a, :b, :c]).check({})
+      expect(result).to have_checked_value({})
+
+      result = Camille::Types::Omit.new(Camille::Types::ObjectAlias, [:a]).check({b: 1, c: 2})
+      expect(result).to have_checked_value({b: 1, c: 2})
+
+      expect(Camille::Types::Omit.new(Camille::Types::ObjectAlias, [:a]).check({b: 1})).to be_composite_type_error
+
+      result = Camille::Types::Omit.new(Camille::Types::ObjectAlias, [:a, :b]).check({c: 1})
+      expect(result).to have_checked_value({c: 1})
+
+      expect(Camille::Types::Omit.new(Camille::Types::ObjectAlias, [:a, :b]).check({})).to be_composite_type_error
+
+      result = Camille::Types::Omit.new(Camille::Types::ObjectAlias, [:a, :b, :c]).check({})
+      expect(result).to have_checked_value({})
+    end
+
+    it 'handles keys of snake case' do
+      object = {
+        long_name: Camille::Types::Number
+      }
+      type = Camille::Types::Omit.new(object, [:long_name])
+      result = type.check({})
+      expect(result).to be_checked
+    end
+
+    it 'preserves optional fields' do
+      object = {
+        id: Camille::Types::Number,
+        name?: Camille::Types::String,
+        price: Camille::Types::Number
+      }
+      type = Camille::Types::Omit.new(object, [:price])
+      result = type.check({id: 1})
+      expect(result).to be_checked
+    end
+  end
+
   describe '#literal' do
     it 'returns literal for objects' do
       expect(Camille::Types::Omit.new({a: 1}, [:a]).literal).to eq('Omit<{a: 1}, "a">')

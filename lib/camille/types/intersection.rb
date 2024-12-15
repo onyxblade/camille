@@ -31,6 +31,24 @@ module Camille
         end
       end
 
+      def check value
+        left_result = @left.check value
+        if left_result.type_error?
+          Camille::TypeError.new(
+            'intersection.left' => left_result
+          )
+        else
+          right_result = @right.check left_result.value
+          if right_result.type_error?
+            Camille::TypeError.new(
+              'intersection.right' => right_result
+            )
+          else
+            Camille::Checked.new(fingerprint, right_result.value)
+          end
+        end
+      end
+
       def literal
         "(#{@left.literal} & #{@right.literal})"
       end

@@ -262,6 +262,245 @@ RSpec.describe Camille::Types::Intersection do
     end
   end
 
+  describe '#check' do
+    let(:intersection_type){
+      described_class.new(
+        {
+          id: Camille::Types::Number
+        },
+        {
+          name: Camille::Types::String
+        }
+      )
+    }
+
+    it 'checks if value is acceptable type' do
+      result = intersection_type.check({
+        id: 1,
+        name: '2'
+      })
+      expect(result).to have_checked_value({
+        id: 1,
+        name: '2'
+      })
+    end
+
+    it 'returns composite error if left-hand side not satisfied' do
+      error = intersection_type.check({})
+
+      expect(error).to be_composite_type_error
+      expect(error.components.keys.first).to eq('intersection.left')
+      expect(error.components.values.first).to be_composite_type_error
+      expect(error.components.values.first.components.size).to eq(1)
+      expect(error.components.values.first.components.keys.first).to eq('id')
+      expect(error.components.values.first.components.values.first.message).to eq("Expected an integer or a float, got nil.")
+    end
+
+    it 'returns composite error if right-hand side not satisfied' do
+      error = intersection_type.check({
+        id: 1
+      })
+
+      expect(error).to be_composite_type_error
+      expect(error.components.keys.first).to eq('intersection.right')
+      expect(error.components.values.first).to be_composite_type_error
+      expect(error.components.values.first.components.size).to eq(1)
+      expect(error.components.values.first.components.keys.first).to eq('name')
+      expect(error.components.values.first.components.values.first.message).to eq("Expected string, got nil.")
+    end
+
+    context 'when two types have conflicting fields' do
+      let(:intersection_type) {
+        described_class.new(
+          {
+            id: Camille::Types::Number
+          },
+          {
+            id: Camille::Types::String
+          }
+        )
+      }
+
+      it 'fails at typecheck' do
+        error = intersection_type.check({
+          id: 1
+        })
+        expect(error).to be_composite_type_error
+        expect(error.components.keys.first).to eq('intersection.right')
+        expect(error.components.values.first).to be_composite_type_error
+        expect(error.components.values.first.components.size).to eq(1)
+        expect(error.components.values.first.components.keys.first).to eq('id')
+        expect(error.components.values.first.components.values.first.message).to eq("Expected string, got 1.")
+
+        error = intersection_type.check({
+          id: '2'
+        })
+        expect(error).to be_composite_type_error
+        expect(error.components.keys.first).to eq('intersection.left')
+        expect(error.components.values.first).to be_composite_type_error
+        expect(error.components.values.first.components.size).to eq(1)
+        expect(error.components.values.first.components.keys.first).to eq('id')
+        expect(error.components.values.first.components.values.first.message).to eq('Expected an integer or a float, got "2".')
+      end
+    end
+
+    context 'when intersection has transformable fields' do
+      shared_examples 'performing transformation' do
+        it 'returns transformed value' do
+          time = Time.now
+
+          result = intersection_type.check({
+            id: 1,
+            name: '2',
+            time: time
+          })
+          expect(result).to have_checked_value({
+            id: 1,
+            name: '2',
+            time: time.as_json
+          })
+        end
+
+        it 'returns error if transformable field is missing' do
+          error = intersection_type.check({
+            id: 1,
+            name: '2'
+          })
+
+          expect(error).to be_composite_type_error
+          expect(error.components.values.first).to be_composite_type_error
+          expect(error.components.values.first.components.size).to eq(1)
+          expect(error.components.values.first.components.keys.first).to eq('time')
+          expect(error.components.values.first.components.values.first.message).to eq("Expected DateTime like object, got nil.")
+        end
+
+        it 'returns error if transformable field is of wrong type' do
+          error = intersection_type.check({
+            id: 1,
+            name: '2',
+            time: 1
+          })
+
+          expect(error).to be_composite_type_error
+          expect(error.components.values.first).to be_composite_type_error
+          expect(error.components.values.first.components.size).to eq(1)
+          expect(error.components.values.first.components.keys.first).to eq('time')
+          expect(error.components.values.first.components.values.first.message).to eq("Expected DateTime like object, got 1.")
+        end
+      end
+
+      context 'when transformable value is at the left' do
+        let(:intersection_type) {
+          described_class.new(
+            {
+              id: Camille::Types::Number,
+              time: Camille::Types::DateTime
+            },
+            {
+              name: Camille::Types::String
+            }
+          )
+        }
+
+        it_behaves_like 'performing transformation'
+      end
+
+      context 'when transformable value is at the right' do
+        let(:intersection_type) {
+          described_class.new(
+            {
+              id: Camille::Types::Number
+            },
+            {
+              name: Camille::Types::String,
+              time: Camille::Types::DateTime
+            }
+          )
+        }
+
+        it_behaves_like 'performing transformation'
+      end
+
+      xcontext 'when both sides have transformable value' do
+        let(:intersection_type) {
+          described_class.new(
+            {
+              id: Camille::Types::Number,
+              time: Camille::Types::DateTime
+            },
+            {
+              name: Camille::Types::String,
+              time: Camille::Types::DateTime
+            }
+          )
+        }
+
+        it_behaves_like 'performing transformation'
+      end
+
+    end
+
+    context 'when intersection has optional fields' do
+      let(:intersection_type) {
+        described_class.new(
+          {
+            id: Camille::Types::Number,
+          },
+          {
+            name?: Camille::Types::String,
+          }
+        )
+      }
+
+      it 'preserves the optional field' do
+        result = intersection_type.check({
+          id: 1
+        })
+        expect(result).to be_checked
+      end
+    end
+
+    context 'when intersection contains object of the same name on both sides' do
+      let(:intersection_type) {
+        described_class.new(
+          {
+            object: {
+              id: Camille::Types::Number,
+            }
+          },
+          {
+            object: {
+              name: Camille::Types::String,
+            }
+          }
+        )
+      }
+
+      it 'perform type checks correctly' do
+        result = intersection_type.check({
+          object: {
+            id: 1,
+            name: '2',
+          }
+        })
+        expect(result).to be_checked
+
+        error = intersection_type.check({
+          object: {
+            id: 1,
+          }
+        })
+
+        expect(error).to be_composite_type_error
+        expect(error.components.values.first).to be_composite_type_error
+        expect(error.components.values.first.components.size).to eq(1)
+        expect(error.components.values.first.components.keys.first).to eq('object')
+        expect(error.components.values.first.components.values.first.components.keys.first).to eq('name')
+        expect(error.components.values.first.components.values.first.components.values.first.message).to eq("Expected string, got nil.")
+      end
+    end
+  end
+
   describe '#literal' do
     let(:intersection) {
       described_class.new(

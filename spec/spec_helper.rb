@@ -27,6 +27,12 @@ RSpec::Matchers.define :be_checked do |expected|
   end
 end
 
+RSpec::Matchers.define :have_checked_value do |expected|
+  match do |actual|
+    actual.instance_of?(Camille::Checked) && actual.value == expected
+  end
+end
+
 RSpec::Matchers.define :be_type_error do |expected|
   match do |actual|
     actual.instance_of? Camille::TypeError

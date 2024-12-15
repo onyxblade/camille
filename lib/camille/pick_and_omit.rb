@@ -21,6 +21,10 @@ module Camille
       @fingerprint = Digest::MD5.hexdigest "#{self.class.name}#{@type.fingerprint}#{@keys.sort}"
     end
 
+    def check value
+      processed_object.check(value)
+    end
+
     def literal
       "#{klass_name}<#{@type.literal}, #{keys_in_literal}>"
     end

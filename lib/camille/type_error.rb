@@ -27,5 +27,13 @@ module Camille
     def to_s
       inspect
     end
+
+    def checked?
+      false
+    end
+
+    def type_error?
+      true
+    end
   end
 end

@@ -62,6 +62,44 @@ RSpec.describe Camille::Types::Array do
     end
   end
 
+  describe '#check' do
+    let(:array_type){ described_class.new(Camille::Types::Number) }
+    let(:date_array){ described_class.new(Camille::Types::DateTime) }
+
+    it 'checks if value is correct array type' do
+      array_type = described_class.new(Camille::Types::Number)
+      expect(array_type.check([1, 2])).to have_checked_value([1, 2])
+    end
+
+    it 'returns basic error if value is not an array' do
+      array_type = described_class.new(Camille::Types::Number)
+      expect(array_type.check(1)).to be_basic_type_error
+    end
+
+    it 'returns composite error if value is an array' do
+      array_type = described_class.new(Camille::Types::Number)
+      error = array_type.check([1, '1'])
+
+      expect(error).to be_composite_type_error
+      expect(error.components.keys.first).to eq('array[1]')
+      expect(error.components.values.first).to be_basic_type_error
+    end
+
+    it 'returns transformed value for date' do
+      time = Time.now
+
+      expect(date_array.check([time, time])).to have_checked_value([time.as_json] * 2)
+    end
+
+    it 'returns nested transformed values' do
+      type = Camille::Types::DateTime[][]
+      time = Time.now
+
+      errors, transformed = type.transform_and_check([[time]])
+      expect(type.check([[time]])).to have_checked_value([[time.as_json]])
+    end
+  end
+
   describe '#literal' do
     it 'returns correct literal' do
       array = described_class.new(

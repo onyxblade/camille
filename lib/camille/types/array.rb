@@ -9,22 +9,35 @@ module Camille
       end
 
       def transform_and_check value
+        result = check value
+        if result.type_error?
+          [result, nil]
+        else
+          [nil, result.value]
+        end
+      end
+
+      def check value
         if value.is_a? ::Array
-          transform_and_check_results = value.map.with_index do |element, index|
-            [index, @content.transform_and_check(element)]
+          results = value.map.with_index do |element, index|
+            [index, @content.check(element)]
           end
-          errors = transform_and_check_results.map do |index, (error, transformed)|
-            ["array[#{index}]", error]
-          end.select{|x| x[1]}
+
+          errors = results.map do |index, result|
+            if result.type_error?
+              ["array[#{index}]", result]
+            else
+              nil
+            end
+          end.compact
 
           if errors.empty?
-            transformed = transform_and_check_results.map{|_, (_, transformed)| transformed}
-            [nil, transformed]
+            Camille::Checked.new(fingerprint, results.map{|_, checked| checked.value})
           else
-            [Camille::TypeError.new(**errors.to_h), nil]
+            Camille::TypeError.new(**errors.to_h)
           end
         else
-          [Camille::TypeError.new("Expected array, got #{value.inspect}."), nil]
+          Camille::TypeError.new("Expected array, got #{value.inspect}.")
         end
       end
 

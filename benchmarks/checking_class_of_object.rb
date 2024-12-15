@@ -1,6 +1,9 @@
 require "benchmark/ips"
 
 class A
+  def is_A?
+    true
+  end
 end
 
 a = A.new
@@ -20,6 +23,10 @@ Benchmark.ips do |x|
 
   x.report("class.equal?") do
     a.class.equal?(A)
+  end
+
+  x.report("is_A?") do
+    a.is_A?
   end
 
   x.compare!
