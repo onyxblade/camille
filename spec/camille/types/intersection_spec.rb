@@ -215,13 +215,13 @@ RSpec.describe Camille::Types::Intersection do
     let(:intersection) {
       described_class.new(
         Camille::Types::Number,
-        Camille::Types::Number
+        Camille::Types::String
       )
     }
 
     let(:intersection_with_union){
       described_class.new(
-        Camille::Types::Object.new(a: Camille::Types::Number),
+        Camille::Types::Number,
         Camille::Types::Union.new(
           Camille::Types::String,
           Camille::Types::Boolean
@@ -230,10 +230,10 @@ RSpec.describe Camille::Types::Intersection do
     }
 
     it 'returns correct literal' do
-      expect(intersection.literal).to eq('(number & number)')
+      expect(intersection.literal).to eq('(number & string)')
     end
 
-    xit 'returns correct literal when mixed with union' do
+    it 'returns correct literal when mixed with union' do
       expect(intersection_with_union.literal).to eq('(number & (string | boolean))')
     end
   end
