@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1
+
+### Fixed
+
+* Tuple type checking now checks length.
+
 ## 0.6.0
 
 ### Added
