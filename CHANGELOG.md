@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.2
+
+### Added
+
+* Added `Camille::Rendered` to store type-checked JSON string. Using this can skip type-check and JSON rendering.
+* Added `Camille::Checked#render` to generate `Camille::Rendered`.
+
+### Changed
+
+* Use `JSON.dump` instead of ActiveSupport `.to_json`.
+
 ## 0.6.1
 
 ### Fixed
