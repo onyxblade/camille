@@ -25,7 +25,7 @@ module Camille
               Camille::TypeErrorPrinter.new(result).print(string_io)
               raise TypeError.new("\nType check failed for response.\n#{string_io.string}")
             else
-              super(json: result.value)
+              super(json: JSON.dump(result.value))
             end
           else
             raise ArgumentError.new("Expected key :json for `render` call.")
