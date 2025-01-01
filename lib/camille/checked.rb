@@ -14,5 +14,9 @@ module Camille
     def type_error?
       false
     end
+
+    def render
+      Camille::Rendered.new(@fingerprint, JSON.dump(@value))
+    end
   end
 end

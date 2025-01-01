@@ -36,7 +36,7 @@ class ProductsController < ApplicationController
   end
 
   def update
-    render json: params.to_unsafe_h.to_json
+    render json: params.to_unsafe_h
   end
 
 
