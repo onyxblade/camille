@@ -10,5 +10,12 @@ RSpec.describe Camille::Checked do
       expect(rendered.fingerprint).to eq(fingerprint)
       expect(rendered.json).to eq('{"a":1}')
     end
+
+    context 'when checked value is rendered object' do
+      it 'directly returns rendered object' do
+        new_checked = described_class.new(fingerprint, rendered)
+        expect(new_checked.render).to be rendered
+      end
+    end
   end
 end

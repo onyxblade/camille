@@ -16,7 +16,11 @@ module Camille
     end
 
     def render
-      Camille::Rendered.new(@fingerprint, JSON.dump(@value))
+      if @value.instance_of? Camille::Rendered
+        @value
+      else
+        Camille::Rendered.new(@fingerprint, JSON.dump(@value))
+      end
     end
   end
 end

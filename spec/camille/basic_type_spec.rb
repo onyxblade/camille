@@ -107,4 +107,28 @@ RSpec.describe Camille::BasicType do
       expect(type.fingerprint).to eq(Digest::MD5.hexdigest(type.class.name))
     end
   end
+
+  describe '#check' do
+    let(:type_a) { Camille::Types::Number.new }
+    let(:type_b) { Camille::Types::String.new }
+
+    context 'when checking Rendered' do
+      let(:rendered_a) { type_a.check(1).render }
+      let(:rendered_b) { type_b.check('1').render }
+
+      context 'when fingerprint matched' do
+        it 'returns Checked with the Rendered object as value' do
+          expect(type_a.check(rendered_a)).to have_checked_value(rendered_a)
+        end
+      end
+
+      context 'when fingerprint not matched' do
+        it 'returns type error' do
+          type_error = type_a.check(rendered_b)
+          expect(type_error).to be_basic_type_error
+          expect(type_error.message).to eq("Expected `Rendered` object with fingerprint #{type_a.fingerprint}. Got fingerprint #{type_b.fingerprint}.")
+        end
+      end
+    end
+  end
 end

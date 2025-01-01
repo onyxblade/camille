@@ -5,6 +5,20 @@ module Camille
   class BasicType
     class InvalidTypeError < ::ArgumentError; end
 
+    module CheckRendered
+      def check value
+        if value.instance_of? Camille::Rendered
+          if @fingerprint == value.fingerprint
+            Camille::Checked.new(@fingerprint, value)
+          else
+            Camille::TypeError.new("Expected `Rendered` object with fingerprint #{@fingerprint}. Got fingerprint #{value.fingerprint}.")
+          end
+        else
+          super
+        end
+      end
+    end
+
     attr_reader :fingerprint
 
     def initialize
@@ -21,6 +35,10 @@ module Camille
 
     def []
       Camille::Types::Array.new(self)
+    end
+
+    def check value
+      raise NotImplementedError
     end
 
     def transform value
@@ -41,6 +59,10 @@ module Camille
 
     def self.directly_instantiable?
       instance_method(:initialize).arity == 0
+    end
+
+    def self.inherited klass
+      klass.prepend CheckRendered
     end
 
     def self.instance value
