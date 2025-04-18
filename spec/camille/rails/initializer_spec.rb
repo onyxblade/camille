@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'initializer' do
-  it 'eager_loads types and schemas' do
+  it 'eager_loads types and schemas and can access rails models' do
     # comparing to make sure that eager_load instead of autoload happened
     loaded_types_size = Camille::Loader.loaded_types.size
     loaded_schemas_size = Camille::Loader.loaded_schemas.size

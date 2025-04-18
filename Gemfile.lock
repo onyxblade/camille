@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    camille (0.6.1)
+    camille (0.6.2)
       rails (>= 6.1, < 8.1)
 
 GEM
@@ -109,14 +109,14 @@ GEM
     marcel (1.0.4)
     mini_mime (1.1.5)
     minitest (5.25.4)
-    net-imap (0.5.4)
+    net-imap (0.5.6)
       date
       net-protocol
     net-pop (0.1.2)
       net-protocol
     net-protocol (0.2.2)
       timeout
-    net-smtp (0.5.0)
+    net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.4)
     nokogiri (1.17.2-x86_64-linux)
@@ -194,7 +194,8 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     useragent (0.16.11)
-    websocket-driver (0.7.6)
+    websocket-driver (0.7.7)
+      base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     zeitwerk (2.7.1)

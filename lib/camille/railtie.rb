@@ -17,6 +17,9 @@ module Camille
         Camille::Loader.register_routes(self)
       end
 
+    end
+
+    config.after_initialize do |app|
       dir = "#{Rails.root}/config/camille"
 
       update_checker = ActiveSupport::FileUpdateChecker.new([], {dir => ['rb']}) do
@@ -27,9 +30,10 @@ module Camille
 
       app.reloader.to_run do
         require_unload_lock!
-        update_checker.execute_if_updated
+        update_checker.execute
       end
 
+      Camille::Loader.initial_load
     end
 
   end

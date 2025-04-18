@@ -3,6 +3,11 @@ RSpec.shared_examples 'reloading' do
     Camille::Loader.reload_types_and_schemas
   end
 
+  before(:each) do
+    # To clean up file watcher updated status
+    Rails.application.reloader.reload!
+  end
+
   let(:product_type_content){
     <<~EOF
       class Camille::Types::Product < Camille::Type
@@ -103,6 +108,24 @@ RSpec.shared_examples 'reloading' do
     rewrite_file "#{Rails.root}/config/camille/configuration.rb", configuration do
       do_reload
       expect(Camille::CodeGenerator.generate_ts.lines[1].chomp).to eq(random_string)
+    end
+  end
+
+  it 'picks up changes in rails model files' do
+    product_model_content = <<~EOF
+      class Product
+        def self.fields
+          {
+            new_id: Camille::Types::Number
+          }
+        end
+      end
+    EOF
+
+    rewrite_file "#{Rails.root}/app/models/product.rb", product_model_content do
+      do_reload
+      expect(Camille::Types::Product.new.underlying).to be_an_instance_of(Camille::Types::Object)
+      expect(Camille::Types::Product.new.underlying.fields[:new_id]).to be_an_instance_of(Camille::Types::Number)
     end
   end
 
