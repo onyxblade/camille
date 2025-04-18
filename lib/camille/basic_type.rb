@@ -41,10 +41,6 @@ module Camille
       raise NotImplementedError
     end
 
-    def transform value
-      value
-    end
-
     def self.| other
       Camille::Type.instance(self) | other
     end

@@ -20,8 +20,7 @@ module Camille
     end
 
     def check value
-      normalized = transform value
-      @underlying.check normalized
+      @underlying.check value
     end
 
     def test value
