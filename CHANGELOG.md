@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.4
+
+### Changed
+
+* **[BREAKING]** Calling `transform` before `check` is now each custom type's responsibility. To migrate, copy the `check` method [here](https://github.com/onyxblade/camille/commit/00fb254667480c3a2ce222209b09f7afd714fd5d#diff-94b933f5da6d8a5cfd11e24fd89c85cd8e788e4f25ca86a94bbf8aaabaade207R13) to existing custom types that make use of `transform`.
+* Warning comment is moved to config.ts_header.
+
 ## 0.6.3
 
 ### Added
