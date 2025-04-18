@@ -23,13 +23,8 @@ module Camille
       @underlying.check value
     end
 
-    def test value
-      result = check value
-      result.type_error? ? result : nil
-    end
-
-    def self.test value
-      new.test value
+    def self.check value
+      new.check value
     end
 
     def self.klass_name

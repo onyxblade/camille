@@ -128,14 +128,15 @@ Each custom type is considered a type alias in TypeScript. And `alias_of` define
 type Product = {id: number, name: string}
 ```
 
-You can perform a type check on a value using `test`, which might be handy in testing:
+You can perform a type check on a value using `check`, which can be handy in testing:
 
 ```ruby
-error = Camille::Types::Product.test(hash)
-if error.nil?
+# `check` will return either a Camille::Checked or a Camille::TypeError
+result = Camille::Types::Product.check(hash)
+if result.checked?
   # the hash is accepted by Camille::Types::Product type
 else
-  p error
+  p result
 end
 ```
 
