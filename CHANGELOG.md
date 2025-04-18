@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.3
+
+### Added
+
+* Allow accessing Rails models from type files.
+
 ## 0.6.2
 
 ### Added
