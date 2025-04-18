@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    camille (0.6.2)
+    camille (0.6.3)
       rails (>= 6.1, < 8.1)
 
 GEM
