@@ -1,5 +1,7 @@
 # Camille
 
+![Gem Version](https://img.shields.io/gem/v/camille)
+
 ## Why?
 
 Traditionally, the JSON response from a Rails API server isn't typed. So even if we have TypeScript at the front-end, we still have little guarantee that our back-end would return the correct type and structure of data.
