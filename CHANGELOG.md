@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0
+
+### Changed
+
+* **[BREAKING]** Removed `Camille::Type#test` in favour of `Camille::Type#check`.
+* Decimal and DateTime types are no longer generated for installation.
+
 ## 0.6.4
 
 ### Changed

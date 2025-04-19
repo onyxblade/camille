@@ -261,6 +261,10 @@ object:
 
 Everything in `config/camille/types` and `config/camille/schemas` will automatically reload after changes in development environment, just like other files in Rails.
 
+## Versioning
+
+This project uses [Semantic Versioning](https://semver.org/).
+
 ## Development
 
 Run tests with `bundle exec rake`.
