@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0
+
+### Added
+
+* Added support for HTTP verbs `put`, `patch` and `delete`.
+
 ## 1.0.0
 
 ### Changed
