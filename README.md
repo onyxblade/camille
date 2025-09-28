@@ -92,7 +92,7 @@ The `params` type for an endpoint is required to be an object type, or a hash in
 
 Camille will automatically add a Rails route for each endpoint. You don't need to do anything other than having the schema file in place.
 
-When defining an endpoint, you can also use `post` instead of `get` for non-idempotent requests. However, no other HTTP verbs are supported, because verbs in RESTful like `patch` and `delete` indicate what we do on resources, but in RPC-style design each request is merely a function call that does not concern RESTful resources.
+When defining an endpoint, you can use any of `get`, `post`, `put`, `patch`, or `delete`.
 
 ### Custom types
 

@@ -46,5 +46,17 @@ module Camille
       def self.post name, &block
         define_endpoint :post, name, &block
       end
+
+      def self.put name, &block
+        define_endpoint :put, name, &block
+      end
+
+      def self.patch name, &block
+        define_endpoint :patch, name, &block
+      end
+
+      def self.delete name, &block
+        define_endpoint :delete, name, &block
+      end
   end
 end

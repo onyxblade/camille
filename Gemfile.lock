@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    camille (0.6.4)
+    camille (1.0.0)
       rails (>= 6.1, < 8.1)
 
 GEM
@@ -108,6 +108,7 @@ GEM
       net-smtp
     marcel (1.0.4)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.9)
     minitest (5.25.4)
     net-imap (0.5.6)
       date
@@ -119,6 +120,9 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.4)
+    nokogiri (1.17.2)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.17.2-x86_64-linux)
       racc (~> 1.4)
     psych (5.2.1)
@@ -210,4 +214,4 @@ DEPENDENCIES
   rspec-rails
 
 BUNDLED WITH
-   2.2.33
+   2.7.2
