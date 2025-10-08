@@ -11,7 +11,7 @@ RSpec.describe Camille::MainController, type: :request do
     describe 'GET /camille/endpoints.ts' do
       it 'returns generated typescript only when Rails.env.development?' do
         get '/camille/endpoints.ts'
-        expect(response.body).to eq(Camille::CodeGenerator.generate_ts)
+        expect(response.body).to eq(Camille::CodeGenerator.new.generate_ts)
       end
 
       context 'when camille files are changed' do

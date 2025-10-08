@@ -1,6 +1,6 @@
 
 RSpec.describe Camille::CodeGenerator do
-  describe '.generate_ts' do
+  describe '#generate_ts' do
     before(:all) do
       class Camille::Types::SampleType < Camille::Type
         include Camille::Types
@@ -45,7 +45,7 @@ RSpec.describe Camille::CodeGenerator do
         }
       EOF
 
-      expect(Camille::CodeGenerator.generate_ts).to eq(text)
+      expect(Camille::CodeGenerator.new.generate_ts).to eq(text)
 
       Camille.configure do |config|
         config.ts_header = nil

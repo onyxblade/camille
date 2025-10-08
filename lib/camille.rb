@@ -57,6 +57,6 @@ module Camille
   end
 
   def self.generate_ts
-    Camille::CodeGenerator.generate_ts
+    Camille::CodeGenerator.new.generate_ts
   end
 end
