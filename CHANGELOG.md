@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0
+
+### Added
+
+* Added `TypeLiteralGenerator` and `SchemaLiteralGenerator` to allow partial endpoint generation with `CodeGenerator`.
+
 ## 1.1.0
 
 ### Added
