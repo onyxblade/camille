@@ -131,4 +131,30 @@ RSpec.describe Camille::BasicType do
       end
     end
   end
+
+  describe '#check_params' do
+    it 'delegates to check by default' do
+      type = Camille::Types::Number.new
+
+      # Should accept valid values
+      result = type.check_params(42)
+      expect(result).to have_checked_value(42)
+
+      # Should reject invalid values
+      error = type.check_params('not a number')
+      expect(error).to be_type_error
+    end
+  end
+
+  describe '.check_params' do
+    it 'creates instance and delegates to check_params' do
+      # Should accept valid values
+      result = Camille::Types::Number.check_params(42)
+      expect(result).to have_checked_value(42)
+
+      # Should reject invalid values
+      error = Camille::Types::Number.check_params('not a number')
+      expect(error).to be_type_error
+    end
+  end
 end
