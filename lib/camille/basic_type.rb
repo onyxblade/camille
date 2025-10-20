@@ -41,6 +41,10 @@ module Camille
       raise NotImplementedError
     end
 
+    def check_params value
+      check value
+    end
+
     def self.| other
       Camille::Type.instance(self) | other
     end
@@ -51,6 +55,10 @@ module Camille
 
     def self.[]
       Camille::Type.instance(self)[]
+    end
+
+    def self.check_params value
+      Camille::Type.instance(self).check_params value
     end
 
     def self.directly_instantiable?

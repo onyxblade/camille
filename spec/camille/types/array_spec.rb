@@ -80,4 +80,41 @@ RSpec.describe Camille::Types::Array do
     end
   end
 
+  describe '#check_params' do
+    it 'handles array of objects with camelCase keys' do
+      array_type = described_class.new(
+        product_id: Camille::Types::Number,
+        product_name: Camille::Types::String
+      )
+
+      result = array_type.check_params([
+        { 'productId' => 1, 'productName' => 'a' },
+        { 'productId' => 2, 'productName' => 'b' }
+      ])
+
+      expect(result).to have_checked_value([
+        { 'product_id' => 1, 'product_name' => 'a' },
+        { 'product_id' => 2, 'product_name' => 'b' }
+      ])
+    end
+
+    it 'handles array of primitives (delegates to check)' do
+      array_type = described_class.new(Camille::Types::Number)
+      result = array_type.check_params([1, 2, 3])
+      expect(result).to have_checked_value([1, 2, 3])
+    end
+
+    it 'returns error for wrong types in array' do
+      array_type = described_class.new(
+        product_id: Camille::Types::Number
+      )
+
+      error = array_type.check_params([
+        { 'productId' => 'wrong' }
+      ])
+
+      expect(error).to be_composite_type_error
+    end
+  end
+
 end

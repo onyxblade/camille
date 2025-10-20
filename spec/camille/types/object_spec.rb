@@ -282,4 +282,78 @@ RSpec.describe Camille::Types::Object do
       expect(object_a.fingerprint).to eq(object_a1.fingerprint)
     end
   end
+
+  describe '#check_params' do
+    let(:object_type){
+      described_class.new(
+        long_id: Camille::Types::Number,
+        long_name: Camille::Types::String
+      )
+    }
+    let(:nested_object_type){
+      described_class.new(
+        product_info: {
+          product_id: Camille::Types::Number,
+          product_name: Camille::Types::String
+        }
+      )
+    }
+
+    it 'accepts camelCase keys and converts them to snake_case' do
+      result = object_type.check_params({
+        'longId' => 1,
+        'longName' => 'name'
+      })
+      expect(result).to have_checked_value({
+        'long_id' => 1,
+        'long_name' => 'name'
+      })
+    end
+
+    it 'returns error for camelCase keys with wrong types' do
+      error = object_type.check_params({
+        'longId' => 'wrong',
+        'longName' => 'name'
+      })
+      expect(error).to be_composite_type_error
+    end
+
+    it 'handles nested objects with camelCase keys' do
+      result = nested_object_type.check_params({
+        'productInfo' => {
+          'productId' => 1,
+          'productName' => 'test'
+        }
+      })
+      expect(result).to have_checked_value({
+        'product_info' => {
+          'product_id' => 1,
+          'product_name' => 'test'
+        }
+      })
+    end
+
+    it 'handles optional fields with camelCase keys' do
+      optional_type = described_class.new(
+        long_id?: Camille::Types::Number,
+        long_name?: Camille::Types::String
+      )
+
+      result = optional_type.check_params({})
+      expect(result).to have_checked_value({})
+
+      result = optional_type.check_params({'longId' => 1})
+      expect(result).to have_checked_value({'long_id' => 1})
+    end
+
+    it 'preserves extra fields not in schema' do
+      result = object_type.check_params({
+        'longId' => 1,
+        'longName' => 'name',
+        'extraField' => 'value'
+      })
+      expect(result).to be_checked
+      expect(result.value['extra_field']).to eq('value')
+    end
+  end
 end

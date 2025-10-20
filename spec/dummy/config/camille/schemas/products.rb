@@ -5,7 +5,7 @@ class Camille::Schemas::Products < Camille::Schema
 
   get :data do
     params(
-      id: Number
+      id?: Number
     )
     response(
       product: Product

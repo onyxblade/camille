@@ -3,7 +3,7 @@ module Camille
   class Configuration
     class << self
       attr_reader :response_key_converter, :params_key_converter
-      attr_accessor :ts_header, :ts_location
+      attr_accessor :ts_header, :ts_location, :check_params
 
       def load_default_configurations
         self.response_key_converter = lambda do |string|
@@ -13,6 +13,8 @@ module Camille
         self.params_key_converter = lambda do |string|
           string.underscore
         end
+
+        self.check_params = false
       end
 
       def response_key_converter= lambda

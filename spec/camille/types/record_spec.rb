@@ -108,4 +108,34 @@ RSpec.describe Camille::Types::Record do
       expect(record_a.fingerprint).not_to eq(record_b.fingerprint)
     end
   end
+
+  describe '#check_params' do
+    it 'does NOT convert keys (Record keys are dynamic and should not be converted)' do
+      record_type = described_class.new(
+        Camille::Types::String,
+        Camille::Types::Number
+      )
+
+      # Keys should remain as-is, not be converted from camelCase to snake_case
+      result = record_type.check_params({
+        'longName' => 1,
+        'anotherKey' => 2
+      })
+
+      expect(result).to have_checked_value({
+        'longName' => 1,
+        'anotherKey' => 2
+      })
+    end
+
+    it 'delegates to check for Record types' do
+      record_type = described_class.new(
+        Camille::Types::Number,
+        Camille::Types::String
+      )
+
+      result = record_type.check_params({1 => 'a', 2 => 'b'})
+      expect(result).to have_checked_value({1 => 'a', 2 => 'b'})
+    end
+  end
 end

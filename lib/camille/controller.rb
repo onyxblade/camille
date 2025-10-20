@@ -43,7 +43,26 @@ module Camille
       Camille::Loader.check_and_raise_exception
       if endpoint = camille_endpoint
         begin
-          params.deep_transform_keys!{|key| Camille::Configuration.params_key_converter.call(key.to_s)}
+          if Camille::Configuration.check_params
+            # New way: check params against the endpoint's params_type if it exists
+            if endpoint.params_type
+              params_to_check = params.to_unsafe_h
+              check_result = endpoint.params_type.check_params(params_to_check)
+
+              if check_result.type_error?
+                string_io = StringIO.new
+                Camille::TypeErrorPrinter.new(check_result).print(string_io)
+                raise TypeError.new("\nType check failed for params.\n#{string_io.string}")
+              else
+                # Use the checked value which already has snake_case keys
+                self.params = ActionController::Parameters.new(check_result.value)
+              end
+            end
+          else
+            # Old way: just transform keys
+            params.deep_transform_keys!{|key| Camille::Configuration.params_key_converter.call(key.to_s)}
+          end
+
           result = super
           # When there's no `render` call, Rails will return status 204
           if response.status == 204

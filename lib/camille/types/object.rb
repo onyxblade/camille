@@ -47,6 +47,52 @@ module Camille
         end
       end
 
+      def check_params value
+        if value.is_a? Hash
+          # Convert camelCase keys to snake_case
+          converted_value = value.transform_keys do |key|
+            Camille::KeyConverter.convert_params_key(key.to_s)
+          end
+
+          fields_with_string_keys = @fields.transform_keys(&:to_s)
+          optional_keys_as_strings = @optional_keys.map(&:to_s)
+
+          # Now check using the regular check method which expects snake_case
+          keys = (fields_with_string_keys.keys + converted_value.keys).uniq
+          keys_to_check, keys_to_skip = keys.partition{|key| fields_with_string_keys[key]}
+
+          results = keys_to_check.map do |key|
+            type = fields_with_string_keys[key]
+            if optional_keys_as_strings.include?(key) && converted_value[key].nil?
+              nil
+            else
+              [key, type.check_params(converted_value[key])]
+            end
+          end.compact
+
+          errors = results.map do |key, result|
+            if result.type_error?
+              [key.to_s, result]
+            else
+              nil
+            end
+          end.compact
+
+          skipped_pairs = keys_to_skip.map do |key|
+            [key, converted_value[key]]
+          end
+
+          if errors.empty?
+            object = Hash[results.map{|key, checked| [key, checked.value]}.concat(skipped_pairs).to_h]
+            Camille::Checked.new(fingerprint, object)
+          else
+            Camille::TypeError.new(**errors.to_h)
+          end
+        else
+          Camille::TypeError.new("Expected hash, got #{value.inspect}.")
+        end
+      end
+
       def literal
         "{#{@fields.map{|k,v| "#{literal_key k}: #{v.literal}"}.join(', ')}}"
       end

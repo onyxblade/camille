@@ -23,8 +23,16 @@ module Camille
       @underlying.check value
     end
 
+    def check_params value
+      @underlying.check_params value
+    end
+
     def self.check value
       new.check value
+    end
+
+    def self.check_params value
+      new.check_params value
     end
 
     def self.klass_name

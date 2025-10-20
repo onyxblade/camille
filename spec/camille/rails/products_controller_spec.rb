@@ -118,6 +118,89 @@ RSpec.describe ProductsController, type: :request do
         end
       end
 
+      context 'when checking params' do
+        it 'validates params against the schema' do
+          post '/products/update', params: {
+            id: 'wrong_type',
+            product: {
+              name: 'string',
+              availableStock: 1
+            }
+          }, as: :json
+
+          expect(response.status).to eq(500)
+          expect(response.body).to include('Type check failed for params')
+        end
+
+        it 'accepts valid camelCase params' do
+          post '/products/update', params: {
+            id: 1,
+            product: {
+              name: 'string',
+              availableStock: 1
+            }
+          }, as: :json
+
+          expect(response.status).to eq(200)
+        end
+
+        it 'validates nested object params' do
+          post '/products/update', params: {
+            id: 1,
+            product: {
+              name: 123,  # wrong type
+              availableStock: 1
+            }
+          }, as: :json
+
+          expect(response.status).to eq(500)
+          expect(response.body).to include('Type check failed for params')
+        end
+      end
+
+      context 'when check_params is false' do
+        before do
+          @original_check_params = Camille::Configuration.check_params
+          Camille::Configuration.check_params = false
+        end
+
+        after do
+          Camille::Configuration.check_params = @original_check_params
+        end
+
+        it 'transforms keys without type checking' do
+          post '/products/update', params: {
+            id: 'wrong_type',  # This would fail type check, but should pass with check_params = false
+            product: {
+              name: 'string',
+              availableStock: 1
+            }
+          }, as: :json
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to include(
+            'id' => 'wrong_type',
+            'product' => {
+              'name' => 'string',
+              'available_stock' => 1
+            }
+          )
+        end
+
+        it 'still transforms camelCase to snake_case' do
+          post '/products/update', params: {
+            id: 1,
+            product: {
+              name: 'test',
+              availableStock: 5
+            }
+          }, as: :json
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['product']['available_stock']).to eq(5)
+        end
+      end
+
     end
 
     context 'when #camille_endpoint is nil' do
