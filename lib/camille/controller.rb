@@ -1,6 +1,8 @@
 module Camille
   module Controller
     class TypeError < ::StandardError; end
+    class ParamsTypeError < TypeError; end
+    class ResponseTypeError < TypeError; end
     class ArgumentError < ::ArgumentError; end
     class MissingRenderError < ::StandardError; end
 
@@ -23,7 +25,7 @@ module Camille
             if result.type_error?
               string_io = StringIO.new
               Camille::TypeErrorPrinter.new(result).print(string_io)
-              raise TypeError.new("\nType check failed for response.\n#{string_io.string}")
+              raise ResponseTypeError.new("\nType check failed for response.\n#{string_io.string}")
             else
               rendered = result.render.json
               super(json: rendered)
@@ -52,7 +54,7 @@ module Camille
               if check_result.type_error?
                 string_io = StringIO.new
                 Camille::TypeErrorPrinter.new(check_result).print(string_io)
-                raise TypeError.new("\nType check failed for params.\n#{string_io.string}")
+                raise ParamsTypeError.new("\nType check failed for params.\n#{string_io.string}")
               else
                 # Use the checked value which already has snake_case keys
                 self.params = ActionController::Parameters.new(check_result.value)
