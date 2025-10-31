@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0
+
+### Added
+
+* Added Camille::Controller::ParamsTypeError and Camille::Controller::ResponseTypeError to indicate source of TypeError.
+
 ## 1.3.0
 
 ### Added
