@@ -71,6 +71,8 @@ module Camille
             raise_missing_render_error
           end
           result
+        rescue ParamsTypeError => e
+          rescue_with_handler(e) || raise
         rescue ActionController::MissingExactTemplate
           raise_missing_render_error
         end
