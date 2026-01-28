@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.0
+
+### Fixed
+
+* Allow Camille::Controller::ParamsTypeError to be rescued by `rescue_from` in controllers.
+
 ## 1.4.0
 
 ### Added
