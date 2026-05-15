@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.0
+
+### Added
+
+* Added `response.data` test helper (require `'camille/testing'`). Validates the response body against the endpoint's response type and returns the snake_case body as a `HashWithIndifferentAccess`. Works with RSpec and Minitest integration / request tests.
+
 ## 1.5.0
 
 ### Fixed
