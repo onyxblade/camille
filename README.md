@@ -263,6 +263,31 @@ object:
 
 Everything in `config/camille/types` and `config/camille/schemas` will automatically reload after changes in development environment, just like other files in Rails.
 
+### RSpec helper
+
+Camille ships an optional helper for request specs. It looks up the endpoint from the current request, validates `response.parsed_body` against the endpoint's response type, and returns the snake_case body as a `HashWithIndifferentAccess` so you can use either string or symbol keys in assertions.
+
+In your `rails_helper.rb`:
+
+```ruby
+require 'camille/rspec'
+
+RSpec.configure do |config|
+  config.include Camille::RSpec::Helpers, type: :request
+end
+```
+
+Then in a request spec:
+
+```ruby
+it 'returns product data' do
+  get '/products/data'
+  expect(response_data[:product][:available_stock]).to eq(1)
+end
+```
+
+If the response body fails the type check the helper raises `Camille::RSpec::ResponseTypeError`. If the route has no Camille endpoint it raises `Camille::RSpec::MissingEndpointError`.
+
 ## Versioning
 
 This project uses [Semantic Versioning](https://semver.org/).
