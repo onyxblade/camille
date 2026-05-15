@@ -1,7 +1,7 @@
 require 'rails_helper'
-require 'camille/rspec'
+require 'camille/testing'
 
-RSpec.describe Camille::RSpec::ResponseExtension, type: :request do
+RSpec.describe Camille::Testing::ResponseExtension, type: :request do
   before(:each) do
     host! 'localhost'
   end
@@ -24,21 +24,21 @@ RSpec.describe Camille::RSpec::ResponseExtension, type: :request do
         'product' => { 'id' => 'not_a_number', 'name' => 's', 'availableStock' => 1 }
       )
       expect { response.data }.to raise_error(
-        Camille::RSpec::ResponseTypeError, /Response type check failed/
+        Camille::Testing::ResponseTypeError, /Response type check failed/
       )
     end
 
     it 'raises MissingEndpointError when the route has no camille endpoint' do
       post '/non_camille_action', params: { underscore_param: 1 }, as: :json
       expect { response.data }.to raise_error(
-        Camille::RSpec::MissingEndpointError, /No camille endpoint/
+        Camille::Testing::MissingEndpointError, /No camille endpoint/
       )
     end
 
     it 'raises MissingEndpointError when the request did not match any route' do
       get '/does-not-exist'
       expect { response.data }.to raise_error(
-        Camille::RSpec::MissingEndpointError, /did not match a controller action/
+        Camille::Testing::MissingEndpointError, /did not match a controller action/
       )
     end
   end

@@ -1,7 +1,7 @@
 require 'action_dispatch'
 
 module Camille
-  module RSpec
+  module Testing
     class ResponseTypeError < ::StandardError; end
     class MissingEndpointError < ::StandardError; end
 
@@ -11,7 +11,7 @@ module Camille
         action          = request && request.path_parameters[:action]
 
         unless controller_path && action
-          raise Camille::RSpec::MissingEndpointError,
+          raise Camille::Testing::MissingEndpointError,
             "No camille endpoint for this response (request did not match a controller action)."
         end
 
@@ -20,7 +20,7 @@ module Camille
         endpoint = schema && schema.endpoints[action.to_sym]
 
         unless endpoint
-          raise Camille::RSpec::MissingEndpointError,
+          raise Camille::Testing::MissingEndpointError,
             "No camille endpoint for #{controller_class_name}##{action}."
         end
 
@@ -28,7 +28,7 @@ module Camille
         if result.type_error?
           io = StringIO.new
           Camille::TypeErrorPrinter.new(result).print(io)
-          raise Camille::RSpec::ResponseTypeError,
+          raise Camille::Testing::ResponseTypeError,
             "\nResponse type check failed.\n#{io.string}"
         end
 
@@ -48,4 +48,4 @@ module Camille
   end
 end
 
-ActionDispatch::TestResponse.prepend(Camille::RSpec::ResponseExtension)
+ActionDispatch::TestResponse.prepend(Camille::Testing::ResponseExtension)
