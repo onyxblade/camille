@@ -1,22 +1,27 @@
+require 'action_dispatch'
+
 module Camille
   module RSpec
     class ResponseTypeError < ::StandardError; end
     class MissingEndpointError < ::StandardError; end
 
-    module Helpers
-      def response_data
-        controller_path = request.path_parameters[:controller]
-        action          = request.path_parameters[:action]
-        controller_class_name = "#{controller_path.camelize}Controller"
+    module ResponseExtension
+      def data
+        unless request
+          raise Camille::RSpec::MissingEndpointError,
+            "No request associated with this response."
+        end
+
+        controller_class_name = "#{request.path_parameters[:controller].camelize}Controller"
         schema   = Camille::Loader.controller_name_to_schema_map[controller_class_name]
-        endpoint = schema && schema.endpoints[action.to_sym]
+        endpoint = schema && schema.endpoints[request.path_parameters[:action].to_sym]
 
         unless endpoint
           raise Camille::RSpec::MissingEndpointError,
-            "No camille endpoint for #{controller_class_name}##{action}."
+            "No camille endpoint for #{controller_class_name}##{request.path_parameters[:action]}."
         end
 
-        result = endpoint.response_type.check_params(response.parsed_body)
+        result = endpoint.response_type.check_params(parsed_body)
         if result.type_error?
           io = StringIO.new
           Camille::TypeErrorPrinter.new(result).print(io)
@@ -39,3 +44,5 @@ module Camille
     end
   end
 end
+
+ActionDispatch::TestResponse.prepend(Camille::RSpec::ResponseExtension)
