@@ -34,5 +34,12 @@ RSpec.describe Camille::RSpec::ResponseExtension, type: :request do
         Camille::RSpec::MissingEndpointError, /No camille endpoint/
       )
     end
+
+    it 'raises MissingEndpointError when the request did not match any route' do
+      get '/does-not-exist'
+      expect { response.data }.to raise_error(
+        Camille::RSpec::MissingEndpointError, /did not match a controller action/
+      )
+    end
   end
 end

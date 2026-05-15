@@ -7,18 +7,21 @@ module Camille
 
     module ResponseExtension
       def data
-        unless request
+        controller_path = request && request.path_parameters[:controller]
+        action          = request && request.path_parameters[:action]
+
+        unless controller_path && action
           raise Camille::RSpec::MissingEndpointError,
-            "No request associated with this response."
+            "No camille endpoint for this response (request did not match a controller action)."
         end
 
-        controller_class_name = "#{request.path_parameters[:controller].camelize}Controller"
+        controller_class_name = "#{controller_path.camelize}Controller"
         schema   = Camille::Loader.controller_name_to_schema_map[controller_class_name]
-        endpoint = schema && schema.endpoints[request.path_parameters[:action].to_sym]
+        endpoint = schema && schema.endpoints[action.to_sym]
 
         unless endpoint
           raise Camille::RSpec::MissingEndpointError,
-            "No camille endpoint for #{controller_class_name}##{request.path_parameters[:action]}."
+            "No camille endpoint for #{controller_class_name}##{action}."
         end
 
         result = endpoint.response_type.check_params(parsed_body)
