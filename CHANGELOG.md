@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.7.0
+
+### Fixed
+
+* Renamed `Camille::Controller::ArgumentError` to `Camille::Controller::InvalidRenderArgumentError` so it no longer shadows the built-in `ArgumentError` inside controllers that include `Camille::Controller`. (#11, thanks @SAY-5)
+
 ## 1.6.0
 
 ### Added
