@@ -69,4 +69,8 @@ class ProductsController < ApplicationController
       }
     }
   end
+
+  def raise_plain_argument_error
+    raise ArgumentError, 'boom'
+  end
 end
