@@ -5,7 +5,10 @@
   margin: 16px 0;
 }
 
-.side-by-side > div[class*='language-'] {
+/* Override the theme's `div[class*='language-'] + div[class*='language-'] { margin-top: -8px }`
+   which is meant for stacked blocks and misaligns grid columns. */
+.vp-doc .side-by-side > div[class*='language-'],
+.vp-doc .side-by-side > div[class*='language-'] + div[class*='language-'] {
   margin: 0;
   min-width: 0;
 }
