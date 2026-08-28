@@ -2,13 +2,9 @@
 
 ![Gem Version](https://img.shields.io/gem/v/camille)
 
-## Why?
+Camille lets you define type schemas for your Rails API in Ruby, then generates typed TypeScript request functions from them and typechecks every response at runtime. The front-end and back-end can no longer disagree about the shape of data.
 
-Traditionally, the JSON response from a Rails API server isn't typed. So even if we have TypeScript at the front-end, we still have little guarantee that our back-end would return the correct type and structure of data.
-
-In order to eliminate type mismatch between both ends, Camille provides a syntax for you to define type schema for your Rails API, and uses these schemas to generate the TypeScript functions for calling the API.
-
-For example, an endpoint defined in Ruby, where `data` is a controller action,
+An endpoint defined in Ruby, where `data` is a controller action,
 
 ```ruby
 get :data do
@@ -21,15 +17,13 @@ get :data do
 end
 ```
 
-will become a function in TypeScript:
+becomes a function in TypeScript:
 
 ```typescript
 data(params: {id: number}): Promise<{name: string}>
 ```
 
-Therefore, if the front-end requests the API by calling `data`, we have guarantee that `id` is presented in `params`, and Camille will require the response to contain a string `name`, so the front-end can receive the correct type of data.
-
-By using these request functions, we also don't need to know about HTTP verbs and paths. It's impossible to have unrecognized routes, since Camille will make sure that each function handled by the correct Rails action.
+Routes are derived from the schema, so the front-end calls a function instead of remembering HTTP verbs and paths, and Camille makes sure the correct Rails action handles it.
 
 ## Installation
 
@@ -46,269 +40,22 @@ bundle install
 bundle exec rails g camille:install
 ```
 
-## Usage
+## Documentation
 
-### Schemas
+Full documentation is at **https://onyxblade.github.io/camille/**, covering:
 
-A schema defines the type of `params` and `response` for a controller action. The following commands will generate schema definition files in `config/camille/schemas`.
+- [Schemas](https://onyxblade.github.io/camille/guide/schemas) and [custom types](https://onyxblade.github.io/camille/guide/custom-types)
+- [Supported type syntax](https://onyxblade.github.io/camille/guide/type-syntax)
+- [TypeScript generation](https://onyxblade.github.io/camille/guide/typescript-generation)
+- [Runtime typechecking](https://onyxblade.github.io/camille/guide/typechecking)
+- [Caching rendered fragments](https://onyxblade.github.io/camille/guide/caching)
+- [Test helper](https://onyxblade.github.io/camille/guide/testing)
 
-```bash
-# to generate a schema for ProductsController
-bundle exec rails g camille:schema products
-# to generate a schema for Api::ProductController
-bundle exec rails g camille:schema api/products
-```
-
-An example of schema definition:
-
-```ruby
-using Camille::Syntax
-
-class Camille::Schemas::Api::Products < Camille::Schema
-  include Camille::Types
-
-  get :data do
-    params(
-      id: Number
-    )
-    response(
-      name: String
-    )
-  end
-end
-```
-
-The `Api::Products` schema defines one endpoint `data` and its params and response type. This endpoint corresponds to the `data` action on `Api::ProductsController`. Inside the action, you can assume that `params[:id]` is a number, and you will need to `render json: {name: 'some string'}` in order to pass the typecheck.
-
-When generating TypeScript request functions, the `data` endpoint will become a function having the following signature:
-
-```typescript
-data(params: {id: number}): Promise<{name: string}>
-```
-
-Therefore, the front-end user is required to provide an `id` when they call this function. And they can expect to get a `name` from the response of this request. There are no more type mismatch between both ends.
-
-The `params` type for an endpoint is required to be an object type, or a hash in Ruby, while `response` type can be any supported type, for example a `Boolean`.
-
-Camille will automatically add a Rails route for each endpoint. You don't need to do anything other than having the schema file in place.
-
-When defining an endpoint, you can use any of `get`, `post`, `put`, `patch`, or `delete`.
-
-### Custom types
-
-In addition to primitive types, you can define custom types in Camille. The following commands will generate type definition files in `config/camille/types`.
-
-```bash
-# to generate a type named Product
-rails g camille:type product
-# to generate a type named Nested::Product
-rails g camille:type nested/product
-```
-
-An example of custom type definition:
-
-```ruby
-using Camille::Syntax
-
-class Camille::Types::Product < Camille::Type
-  include Camille::Types
-
-  alias_of(
-    id: Number,
-    name: String
-  )
-end
-```
-
-Each custom type is considered a type alias in TypeScript. And `alias_of` defines what this type is aliasing. In this case, the `Product` type is an alias of an object type having fields `id` as `Number` and `name` as `String`. When generating TypeScript, it will be converted to the following:
-
-```typescript
-type Product = {id: number, name: string}
-```
-
-You can perform a type check on a value using `check`, which can be handy in testing:
-
-```ruby
-# `check` will return either a Camille::Checked or a Camille::TypeError
-result = Camille::Types::Product.check(hash)
-if result.checked?
-  # the hash is accepted by Camille::Types::Product type
-else
-  p result
-end
-```
-
-### Available syntax for types
-
-Camille supports most of the type syntax in TypeScript. Below is a list of types that you can use in type and schema definition.
-
-```ruby
-params(
-  # primitive types in TypeScript
-  number: Number,
-  string: String,
-  boolean: Boolean,
-  null: Null,
-  undefined: Undefined,
-  any: Any,
-  # an array type is a type name followed by '[]'
-  array: Number[],
-  # an object type looks like hash
-  object: {
-    field: Number
-  },
-  # an array of objects also works
-  object_array: {
-    field: Number
-  }[],
-  # a union type is two types connected by '|'
-  union: Number | String,
-  # an intersection type is two types connected by '&'
-  intersection: { id: Number } & { name: String },
-  # a tuple type is several types put inside '[]'
-  tuple: [Number, String, Boolean],
-  # a field followed by '?' is optional, the same as in TypeScript
-  optional?: Number,
-  # literal types
-  number_literal: 1,
-  string_literal: 'hello',
-  boolean_literal: false,
-  # a custom type we defined above
-  product: Product,
-  # Pick and Omit accept a type and an array of symbols
-  pick: Pick[{a: 1, b: 2}, [:a, :b]],
-  omit: Omit[Product, [:id]],
-  # Record accepts a key type and a value type
-  record: Record[Number, String]
-)
-```
-
-### TypeScript generation
-
-After you have your types and schemas in place, you can visit `/camille/endpoints.ts` in development environment to have the TypeScript request functions generated.
-
-An example from our previously defined type and schema will be:
-
-```typescript
-import request from './request'
-
-export type Product = {id: number, name: string}
-
-export default {
-  api: {
-    data(params: {id: number}): Promise<{name: string}> {
-      return request('get', '/api/products/data', params)
-    }
-  }
-}
-```
-
-The first line of `import` is configurable as `config.ts_header` in `config/camille/configuration.rb`. You would need to implement a `request` function that performs the HTTP request.
-
-### Conversion between camelCase and snake_case
-
-In TypeScript world, people usually use camelCase to name functions and variables, while in Ruby the convention is to use snake_case. Camille will automatically convert between these two when processing request.
-
-For example,
-
-```ruby
-get :special_data do
-  params(
-    long_id: Number
-  )
-  response(
-    long_name: String
-  )
-end
-```
-
-will have TS signature:
-
-```typescript
-specialData(params: {longId: number}): Promise<{longName: string}>
-```
-
-In the Rails action you still use `params[:long_id]` to access the parameter and return `long_name` in response.
-
-### Typechecking
-
-If a controller action has a corresponding schema, Camille will raise an error if the returned JSON doesn't match the response type specified in the schema.
-
-For example for
-```ruby
-response(
-  object: {
-    array: Number[]
-  }
-)
-```
-
-if we return such a JSON in our action
-```ruby
-render json: {
-  object: {
-    array: [1, 2, '3']
-  }
-}
-```
-
-Camille will print the following error:
-```
-object:
-  array:
-    array[2]: Expected number, got "3".
-```
-
-### Caching rendered fragments
-
-Type checking and key conversion run on every `render`. For data that is expensive to build and shared across requests, you can check it once and cache the result as a `Camille::Rendered`:
-
-```ruby
-rendered = Camille::Types::Product.render!(serialize(product))
-# => Camille::Rendered with the type's fingerprint and the final JSON string
-Rails.cache.write("product/#{product.id}/#{Camille::Types::Product.new.fingerprint}", rendered)
-```
-
-`render!` raises `Camille::BasicType::RenderError` if the value doesn't match the type. A `Rendered` can be placed anywhere a value of that type is expected:
-
-```ruby
-render json: {
-  products: Rails.cache.read_multi(*keys).values  # Product[]
-}
-```
-
-The type accepts it by comparing fingerprints instead of re-checking, and `to_json` splices the stored string verbatim, so no parsing or re-serialization happens on the cached fragments.
-
-A `Rendered` is immutable and opaque. If a fragment needs to be modified before rendering, cache the plain hash instead and let Camille check it as usual; the two forms are a per-fragment choice. Keep volatile or per-user fields outside cached fragments, and include the type's `fingerprint` in the cache key so entries are invalidated when the type changes.
-
-`Rendered` defines `marshal_dump`/`marshal_load` as `[fingerprint, json]`, so the default `Rails.cache` coder stores just the two strings. If you use the `:message_pack` cache serializer, register the class with `ActiveSupport::MessagePack::CacheSerializer` using the same pair.
-
-### Reloading
-
-Everything in `config/camille/types` and `config/camille/schemas` will automatically reload after changes in development environment, just like other files in Rails.
-
-### Test helper
-
-Camille ships an optional `response.data` helper for Rails integration / request tests. It looks up the endpoint from the current request, validates `response.parsed_body` against the endpoint's response type, and returns the snake_case body as a `HashWithIndifferentAccess` so you can use either string or symbol keys in assertions.
-
-In your `rails_helper.rb` (RSpec) or `test_helper.rb` (Minitest):
-
-```ruby
-require 'camille/testing'
-```
-
-Then in a test:
-
-```ruby
-get '/products/data'
-expect(response.data[:product][:available_stock]).to eq(1)
-```
-
-Since `Camille::Controller#render` only type checks and converts keys for 200 responses, `response.data` returns non-200 bodies as-is without validation. If a 200 response body fails the type check the helper raises `Camille::Testing::ResponseTypeError`. If the route has no Camille endpoint it raises `Camille::Testing::MissingEndpointError`.
+The docs source lives in `docs/`; run `npm install && npm run dev` there to preview locally.
 
 ## Versioning
 
-This project uses [Semantic Versioning](https://semver.org/).
+This project uses [Semantic Versioning](https://semver.org/). See [CHANGELOG.md](CHANGELOG.md).
 
 ## Development
 
