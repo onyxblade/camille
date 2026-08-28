@@ -35,6 +35,10 @@ module Camille
       new.check_params value
     end
 
+    def self.render! value
+      new.render! value
+    end
+
     def self.klass_name
       name.gsub(/^Camille::Types::/, '')
     end

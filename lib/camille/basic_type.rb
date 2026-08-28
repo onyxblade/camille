@@ -4,6 +4,7 @@ module Camille
   # This class specifies the methods available for all types includeing built-in and custom ones.
   class BasicType
     class InvalidTypeError < ::ArgumentError; end
+    class RenderError < ::StandardError; end
 
     module CheckRendered
       def check value
@@ -23,6 +24,19 @@ module Camille
 
     def initialize
       @fingerprint = Digest::MD5.hexdigest self.class.name
+    end
+
+    # Checks `value` and returns a `Camille::Rendered`, raising `RenderError` with
+    # the printed type error if the check fails.
+    def render! value
+      result = check(value)
+      if result.type_error?
+        string_io = StringIO.new
+        Camille::TypeErrorPrinter.new(result).print(string_io)
+        raise RenderError.new("\nType check failed for render!.\n#{string_io.string}")
+      else
+        result.render
+      end
     end
 
     def | other

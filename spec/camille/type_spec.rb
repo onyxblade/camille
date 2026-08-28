@@ -32,6 +32,28 @@ RSpec.describe Camille::Type do
     Camille::Types.send(:remove_const, :TypeSpec)
   end
 
+  describe '.render!' do
+    it 'returns Rendered for a valid value' do
+      rendered = Camille::Types::TypeSpec::Nested.render!(id: 1, name: 'a')
+      expect(rendered).to be_an_instance_of(Camille::Rendered)
+      expect(rendered.fingerprint).to eq(Camille::Types::TypeSpec::Nested.new.fingerprint)
+      expect(rendered.json).to eq('{"id":1,"name":"a"}')
+    end
+
+    it 'is accepted by the same type without re-checking' do
+      rendered = Camille::Types::TypeSpec::Nested.render!(id: 1, name: 'a')
+      result = Camille::Types::TypeSpec::Nested.check(rendered)
+      expect(result).to be_an_instance_of(Camille::Checked)
+      expect(result.render).to be rendered
+    end
+
+    it 'raises RenderError with the printed type error for an invalid value' do
+      expect {
+        Camille::Types::TypeSpec::Nested.render!(id: 1, name: 2)
+      }.to raise_error(Camille::BasicType::RenderError, /name: Expected string, got 2\./)
+    end
+  end
+
   describe '.alias_of' do
     it 'defines type alias' do
       expect(Camille::Types::TypeSpec.new.underlying).to be_an_instance_of(Camille::Types::Number)
