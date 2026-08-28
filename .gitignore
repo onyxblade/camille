@@ -15,3 +15,6 @@
 !/spec/dummy/tmp/.keep
 
 *.gem
+# gem projects do not track the lockfile; CI resolves from gemfiles/
+/Gemfile.lock
+/gemfiles/*.lock
