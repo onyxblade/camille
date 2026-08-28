@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.8.1
+
+### Fixed
+
+* `Record`, `Pick` and `Omit` now implement `check_params`, so nested objects inside them get their camelCase keys converted instead of failing with errors like `Expected array, got nil`. Record keys are still not converted.
+* `response.data` in `camille/testing` no longer type checks non-200 responses, matching `Camille::Controller#render`, which only checks and converts keys for 200 responses. Non-200 bodies are returned as-is.
+
 ## 1.8.0
 
 ### Added
