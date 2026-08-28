@@ -18,3 +18,8 @@
 # gem projects do not track the lockfile; CI resolves from gemfiles/
 /Gemfile.lock
 /gemfiles/*.lock
+
+# docs site
+/docs/node_modules/
+/docs/.vitepress/dist/
+/docs/.vitepress/cache/

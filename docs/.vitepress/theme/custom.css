@@ -1,0 +1,17 @@
+.side-by-side {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.side-by-side > div[class*='language-'] {
+  margin: 0;
+  min-width: 0;
+}
+
+@media (max-width: 720px) {
+  .side-by-side {
+    grid-template-columns: 1fr;
+  }
+}
