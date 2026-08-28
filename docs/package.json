@@ -10,6 +10,6 @@
   "devDependencies": {
     "@types/markdown-it-container": "^4.0.0",
     "markdown-it-container": "^4.0.0",
-    "vitepress": "^1.6.3"
+    "vitepress": "^2.0.0-alpha.19"
   }
 }
