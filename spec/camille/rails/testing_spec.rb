@@ -28,6 +28,13 @@ RSpec.describe Camille::Testing::ResponseExtension, type: :request do
       )
     end
 
+    it 'returns non-200 bodies as-is without type checking' do
+      get '/products/render_422'
+      expect(response.status).to eq(422)
+      expect(response.data).to eq('error_message' => 'invalid')
+      expect(response.data[:error_message]).to eq('invalid')
+    end
+
     it 'raises MissingEndpointError when the route has no camille endpoint' do
       post '/non_camille_action', params: { underscore_param: 1 }, as: :json
       expect { response.data }.to raise_error(

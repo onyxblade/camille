@@ -58,6 +58,10 @@ class ProductsController < ApplicationController
     render json: 'error', status: 401
   end
 
+  def render_422
+    render json: { error_message: 'invalid' }, status: 422
+  end
+
   def response_false
     render json: false
   end

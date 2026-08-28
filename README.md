@@ -304,7 +304,7 @@ get '/products/data'
 expect(response.data[:product][:available_stock]).to eq(1)
 ```
 
-If the response body fails the type check the helper raises `Camille::Testing::ResponseTypeError`. If the route has no Camille endpoint it raises `Camille::Testing::MissingEndpointError`.
+Since `Camille::Controller#render` only type checks and converts keys for 200 responses, `response.data` returns non-200 bodies as-is without validation. If a 200 response body fails the type check the helper raises `Camille::Testing::ResponseTypeError`. If the route has no Camille endpoint it raises `Camille::Testing::MissingEndpointError`.
 
 ## Versioning
 

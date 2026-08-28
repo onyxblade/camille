@@ -11,28 +11,14 @@ module Camille
       end
 
       def check value
-        if value.is_a? ::Hash
+        check_with_method(value, :check)
+      end
 
-          results = value.map.with_index do |(k, v), index|
-            [index, check_pair(k, v)]
-          end
-
-          errors = results.map do |index, result|
-            if result.instance_of?(Camille::TypeError)
-              ["record[#{index}]", result]
-            else
-              nil
-            end
-          end.compact
-
-          if errors.empty?
-            Camille::Checked.new(fingerprint, results.map{|_, result| [result[0].value, result[1].value]}.to_h)
-          else
-            Camille::TypeError.new(**errors.to_h)
-          end
-        else
-          Camille::TypeError.new("Expected hash, got #{value.inspect}.")
-        end
+      # Record keys are dynamic, so they are never converted between
+      # camelCase and snake_case. Only the values are checked with
+      # `check_params` so nested objects get their keys converted.
+      def check_params value
+        check_with_method(value, :check_params)
       end
 
       def self.[] key, value
@@ -44,9 +30,34 @@ module Camille
       end
 
       private
-        def check_pair key, value
+        def check_with_method value, method_name
+          if value.is_a? ::Hash
+
+            results = value.map.with_index do |(k, v), index|
+              [index, check_pair(k, v, method_name)]
+            end
+
+            errors = results.map do |index, result|
+              if result.instance_of?(Camille::TypeError)
+                ["record[#{index}]", result]
+              else
+                nil
+              end
+            end.compact
+
+            if errors.empty?
+              Camille::Checked.new(fingerprint, results.map{|_, result| [result[0].value, result[1].value]}.to_h)
+            else
+              Camille::TypeError.new(**errors.to_h)
+            end
+          else
+            Camille::TypeError.new("Expected hash, got #{value.inspect}.")
+          end
+        end
+
+        def check_pair key, value, method_name
           key_result = @key.check key
-          value_result = @value.check value
+          value_result = @value.public_send(method_name, value)
 
           if key_result.checked? && value_result.checked?
             [key_result, value_result]

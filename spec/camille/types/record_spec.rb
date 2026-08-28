@@ -128,6 +128,23 @@ RSpec.describe Camille::Types::Record do
       })
     end
 
+    it 'checks values with check_params so nested object keys get converted' do
+      record_type = described_class.new(
+        Camille::Types::String,
+        Camille::Types::Object.new(ingredient_keys: Camille::Types::Array.new(Camille::Types::String))
+      )
+
+      result = record_type.check_params({
+        'someForm' => { 'ingredientKeys' => ['a'] }
+      })
+
+      expect(result).to have_checked_value({
+        'someForm' => { 'ingredient_keys' => ['a'] }
+      })
+
+      expect(record_type.check_params({'someForm' => {'ingredientKeys' => nil}})).to be_composite_type_error
+    end
+
     it 'delegates to check for Record types' do
       record_type = described_class.new(
         Camille::Types::Number,

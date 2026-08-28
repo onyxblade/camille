@@ -32,6 +32,14 @@ RSpec.describe Camille::Types::Omit do
     end
   end
 
+  describe '#check_params' do
+    it 'converts keys of the processed object' do
+      type = Camille::Types::Omit.new({long_id: Camille::Types::Number, short_id: Camille::Types::Number}, [:short_id])
+      expect(type.check_params({'longId' => 1})).to have_checked_value({'long_id' => 1})
+      expect(type.check_params({'longId' => 'x'})).to be_composite_type_error
+    end
+  end
+
   describe '#check' do
     it 'returns the transformed value' do
       object = {

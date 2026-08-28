@@ -57,6 +57,10 @@ class Camille::Schemas::Products < Camille::Schema
     response(id: Number)
   end
 
+  get :render_422 do
+    response(id: Number)
+  end
+
   get :response_false do
     response(Boolean)
   end

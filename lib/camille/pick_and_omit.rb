@@ -25,6 +25,10 @@ module Camille
       processed_object.check(value)
     end
 
+    def check_params value
+      processed_object.check_params(value)
+    end
+
     def literal
       "#{klass_name}<#{@type.literal}, #{keys_in_literal}>"
     end

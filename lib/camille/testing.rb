@@ -24,6 +24,10 @@ module Camille
             "No camille endpoint for #{controller_class_name}##{action}."
         end
 
+        # Camille::Controller#render only type checks and converts keys for
+        # 200 responses, so mirror that here and return non-200 bodies as-is.
+        return deep_indifferent(parsed_body) unless status == 200
+
         result = endpoint.response_type.check_params(parsed_body)
         if result.type_error?
           io = StringIO.new
