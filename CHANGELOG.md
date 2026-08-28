@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased
+## 1.8.0
+
+### Added
+
+* Added `render!` to every type (`Camille::Types::Product.render!(value)`), which checks a value and returns a `Camille::Rendered`, raising `Camille::BasicType::RenderError` on a type mismatch. A `Rendered` can be cached and placed into a later response, where the type accepts it by fingerprint without re-checking and its JSON is spliced verbatim. See "Caching rendered fragments" in the README.
+* `Camille::Rendered` now marshals as `[fingerprint, json]`, so entries stored with the default `Rails.cache` coder stay valid across changes to the class.
 
 ### Changed
 
