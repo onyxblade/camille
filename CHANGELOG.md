@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+* Renamed `Camille::Controller::InvalidRenderArgumentError` to `Camille::Controller::RenderArgumentError`, matching the naming of the other controller errors. The old name remains as an alias.
+
 ## 1.7.0
 
 ### Fixed

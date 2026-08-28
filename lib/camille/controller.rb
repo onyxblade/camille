@@ -3,7 +3,8 @@ module Camille
     class TypeError < ::StandardError; end
     class ParamsTypeError < TypeError; end
     class ResponseTypeError < TypeError; end
-    class InvalidRenderArgumentError < ::ArgumentError; end
+    class RenderArgumentError < ::ArgumentError; end
+    InvalidRenderArgumentError = RenderArgumentError
     class MissingRenderError < ::StandardError; end
 
     def camille_schema
@@ -31,7 +32,7 @@ module Camille
               super(json: rendered)
             end
           else
-            raise InvalidRenderArgumentError.new("Expected key :json for `render` call.")
+            raise RenderArgumentError.new("Expected key :json for `render` call.")
           end
         else
           super
